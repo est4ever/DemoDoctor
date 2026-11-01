@@ -88,7 +88,17 @@ screen offers a cached EP010 recovery button. If 5173 is occupied, choose anothe
 Vite port; relative proxy requests still work. Do not solve media problems by
 enabling paid providers or substituting mock results.
 
-Rebuilding the compact media is maintainer-only:
-`scripts/prepare_submission_replays.py --help`. It requires the original recorded
-inputs and refuses to overwrite an existing distribution. Ordinary judges never
-need the original private job directory or the reconstruction script.
+Rebuilding compact media requires original licensed inputs and the private
+maintainer packaging workflow, intentionally omitted from this public tree.
+Ordinary judges need only the tracked replays; no private job directory or
+reconstruction script is required.
+
+## Optional local Real Analysis
+
+Self-service Real Analysis is implemented; offline replay and Dry Run remain the
+defaults. After one-time backend-only credential configuration, stop managed
+services and explicitly start `scripts/start-demodoctor.ps1 -RealAnalysis` with
+an adequate per-run limit. See the README Real Analysis section and the built-in
+`/real-analysis-setup.html` guide for approval, budgeting and limitations.
+No personal environment file is needed for offline replay. Do not register this
+checkout globally if another working checkout is already registered.

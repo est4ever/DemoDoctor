@@ -1,6 +1,7 @@
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { EvidenceSource } from "./EvidenceSource";
 import { RecordedEvidence } from "./RecordedEvidence";
+import { DiagnosticDetails } from "./DiagnosticDetails";
 import type { CSSProperties, ReactNode } from "react";
 import { DEFAULT_PANELS, usePanelLayout } from "../lib/usePanelLayout";
 import { PanelDivider } from "./PanelDivider";
@@ -247,7 +248,7 @@ export function InvestigationDesk(p: Props) {
         </div>
         <div className="rail-bottom">
           <span className="status-dot" /> Local workspace
-          <small>Frozen evidence · No inference calls</small>
+          <small>Cached demos replay offline · Uploads require confirmation</small>
           <div className="rail-version">
             UI EXPERIMENT <span>v0.1</span>
           </div>
@@ -276,7 +277,7 @@ export function InvestigationDesk(p: Props) {
           </div>
           <div className="topbar-panel-actions"><button className="panel-button" onClick={panels.reset} aria-label="Reset panel layout" title="Restore default widths and expanded desktop panels">Reset layout</button><span className="local-tag">
             <span className="status-dot" />{" "}
-            {a.dry_run ? "Dry run · SAM/Muse not executed" : p.liveMode ? "Uploaded footage" : "Offline replay"}
+            {page === "upload" ? "Import · explicit approval" : a.dry_run ? "Dry run · SAM/Muse not executed" : p.liveMode ? "Uploaded footage" : "Offline replay"}
           </span>
           </div>
         </header>
@@ -613,7 +614,7 @@ export function InvestigationDesk(p: Props) {
                     <div className="technical-evidence">
                       <details id="evidence-source-details" open={sourceOpen} onToggle={e => setSourceOpen(e.currentTarget.open)}>
                         <summary ref={sourceSummary}>Source & technical evidence · {active.evidence_id}</summary>
-                        <EvidenceSource item={active} analysis={a} tracks={p.tracks} joints={p.joints} fps={p.fps} seek={p.seek} />
+                        <EvidenceSource item={active} analysis={a} tracks={p.tracks} joints={p.joints} fps={p.fps} seek={p.seek} jobId={p.liveMode ? p.liveJobId : null} />
                       </details>
                     </div>
                   )}
@@ -709,6 +710,7 @@ export function InvestigationDesk(p: Props) {
                     </>
                   ) : tab === "Findings" ? (
                     <div className="inspector-content">
+                      <DiagnosticDetails analysis={a} inspectEvidence={(id) => { inspectEvidence(id); setTab("Evidence"); }} seek={p.seek} />
                       {findingGroups(a).map((group) => (
                         <div key={group.label}>
                           <h3

@@ -6,11 +6,12 @@ type Props = {
   tracks?: TracksBundle | null;
   joints?: JointsBundle | null;
   fps: number;
+  jobId?: string | null;
   seek: (t: number, options?: { pause?: boolean }) => void;
 };
 
 /** Read-only presentation of the current catalog and its loaded source artifacts. */
-export function EvidenceSource({ item, analysis, tracks, joints, fps, seek }: Props) {
+export function EvidenceSource({ item, analysis, tracks, joints, fps, seek, jobId }: Props) {
   const claims = (item.claims ?? []).filter((c): c is Record<string, unknown> => !!c && typeof c === "object");
   const displacement = claims.find(c => c.type === "displacement");
   const trackId = item.track_id ?? claims.find(c => typeof c.track_id === "string")?.track_id;
@@ -35,10 +36,10 @@ export function EvidenceSource({ item, analysis, tracks, joints, fps, seek }: Pr
       {/No joint data/i.test(item.summary ?? "") && <p className="source-limitation"><strong>Joint/gripper measurements unavailable.</strong> No joint dataset is attached to this video-only investigation. Gripper opening, grasp and release cannot be measured from this entry.</p>}
       {/Not every expected object/i.test(item.summary ?? "") && <p className="source-limitation">An established final object position is missing; this record cannot verify placement in the destination.</p>}
       {/empty_result/i.test(item.summary ?? "") && <>
-        <p className="source-limitation"><strong>Destination measurement unavailable.</strong> Segmentation returned no usable tray mask (empty_result). No destination-mask artifact is available; this does not mean the tray was physically absent.</p>
+        <p className="source-limitation"><strong>Destination measurement unavailable.</strong> Segmentation returned no usable {jobId ? "destination" : "tray"} mask (empty_result). No destination-mask artifact is available; this does not mean the {jobId ? "destination" : "tray"} was physically absent.</p>
         {analysis.recorded_evidence?.provenance.target_segmentation && <pre aria-label="Destination segmentation diagnostic">{JSON.stringify(analysis.recorded_evidence.provenance.target_segmentation, null, 2)}</pre>}
       </>}
-      <p>Provenance: saved analysis catalog · report-level uncertainty, not a timed physical event. Separate raw report artifact unavailable in this replay.</p>
+      <p>Provenance: saved analysis catalog · report-level uncertainty, not a timed physical event. {jobId ? "The original job report and verification are available below." : "Separate raw report artifact unavailable in this replay."}</p>
     </>}
     {sam && <>
       <h4>Recorded image-space source</h4>
@@ -69,6 +70,10 @@ export function EvidenceSource({ item, analysis, tracks, joints, fps, seek }: Pr
       <dt>Frames</dt><dd>{item.frame_start != null ? `${item.frame_start} – ${item.frame_end ?? item.frame_start} (catalog bounds)` : "No frame assigned"}</dd>
     </dl>
     {item.note && <p>{item.note}</p>}
+    {jobId && <div className="claim-links" aria-label="Original job source artifacts">
+      {[['failure_report.json','Failure report'],['verification.json','Independent verification'],['evidence_package.json','Original evidence package'],['muse_result.json','Original Muse response']].map(([file,label]) =>
+        <a key={file} href={`/api/jobs/${encodeURIComponent(jobId)}/files/${file}`} target="_blank" rel="noreferrer">{label} ↗</a>)}
+    </div>}
     <details><summary>Raw evidence record · {item.evidence_id}</summary><pre aria-label="Raw evidence record">{JSON.stringify(item, null, 2)}</pre></details>
   </>;
 }

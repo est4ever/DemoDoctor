@@ -2,7 +2,8 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { act } from "react";
 import { createRoot, type Root } from "react-dom/client";
-import { readFileSync } from "node:fs";
+import { existsSync, readFileSync } from "node:fs";
+import { resolve } from "node:path";
 import App from "../App";
 
 // Test the real App selection/clock handlers; media decoding is checked in Chromium.
@@ -30,13 +31,15 @@ afterEach(async () => {
 async function load(episode = "pilot", missingTracks = false) {
   window.history.replaceState({}, "", `/#${episode}`);
   vi.stubGlobal("fetch", vi.fn(async (url: string) => {
+    const requestedEpisode = /\/data\/(ep\d+)\//.exec(url)?.[1] ?? (url.includes("recorded-pilot") ? "pilot" : episode);
     const suffix = url.split("/").pop();
     let data;
-    if (episode === "pilot") {
+    if (requestedEpisode === "pilot") {
       if (suffix === "analysis.json") data = pilot;
       if (suffix === "tracks.json" && !missingTracks) data = pilotTracks;
     } else if (["analysis.json", "tracks.json", "joints.json"].includes(suffix!)) {
-      data = json(`../../public/data/${episode}/${suffix}`);
+      const path = resolve("public/data", requestedEpisode, suffix!);
+      if (existsSync(path)) data = JSON.parse(readFileSync(path, "utf8"));
     }
     // A nonzero initial UI clock catches accidental seeking of untimed evidence to zero.
     if (suffix === "analysis.json") data = { ...data, initial_seek_s: 12 };
@@ -45,7 +48,7 @@ async function load(episode = "pilot", missingTracks = false) {
     });
   }));
   await act(async () => { root.render(<App />); });
-  expect(host.querySelector(".evidence-list")).not.toBeNull();
+  expect(host.querySelector(".evidence-list"), host.textContent ?? "").not.toBeNull();
 }
 async function inspect(id: string) {
   const button = [...host.querySelectorAll<HTMLButtonElement>(".evidence-list button")]
@@ -106,5 +109,26 @@ describe("Inspect source interaction", () => {
     expect(source().textContent).toContain("proprio:observation.state[gripper]");
     expect(time()).toBe(44.5);
     expect(host.querySelector("#inspector-tab-Evidence")!.getAttribute("aria-selected")).toBe("true");
+  });
+  it("restores EP005 hypotheses and opens untimed context without moving the video", async () => {
+    await load("ep005");
+    await act(async () => host.querySelector<HTMLButtonElement>("#inspector-tab-Findings")!.click());
+    expect(host.querySelector(".diagnostic-hypotheses")!.textContent).toContain("incorrectly oriented flat");
+    await act(async () => host.querySelector<HTMLButtonElement>('[aria-label="Inspect diagnostic citation E3"]')!.click());
+    expect(source().open).toBe(true); expect(time()).toBe(12);
+    expect(source().textContent).toContain("2D containment");
+    expect(host.querySelector("#inspector-tab-Evidence")!.getAttribute("aria-selected")).toBe("true");
+  });
+  it("replaces hypotheses and source bindings when navigating to another investigation", async () => {
+    await load("ep005");
+    await act(async () => host.querySelector<HTMLButtonElement>("#inspector-tab-Findings")!.click());
+    expect(host.textContent).toContain("incorrectly oriented flat");
+    await act(async () => host.querySelector<HTMLButtonElement>('.session-list [aria-label^="Open EP010 "]')!.click());
+    await act(async () => host.querySelector<HTMLButtonElement>("#inspector-tab-Findings")!.click());
+    expect(host.querySelector(".diagnostic-hypotheses")!.textContent).not.toContain("incorrectly oriented flat");
+    expect(host.querySelector(".diagnostic-hypotheses")!.textContent).toContain("intentional release or an unintended drop");
+    await act(async () => host.querySelector<HTMLButtonElement>('[aria-label="Inspect diagnostic citation E2"]')!.click());
+    expect(source().textContent).toContain("proprio:observation.state[gripper]");
+    expect(time()).toBe(44.5);
   });
 });

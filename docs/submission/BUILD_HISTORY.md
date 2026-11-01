@@ -5,9 +5,11 @@ timestamps below are documentary references to the original development records,
 not commits reachable in this new repository. A new initial commit does not
 establish that the October 24 foundation was built during the event.
 
-Final functional freeze: **736e4e1fdbf1c4d90414047d5226c7c37ef66829**, approved by the owner.
-Audit cutoff: **October 31, 2026**. Advertised event window: October 26–November 4.
-The window has not finished at this cutoff; no November 1–4 work is claimed.
+Initial public-release functional freeze: **736e4e1fdbf1c4d90414047d5226c7c37ef66829**.
+Subsequent owner-authorized changes are documented below through
+**097f8e1e6509b512886fc8eebe564007758bb759**.
+Audit cutoff: **November 1, 2026**. Advertised event window: October 26–November 4.
+No future November 2–4 work is claimed at this cutoff.
 
 ## Pre-existing foundation
 
@@ -35,6 +37,8 @@ foundation must be disclosed as pre-existing, not work created during the event.
 | API security and independent evidence correctness | 7a4f5f2, 9418627, Oct 31 | Artifact/request boundaries, explicit local-input permissions and stricter new validation; frozen outputs retained |
 | Navigation, job recovery and viewer error visibility | af06807, Oct 31 | History recovery, current-tab job recovery and visible optional Rerun errors |
 | Adjustable viewport panels | 736e4e1, Oct 31 | Independently collapsible/resizable panels, local preferences, accessible controls and narrow-screen drawer |
+| Self-service local Real Analysis | f60965f, Nov 1 | Existing pipeline connected to prepare/approve/results UI; explicit startup opt-in, ledger checks and zero paid retries; new mocked-provider tests, not a new paid pilot |
+| Saved diagnostic hypotheses and criterion coverage | 097f8e1, Nov 1 | Existing Muse suggestions restored as Unverified with original citations; EP005 outcome unchanged; no new orientation detector |
 | Approved Apache notices and audit records | 171ecf9, 94e060c, 5582886, Oct 31 | License/docs and confirmed repair evidence; not additional model/scientific results |
 
 The final three-minute video was assembled locally after the original replay
@@ -42,8 +46,9 @@ checkpoint and before the later viewport/launcher improvements; production files
 remain ignored. The owner approved keeping this video unchanged at functional
 freeze. The earlier `0ee4cdb` freeze was followed by owner-authorized inspection,
 security, correctness, recovery and panel work listed above. The final freeze is
-now `736e4e1`; subsequent submission preparation changes documentation only,
-not application behavior or recorded evidence. The video combines authentic project
+recorded for the first release at `736e4e1`. The owner subsequently authorized
+the November 1 workflow and presentation changes above. They change application
+behavior but do not modify frozen scientific results or the final video. The video combines authentic project
 assets, supplied ElevenLabs Hope narration and DemoDoctor Resolve. No generated
 robot actions, missing observations or new inference calls were added in editing.
 
@@ -94,6 +99,8 @@ are listed for provenance, not counted as independent feature implementations.
 | `af06807` | 2026-10-31T20:02:52-04:00 | 2026-10-31T20:02:52-04:00 | fix(qa): recover investigation routes and jobs and surface viewer failures |
 | `5582886` | 2026-10-31T20:04:00-04:00 | 2026-10-31T20:04:00-04:00 | docs: record focused repair verification and remaining release decisions |
 | `736e4e1` | 2026-10-31T20:34:43-04:00 | 2026-10-31T20:34:43-04:00 | feat(ui): add persistent collapsible and resizable workstation panels |
+| `f60965f` | 2026-11-01T00:37:12-04:00 | 2026-11-01T00:37:12-04:00 | feat: enable explicit local real analysis from Import Footage |
+| `097f8e1` | 2026-11-01T01:19:09-04:00 | 2026-11-01T01:19:09-04:00 | Restore saved diagnostic hypotheses and criterion coverage |
 
 Git timestamps and messages document repository history, not independent proof
 of when every line was authored. The owner must disclose any other earlier or

@@ -199,6 +199,7 @@ export type TracksBundle = {
       bbox: [number, number, number, number];
       confidence: number;
       track_status: string;
+      mask?: { size: [number, number]; counts: number[] } | null;
     }>
   >;
 };

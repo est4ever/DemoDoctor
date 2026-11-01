@@ -10,12 +10,14 @@ explanations. Video, playback, timeline and evidence remain visible together;
 side panels resize/collapse independently. Source inspection distinguishes
 observed geometry, measured signals, inferred events and unknown outcomes.
 
-This is a **new public-release snapshot**, not the original development Git
-history. It derives from checkpoint `05b175db352ae306c8607e6e08f06036f330b55b`.
+This repository has its own public Git history, separate from private development.
+The initial snapshot derived from `05b175db352ae306c8607e6e08f06036f330b55b`;
+this incremental update transfers validated changes through
+`097f8e1e6509b512886fc8eebe564007758bb759` without importing private commits.
 The October 24 prototype predates the October 26 event start. See
 [build history](docs/submission/BUILD_HISTORY.md) and
-[snapshot provenance](docs/submission/SNAPSHOT.md). A single new release commit
-does not mean the whole project was built during the event.
+[snapshot provenance](docs/submission/SNAPSHOT.md). Public release commits
+do not mean the whole project was built during the event.
 
 ## Offline judge quick start
 
@@ -38,7 +40,8 @@ Pop-Location
 The launcher starts FastAPI at `127.0.0.1:8765`, Vite at `127.0.0.1:5173`, checks
 readiness and the six recorded demonstrations, opens the default browser and
 returns control. It defaults to offline/cache replay and dry-run uploads;
-paid providers are rejected by the launcher backend.
+paid providers are rejected by the ordinary offline launcher backend.
+Real Analysis requires the separate explicit local opt-in described below.
 
 ```powershell
 .\scripts\status-demodoctor.ps1
@@ -72,16 +75,18 @@ After startup, open **http://127.0.0.1:5173/** and choose a demonstration.
 |---|---|
 | PILOT | Genuine recorded SO-101 SAM/Muse artifacts; two independently checked image-space claims; uncertain task outcome |
 | EP010 | Measured gripper opening at 44.50s supports an inferred release; holding, intent and placement remain unverified |
-| EP005 | Illustrative Muse-only/evidence-grounded comparison; not a controlled scientific ablation |
+| EP005 | Unverified saved flat-orientation hypothesis and original citations; outcome remains uncertain; comparison is illustrative |
 | EP003 | Saved 2D containment criterion met; upright orientation unverified |
 | EP013 | Saved end-state-supported failure; no invented timed failure event |
 | EP006 | Evidence abstention from insufficient geometry |
 
 Replays use saved real analysis and make no new model calls. The five cached
 BotFails investigations also work with the frontend alone. PILOT requires the
-local read-only API, started by the launcher. New uploads are explicitly dry-run
-preparation: SAM/Muse are skipped, no physical findings are fabricated, and the
-result remains uncertain. Dry run is not a demonstration of fresh real inference.
+local read-only API, started by the launcher. New uploads default to explicitly
+labeled Dry Run preparation: SAM/Muse are skipped, no physical findings are
+fabricated, and the result remains uncertain. Real Analysis is implemented but
+requires provider configuration, explicit local opt-in and per-job cost approval.
+Dry run is not a demonstration of fresh real inference.
 
 In the video-only PILOT, recorded box centers are approximately **609 pixels
 apart (609.01 px)**. There is a **105-frame observation gap, 433-537 inclusive**;
@@ -94,9 +99,71 @@ later offline reconstruction was never fed back into that historical Muse respon
 
 Select evidence to inspect its source. Timed evidence seeks the video; untimed
 evidence opens its explanation without inventing a timestamp. SAM overlay and
-annotation modes preserve original frame timing. The optional EP010 Rerun viewer
+annotation modes preserve original frame timing. Findings now exposes saved
+diagnostic hypotheses and visual interpretations, all explicitly Unverified,
+plus task-criterion coverage. Supported assessment sources do not establish
+criterion satisfaction; orientation is unassessed and missing evidence never
+changes an outcome. Missing citations/frame references are explicit.
+The optional EP010 Rerun viewer
 lazy-loads about 67 MB of installed viewer Wasm; it is not required for offline
 investigation. Legacy 3D mappings are not validated hardware ground truth.
+
+## Analyze new footage locally
+
+After one-time provider setup, each new video is handled entirely in **Import
+footage**: choose **Real Analysis**, review the selected file/hash and exact
+frame window, then click **Analyze — approve estimated cost**. Upload preparation,
+refresh and startup never start paid inference. Results open automatically in the
+investigation workstation; its `#job/<id>` URL restores them on refresh.
+
+Ordinary `DemoDoctor` remains offline. To opt into real analysis for a local session:
+
+```powershell
+.\scripts\stop-demodoctor.ps1
+# Credentials stay in an existing private file or the backend environment.
+# Only the explicit limit changes the existing ledger's per-run cap; spend and total stay intact.
+.\scripts\start-demodoctor.ps1 -RealAnalysis -CredentialsFile C:\private\providers.env -PerRunBudgetUsd 2.10
+```
+
+The registered `DemoDoctor` commands accept the same flags when this checkout
+is the one explicitly registered.
+
+The credentials file contains `MODEL_API_KEY` for Meta and `FIREWORKS_API_KEY` for
+Fireworks. An ignored project-local `.env` or existing process environment also
+works; omit `-CredentialsFile` in that case. Keys never enter the browser or its
+storage. Readiness indicates configuration presence, **not** successful account
+authentication, sufficient credits or guaranteed model availability. Missing
+configuration has visible setup instructions. No dependencies are installed by
+the launcher. No developer or terminal is needed for each subsequent video.
+
+The default $1 run cap is smaller than the $1.32 full-context Muse reservation
+before SAM. Explicitly configuring an adequate run cap is required; neither the
+UI nor a normal launch raises it. Existing spend, reservations, unknown-charge
+reconciliation and total limits remain enforced. Estimates use standard published
+rates and are **not provider-enforced billing guarantees**. Account pricing must
+be checked before spending. There are zero automatic paid retries. A lost start
+response recovers the same job; approval is single-use and expires after 15 minutes.
+Interrupted jobs are marked on backend restart and never resumed automatically.
+
+Use a single-camera MP4 that both browser and backend can decode. Analyze an
+explicit window of at most 30 seconds; the default is only the first four seconds.
+Declare a complete task only when the full attempt is present and selected.
+The pipeline supplies video-only observations, not measured gripper opening,
+contact, force or release. Raw destination footprints have no calibrated interior
+and assume a stationary camera/target. The outcome rule is `all_objects_in_target`,
+not arbitrary task-language verification; drawer closure and similar articulated
+goals cannot be certified. An uncertain outcome is valid. Missing segmentation
+does not mean the destination was physically absent. Failures do not substitute
+mock evidence. Repeated identical media may reuse genuine cached SAM observations,
+which remain labeled by their provenance.
+
+The setup guide is also available from Import at `/real-analysis-setup.html`.
+Keep the API bound to loopback; do not deploy it as a public inference endpoint.
+Stop the enabled session before returning to ordinary offline `DemoDoctor`.
+
+This public update was validated with synthetic providers only. A fresh real-provider
+run on a genuinely unseen video has not been executed for this release; implementation
+and mocked end-to-end tests are not evidence of generalization accuracy.
 
 ## Manual startup and tests
 
@@ -115,7 +182,9 @@ Pop-Location
 The Python suite marks tests requiring original full videos/SAM caches as
 `real_data`; those fixtures are intentionally absent and corresponding tests may
 skip. Actual snapshot counts and browser checks are in
-[VALIDATION.md](docs/submission/VALIDATION.md). No skipped test is counted as passed.
+[VALIDATION.md](docs/submission/VALIDATION.md) and the
+[November 1 update report](docs/submission/UPDATE_20261101.md). The update report
+records unresolved development-tool advisories. No skipped test is counted as passed.
 macOS/Linux setup is documented but not independently validated in this release.
 
 ## Scope, provenance and licenses

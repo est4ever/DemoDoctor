@@ -1,424 +1,187 @@
-import { useCallback, useEffect, useState } from "react";
+﻿import { useCallback, useEffect, useRef, useState } from "react";
 import type { AnalysisBundle, TracksBundle } from "../lib/types";
 import { Badge, Button, Panel } from "./ui";
 
-const API = "";
-
-type Budget = {
-  total_budget_usd: number;
-  per_run_budget_usd: number;
-  spent_usd: number;
-  remaining_usd: number;
-};
-
-type JobStatus = {
-  job_id: string;
-  status: string;
-  stages?: Array<{ name: string; ts?: number }>;
-  errors?: string[];
-  cost?: { job_estimated_usd?: number; ledger?: Budget };
-  joint_limitations?: string[];
-  has_analysis?: boolean;
-};
-
-type Props = {
-  onLiveResult: (args: {
-    jobId: string;
-    analysis: AnalysisBundle;
-    tracks: TracksBundle | null;
-  }) => void;
-};
+type Budget = { total_budget_usd: number; per_run_budget_usd: number; spent_usd: number; remaining_usd: number };
+type Health = { ok?: boolean; sam_key?: boolean; muse_key?: boolean; real_analysis_enabled?: boolean; offline_only?: boolean };
+type JobStatus = { job_id: string; status: string; dry_run?: boolean; stages?: Array<{name: string}>; errors?: string[]; joint_limitations?: string[]; has_analysis?: boolean };
+type Quote = { job_id: string; approval_id: string; filename: string; sha256: string; start_s: number; end_s: number; frame_start: number; frame_end: number; fps: number; source_frames: number; estimated_max_usd: number; sam_estimate_usd: number; muse_reservation_usd: number; operations: string[]; complete_task_scope: boolean; budget: Budget; note: string };
+type Props = { onLiveResult: (args: { jobId: string; analysis: AnalysisBundle; tracks: TracksBundle | null }) => void };
+async function responseBody(r: Response) {
+  const body = await r.json();
+  if (!r.ok) throw new Error(typeof body.detail === "string" ? body.detail : JSON.stringify(body.detail ?? r.statusText));
+  return body;
+}
 
 export function LiveAnalyzePanel({ onLiveResult }: Props) {
   const [file, setFile] = useState<File | null>(null);
   const [task, setTask] = useState("Store green plates in the dish rack");
   const [objectConcept, setObjectConcept] = useState("green plate");
   const [destination, setDestination] = useState("dish rack");
-  const [windowStart, setWindowStart] = useState("0");
-  const [windowEnd, setWindowEnd] = useState("4");
-  const [useWindow, setUseWindow] = useState(false);
-  const dryRun = true;
-  const [preview, setPreview] = useState<string | null>(null);
-  const [previewReady, setPreviewReady] = useState(false);
-  const [completeDemo, setCompleteDemo] = useState(false);
-  const [busy, setBusy] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const [windowStart, setWindowStart] = useState("0"), [windowEnd, setWindowEnd] = useState("4");
+  const [useWindow, setUseWindow] = useState(false), [completeDemo, setCompleteDemo] = useState(false);
+  const [mode, setMode] = useState<"dry" | "real">("dry");
+  const [preview, setPreview] = useState<string | null>(null), [previewReady, setPreviewReady] = useState(false);
+  const [busy, setBusy] = useState(false), [error, setError] = useState<string | null>(null);
+  const [quote, setQuote] = useState<Quote | null>(null), [health, setHealth] = useState<Health | null>(null);
+  const [budget, setBudget] = useState<Budget | null>(null), [pollEpoch, setPollEpoch] = useState(0);
+  const [pollPaused, setPollPaused] = useState(false);
+  const submitting = useRef(false);
   const [job, setJob] = useState<JobStatus | null>(() => {
-    try {
-      const id = sessionStorage.getItem("demodoctor.uploadJob");
-      return id && /^[A-Za-z0-9_-]{1,128}$/.test(id) ? {job_id: id, status: "queued"} : null;
-    } catch { return null; }
+    try { const id = sessionStorage.getItem("demodoctor.uploadJob"); return id && /^[A-Za-z0-9_-]{1,128}$/.test(id) ? {job_id: id, status: "queued"} : null; }
+    catch { return null; }
   });
-  const [budget, setBudget] = useState<Budget | null>(null);
-  const [health, setHealth] = useState<{
-    ok?: boolean;
-    sam_key?: boolean;
-    muse_key?: boolean;
-  } | null>(null);
-
+  const jobId = job?.job_id;
   const refreshBudget = useCallback(async () => {
-    try {
-      const r = await fetch(`${API}/api/health`);
-      setHealth(r.ok ? await r.json() : { ok: false });
-    } catch {
-      setHealth({ ok: false });
-    }
-    try {
-      const r = await fetch(`${API}/api/budget`);
-      if (r.ok) setBudget(await r.json());
-    } catch {
-      /* offline */
-    }
+    try { const h = await responseBody(await fetch("/api/health")); setHealth(h); if (h.budget) setBudget(h.budget); }
+    catch { setHealth({ok: false}); }
   }, []);
-
+  useEffect(() => { void refreshBudget(); }, [refreshBudget]);
   useEffect(() => {
     setPreviewReady(false);
-    if (!file) {
-      setPreview(null);
-      return;
-    }
-    const url = URL.createObjectURL(file);
-    setPreview(url);
+    if (!file) { setPreview(null); return; }
+    const url = URL.createObjectURL(file); setPreview(url);
     return () => URL.revokeObjectURL(url);
   }, [file]);
-
+  // A prepared quote is immutable. Any input edit cancels the visible approval.
+  useEffect(() => { setQuote(null); }, [file, task, objectConcept, destination, windowStart, windowEnd, useWindow, completeDemo, mode]);
   const chooseFile = (next: File | null) => {
-    try { sessionStorage.removeItem("demodoctor.uploadJob"); } catch { /* storage unavailable */ }
-    if (next && (!next.type.startsWith("video/") || next.size === 0)) {
-      setFile(null);
-      setJob(null);
-      setError("Choose a non-empty video file, such as MP4 or WebM.");
-      return;
-    }
-    setError(null);
+    if (busy) return;
+    try { sessionStorage.removeItem("demodoctor.uploadJob"); } catch { /* browser storage optional */ }
+    setJob(null); setQuote(null); setError(null);
+    if (next && (!next.type.startsWith("video/") || !next.size)) { setFile(null); setError("Choose a non-empty video file, such as MP4 or WebM."); return; }
     setFile(next);
-    setJob(null);
   };
-
   useEffect(() => {
-    if (!job || job.status === "completed" || job.status === "failed") return;
-    setBusy(true);
-    let cancelled = false;
-    const id = window.setInterval(async () => {
+    if (!jobId) return;
+    let cancelled = false, timer: number | undefined;
+    setBusy(true); setPollPaused(false);
+    const poll = async () => {
       try {
-        const r = await fetch(`${API}/api/jobs/${job.job_id}`);
-        if (!r.ok) throw new Error(`Job status failed (${r.status})`);
-        const st = (await r.json()) as JobStatus;
+        const st = await responseBody(await fetch(`/api/jobs/${jobId}`)) as JobStatus;
         if (cancelled) return;
-        if (st.status !== "completed") setJob(st);
-        if (st.status === "completed" && st.has_analysis) {
-          const [a, t] = await Promise.all([
-            fetch(`${API}/api/jobs/${job.job_id}/analysis`).then((x) =>
-              x.ok
-                ? x.json()
-                : Promise.reject(
-                    new Error(`Results unavailable (${x.status})`),
-                  ),
-            ),
-            fetch(`${API}/api/jobs/${job.job_id}/tracks`)
-              .then((x) => (x.ok ? x.json() : null))
-              .catch(() => null),
+        setJob(st);
+        if (st.status === "completed") {
+          if (!st.has_analysis) throw new Error("Job completed without an analysis artifact");
+          const [analysis, tracks] = await Promise.all([
+            fetch(`/api/jobs/${jobId}/analysis`).then(responseBody),
+            fetch(`/api/jobs/${jobId}/tracks`).then(r => r.ok ? r.json() : null),
           ]);
           if (cancelled) return;
-          setJob(st);
-          onLiveResult({
-            jobId: job.job_id,
-            analysis: a as AnalysisBundle,
-            tracks: t as TracksBundle | null,
-          });
-          void refreshBudget();
-          setBusy(false);
-        } else if (st.status === "completed") {
-          throw new Error("Job completed without an analysis artifact");
-        } else if (st.status === "failed") {
-          setError((st.errors || []).join("; ") || "Analysis failed");
-          setBusy(false);
-          void refreshBudget();
+          try { if (sessionStorage.getItem("demodoctor.uploadJob") === jobId) sessionStorage.removeItem("demodoctor.uploadJob"); } catch { /* URL preserves completed results */ }
+          setBusy(false); onLiveResult({jobId, analysis, tracks}); void refreshBudget(); return;
         }
+        if (["failed", "interrupted"].includes(st.status)) {
+          setError((st.errors || []).join("; ") || "Analysis stopped. No automatic retry was made.");
+          setBusy(false); void refreshBudget(); return;
+        }
+        if (st.status === "awaiting_approval") { setBusy(false); setError(previous => previous ? `${previous} No inference was started.` : "This upload was not started. Prepare it again to obtain a new confirmation."); return; }
+        timer = window.setTimeout(poll, 1500);
       } catch (e) {
         if (cancelled) return;
-        setError(String(e));
-        setJob((previous) =>
-          previous ? { ...previous, status: "failed" } : null,
-        );
-        setBusy(false);
+        setError(`${String(e)}. Status unknown; recover this job before starting another. No paid retry was made.`);
+        setPollPaused(true); // Preserve the job ID and prevent accidental paid resubmission.
       }
-    }, 1500);
-    return () => {
-      cancelled = true;
-      window.clearInterval(id);
     };
-  }, [job, onLiveResult, refreshBudget]);
+    timer = window.setTimeout(poll, 100);
+    return () => { cancelled = true; window.clearTimeout(timer); };
+  }, [jobId, pollEpoch, onLiveResult, refreshBudget]);
 
   const submit = async () => {
+    if (submitting.current) return;
     setError(null);
-    if (!file) {
-      setError("Choose a video file first.");
-      return;
+    if (!file || !task.trim() || !objectConcept.trim() || !destination.trim()) { setError("Choose footage and fill in the task, object concept and destination."); return; }
+    if (useWindow && (!windowStart.trim() || !windowEnd.trim() || !Number.isFinite(Number(windowStart)) || !Number.isFinite(Number(windowEnd)) || Number(windowStart) < 0 || Number(windowEnd) <= Number(windowStart) || Number(windowEnd) - Number(windowStart) > 30)) {
+      setError("Choose a valid time window: start at zero or later, end after start, at most 30 seconds."); return;
     }
-    if (!task.trim()) {
-      setError("Describe the task before preparing the demonstration.");
-      return;
-    }
-    if (
-      useWindow &&
-      (!Number.isFinite(Number(windowStart)) ||
-        !Number.isFinite(Number(windowEnd)) ||
-        Number(windowStart) < 0 ||
-        Number(windowEnd) <= Number(windowStart))
-    ) {
-      setError(
-        "Choose a valid time window: start at zero or later, with the end after the start.",
-      );
-      return;
-    }
-    if (!health?.ok) {
-      setError(
-        "The local analysis service is unavailable. You can still preview footage here.",
-      );
-      return;
-    }
-    setBusy(true);
-    const fd = new FormData();
-    fd.append("video", file);
-    fd.append("task_description", task);
-    fd.append("object_concept", objectConcept);
-    fd.append("destination_concept", destination);
-    fd.append("run_muse", "false");
-    fd.append("dry_run", dryRun ? "true" : "false");
-    fd.append("force_sam_refresh", "false");
-    fd.append("complete_demonstration", String(completeDemo));
-    if (useWindow) {
-      fd.append("window_start_s", windowStart);
-      fd.append("window_end_s", windowEnd);
-    } else {
-      fd.append("max_window_s", completeDemo ? "30" : "4");
-    }
+    if (!health?.ok) { setError("The local analysis service is unavailable. You can still preview footage here."); return; }
+    submitting.current = true; setBusy(true); setQuote(null);
+    const fd = new FormData(); fd.append("video", file); fd.append("task_description", task);
+    fd.append("object_concept", objectConcept); fd.append("destination_concept", destination);
+    fd.append("run_muse", String(mode === "real")); fd.append("dry_run", String(mode === "dry"));
+    fd.append("prepare_only", String(mode === "real")); fd.append("force_sam_refresh", "false"); fd.append("complete_demonstration", String(completeDemo));
+    if (useWindow) { fd.append("window_start_s", windowStart); fd.append("window_end_s", windowEnd); }
+    else fd.append("max_window_s", completeDemo ? "30" : "4");
     try {
-      const r = await fetch(`${API}/api/analyze`, { method: "POST", body: fd });
-      const body = await r.json();
-      if (!r.ok) {
-        setError(body?.detail ? JSON.stringify(body.detail) : r.statusText);
-        setBusy(false);
-        return;
-      }
-      try { sessionStorage.setItem("demodoctor.uploadJob", body.job_id); } catch { /* current panel still works */ }
-      setJob({ job_id: body.job_id, status: "running", stages: [] });
-      if (body.budget) setBudget(body.budget);
-    } catch (e) {
-      setError(String(e));
-      setBusy(false);
-    }
+      const body = await responseBody(await fetch("/api/analyze", {method: "POST", body: fd}));
+      if (body.quote) { setQuote(body.quote); setBusy(false); }
+      else { try { sessionStorage.setItem("demodoctor.uploadJob", body.job_id); } catch { /* optional */ } setJob({job_id: body.job_id, status: "queued"}); }
+    } catch (e) { setError(String(e)); setBusy(false); }
+    finally { submitting.current = false; }
   };
-
-  return (
-    <Panel title="Import & prepare" className="mt-5" bodyClassName="space-y-4">
-      <p className="text-[0.9rem] text-[var(--muted)]">
-        Preview footage locally, then prepare a free dry run using the local
-        analysis service. SAM and Muse inference are disabled in this UI
-        experiment.
-      </p>
-
-      <div className="flex flex-wrap gap-2">
-        <Badge tone={health == null ? "muted" : health.ok ? "ok" : "danger"}>
-          Local service{" "}
-          {health == null
-            ? "not checked"
-            : health.ok
-              ? "online"
-              : "unavailable"}
-        </Badge>
-        <Badge tone="muted">Dry run only · No paid inference</Badge>
-        {budget ? (
-          <Badge tone="muted">
-            budget ${budget.spent_usd.toFixed(3)} / ${budget.total_budget_usd} ·
-            rem ${budget.remaining_usd.toFixed(3)}
-          </Badge>
-        ) : null}
-      </div>
-
-      <label
-        className="upload-drop"
-        onDragOver={(e) => e.preventDefault()}
-        onDrop={(e) => {
-          e.preventDefault();
-          if (!busy) chooseFile(e.dataTransfer.files[0] ?? null);
-        }}
-      >
-        <strong>{file ? file.name : "Drop robot footage here"}</strong>
-        <small>
-          {file
-            ? `${(file.size / 1024 / 1024).toFixed(1)} MB · Local preview`
-            : "Or browse files · MP4, WebM and other browser-supported video"}
-        </small>
-        <input
-          type="file"
-          accept="video/mp4,video/*"
-          aria-label="Robot demonstration video"
-          disabled={busy}
-          className="mt-1 block w-full text-[0.9rem]"
-          onChange={(e) => chooseFile(e.target.files?.[0] ?? null)}
-        />
-      </label>
-      {preview && (
-        <video
-          className="upload-preview"
-          src={preview}
-          controls
-          muted
-          playsInline
-          onLoadedData={() => setPreviewReady(true)}
-          onError={() => {
-            setPreviewReady(false);
-            setError(
-              "This video cannot be decoded by the browser. Try an H.264 MP4 or WebM file.",
-            );
-          }}
-        />
-      )}
-      <ol
-        className="progress-stages"
-        aria-label="Import progress"
-        aria-live="polite"
-      >
-        <li>
-          01 · Footage selected <span>{file ? "Ready" : "Waiting"}</span>
-        </li>
-        <li>
-          02 · Local preview <span>{previewReady ? "Ready" : "Waiting"}</span>
-        </li>
-        <li>
-          03 · Dry-run preparation{" "}
-          <span>
-            {job?.status ?? (busy ? "Uploading footage" : "Not started")}
-          </span>
-        </li>
-        <li>
-          04 · Evidence results{" "}
-          <span>
-            {job?.status === "completed"
-              ? "Available in investigation"
-              : "Awaiting service"}
-          </span>
-        </li>
-      </ol>
-      <div className="grid gap-3 md:grid-cols-2">
-        <label className="block text-[0.85rem]">
-          <span className="font-medium text-[var(--muted)]">Task</span>
-          <input
-            className="mt-1 w-full rounded-xl border border-[var(--border)] bg-white px-3 py-2"
-            value={task}
-            onChange={(e) => setTask(e.target.value)}
-          />
-        </label>
-        <label className="block text-[0.85rem]">
-          <span className="font-medium text-[var(--muted)]">
-            Object concept
-          </span>
-          <input
-            className="mt-1 w-full rounded-xl border border-[var(--border)] bg-white px-3 py-2"
-            value={objectConcept}
-            onChange={(e) => setObjectConcept(e.target.value)}
-          />
-        </label>
-        <label className="block text-[0.85rem]">
-          <span className="font-medium text-[var(--muted)]">Destination</span>
-          <input
-            className="mt-1 w-full rounded-xl border border-[var(--border)] bg-white px-3 py-2"
-            value={destination}
-            onChange={(e) => setDestination(e.target.value)}
-          />
-        </label>
-      </div>
-
-      <div className="flex flex-wrap items-end gap-3">
-        <label className="inline-flex items-center gap-2 text-[0.85rem]">
-          <input
-            type="checkbox"
-            checked={useWindow}
-            onChange={(e) => setUseWindow(e.target.checked)}
-          />
-          Custom time window (s)
-        </label>
-        {useWindow ? (
-          <>
-            <input
-              className="w-20 rounded-lg border border-[var(--border)] px-2 py-1.5"
-              value={windowStart}
-              onChange={(e) => setWindowStart(e.target.value)}
-            />
-            <span className="text-[var(--muted)]">→</span>
-            <input
-              className="w-20 rounded-lg border border-[var(--border)] px-2 py-1.5"
-              value={windowEnd}
-              onChange={(e) => setWindowEnd(e.target.value)}
-            />
-          </>
-        ) : (
-          <span className="text-[0.85rem] text-[var(--muted)]">
-            {completeDemo
-              ? "Complete video, up to 30 seconds"
-              : "Default: first 4 seconds (partial task)"}
-          </span>
-        )}
-        <label className="inline-flex items-center gap-2 text-[0.85rem]">
-          <input
-            type="checkbox"
-            checked={completeDemo}
-            onChange={(e) => setCompleteDemo(e.target.checked)}
-          />
-          Video contains the complete task
-        </label>
-      </div>
-
-      <div className="flex flex-wrap gap-2">
-        <Button
-          variant="primary"
-          disabled={busy || !previewReady || !health?.ok}
-          onClick={() => void submit()}
-        >
-          {busy ? "Preparing dry run…" : "Prepare dry run"}
-        </Button>
-        <Button
-          variant="ghost"
-          disabled={busy}
-          onClick={() => void refreshBudget()}
-        >
-          Check local service
-        </Button>
-      </div>
-
-      {error ? (
-        <p role="alert" className="text-[0.9rem] text-[var(--danger)]">
-          {error}
-        </p>
-      ) : null}
-
-      {job ? (
-        <div className="rounded-xl border border-[var(--border)] bg-[var(--panel-soft)] px-4 py-3 text-[0.85rem]">
-          <div className="font-medium">
-            Job {job.job_id} · {job.status}
-          </div>
-          <div className="mt-1 text-[var(--muted)]">
-            {(job.stages || [])
-              .slice(-6)
-              .map((s) => s.name)
-              .join(" → ") || "waiting…"}
-          </div>
-          {job.joint_limitations?.length ? (
-            <ul className="mt-2 list-disc pl-5 text-[var(--warn)]">
-              {job.joint_limitations.map((u) => (
-                <li key={u}>{u}</li>
-              ))}
-            </ul>
-          ) : null}
-          {job.cost?.job_estimated_usd != null ? (
-            <div className="mt-1 text-[var(--muted)]">
-              Job spend est. ${job.cost.job_estimated_usd.toFixed(4)}
-            </div>
-          ) : null}
-        </div>
-      ) : null}
-    </Panel>
-  );
+  const approve = async () => {
+    if (!quote || submitting.current) return;
+    const id = quote.job_id;
+    submitting.current = true; setBusy(true); setError(null);
+    // Save the identity before the POST: a dropped response must recover, never retry.
+    try { sessionStorage.setItem("demodoctor.uploadJob", id); } catch { /* current panel still recovers */ }
+    try {
+      await responseBody(await fetch(`/api/jobs/${id}/start`, {method: "POST", headers: {"Content-Type": "application/json"}, body: JSON.stringify({approval_id: quote.approval_id})}));
+      setQuote(null); setJob({job_id: id, status: "queued"});
+    } catch (e) { setError(`${String(e)}. Checking this job; no automatic paid retry.`); setQuote(null); setJob({job_id: id, status: "queued"}); }
+    finally { submitting.current = false; }
+  };
+  const realReady = health?.real_analysis_enabled && health.sam_key && health.muse_key;
+  const budgetFits = quote && quote.estimated_max_usd <= Math.min(quote.budget.per_run_budget_usd, quote.budget.remaining_usd);
+  return <Panel title="Import & prepare" className="mt-5" bodyClassName="space-y-4">
+    <p className="text-[0.9rem] text-[var(--muted)]">Preview footage locally. Dry Run prepares a video without provider calls. Real Analysis uses Meta SAM 3.1 and Muse Spark Open only after you confirm its estimate.</p>
+    <div className="flex flex-wrap gap-2">
+      <Badge tone={health?.ok ? "ok" : "muted"}>Local service {health?.ok ? "online" : "unavailable"}</Badge>
+      <Badge tone="muted">Meta {health?.sam_key ? "configured" : "not configured"}</Badge>
+      <Badge tone="muted">Fireworks {health?.muse_key ? "configured" : "not configured"}</Badge>
+      <Badge tone="muted">{health?.real_analysis_enabled ? "Real-analysis session enabled" : "Offline session"}</Badge>
+      {budget && <Badge tone="muted">budget ${budget.spent_usd.toFixed(3)} / ${budget.total_budget_usd} · rem ${budget.remaining_usd.toFixed(3)} · run limit ${budget.per_run_budget_usd.toFixed(2)}</Badge>}
+    </div>
+    <fieldset disabled={busy} className="flex flex-wrap gap-4"><legend className="text-sm font-medium">Analysis mode</legend>
+      <label><input type="radio" name="analysis-mode" checked={mode === "dry"} onChange={() => setMode("dry")} /> Dry Run · no provider calls</label>
+      <label><input type="radio" name="analysis-mode" checked={mode === "real"} onChange={() => setMode("real")} /> Real Analysis · paid SAM + Muse</label>
+    </fieldset>
+    {mode === "real" && <div className="rounded-xl border border-[var(--border)] p-3 text-sm" role="note">
+      {!health?.real_analysis_enabled && <p>Offline protection is active. Start an explicitly enabled local session with <code>DemoDoctor -RealAnalysis</code>. Stop the managed offline session first. Ordinary DemoDoctor stays offline.</p>}
+      {(!health?.sam_key || !health?.muse_key) && <p>Configure MODEL_API_KEY and FIREWORKS_API_KEY in the backend environment or a private .env file, then restart the enabled session. Never enter API keys in this page. See <a href="/real-analysis-setup.html" target="_blank" rel="noreferrer">local setup instructions</a>.</p>}
+      <p>Configuration presence does not verify credentials, credit or provider availability. Video-only analysis cannot measure gripper opening or prove release. Raw destination masks cannot certify calibrated interior placement; the outcome may remain uncertain.</p>
+      <p>The outcome rule is all objects in the target, with a stationary camera and target footprint. Articulated goals such as closing a drawer are not verified by this rule.</p>
+    </div>}
+    <label className="upload-drop" onDragOver={e => e.preventDefault()} onDrop={e => { e.preventDefault(); chooseFile(e.dataTransfer.files[0] ?? null); }}>
+      <strong>{file?.name ?? "Drop robot footage here"}</strong><small>{file ? `${(file.size / 1024 / 1024).toFixed(1)} MB · Local preview` : "Or browse files · MP4, WebM and other browser-supported video"}</small>
+      <input type="file" accept="video/mp4,video/*" aria-label="Robot demonstration video" disabled={busy} onChange={e => chooseFile(e.target.files?.[0] ?? null)} />
+    </label>
+    {preview && <video className="upload-preview" src={preview} controls muted playsInline onLoadedData={() => setPreviewReady(true)} onError={() => { setPreviewReady(false); setError("This video cannot be decoded by the browser. Try an H.264 MP4 or WebM file."); }} />}
+    <ol className="progress-stages" aria-label="Import progress" aria-live="polite">
+      <li>01 · Footage selected <span>{file ? "Ready" : "Waiting"}</span></li>
+      <li>02 · Local preview <span>{previewReady ? "Ready" : "Waiting"}</span></li>
+      <li>03 · {job ? job.dry_run === false ? "Real analysis job" : job.dry_run === true ? "Dry-run preparation" : "Recovered job" : mode === "dry" ? "Dry-run preparation" : "Real analysis"} <span>{job?.status ?? (busy ? "Uploading footage" : quote ? "Awaiting confirmation" : "Not started")}</span></li>
+      <li>04 · Evidence results <span>{job?.status === "completed" ? "Available in investigation" : "Awaiting service"}</span></li>
+    </ol>
+    <fieldset disabled={busy} className="grid gap-3 md:grid-cols-2">
+      <label className="block text-sm">Task<input className="mt-1 w-full rounded-xl border border-[var(--border)] px-3 py-2" value={task} onChange={e => setTask(e.target.value)} /></label>
+      <label className="block text-sm">Object concept<input className="mt-1 w-full rounded-xl border border-[var(--border)] px-3 py-2" value={objectConcept} onChange={e => setObjectConcept(e.target.value)} /></label>
+      <label className="block text-sm">Destination<input className="mt-1 w-full rounded-xl border border-[var(--border)] px-3 py-2" value={destination} onChange={e => setDestination(e.target.value)} /></label>
+    </fieldset>
+    <fieldset disabled={busy} className="flex flex-wrap items-end gap-3 text-sm">
+      <label><input type="checkbox" checked={useWindow} onChange={e => setUseWindow(e.target.checked)} /> Custom time window (s)</label>
+      {useWindow ? <><input aria-label="Window start seconds" className="w-20 rounded-lg border px-2 py-1.5" value={windowStart} onChange={e => setWindowStart(e.target.value)} /><span>→</span><input aria-label="Window end seconds" className="w-20 rounded-lg border px-2 py-1.5" value={windowEnd} onChange={e => setWindowEnd(e.target.value)} /></> : <span>{completeDemo ? "Complete video, up to 30 seconds" : "Default: first 4 seconds (partial task)"}</span>}
+      <label><input type="checkbox" checked={completeDemo} onChange={e => setCompleteDemo(e.target.checked)} /> Video contains the complete task</label>
+    </fieldset>
+    <div className="flex flex-wrap gap-2">
+      <Button variant="primary" disabled={busy || !previewReady || !health?.ok || (mode === "real" && !realReady)} onClick={() => void submit()}>{busy ? "Working…" : mode === "real" ? "Review real analysis estimate" : "Prepare dry run"}</Button>
+      <Button variant="ghost" disabled={busy} onClick={() => void refreshBudget()}>Check local service</Button>
+      {pollPaused && <Button onClick={() => setPollEpoch(n => n + 1)}>Recover job status</Button>}
+    </div>
+    {quote && <section aria-label="Confirm real analysis" className="rounded-xl border border-[var(--border)] p-4 space-y-2" tabIndex={-1} ref={el => el?.focus()}>
+      <h3 className="font-semibold">Confirm Real Analysis</h3>
+      <p>{quote.filename} · {quote.start_s.toFixed(3)}–{quote.end_s.toFixed(3)}s · frames {quote.frame_start}–{quote.frame_end - 1} at {quote.fps} FPS</p>
+      <p className="break-all text-xs">SHA256 {quote.sha256}</p>
+      <p>Task: {task} · Object: {objectConcept} · Destination: {destination}</p>
+      <p>{quote.complete_task_scope ? "Declared complete task" : "Whole-task completeness not established: the task outcome remains uncertain"}</p>
+      <ul className="list-disc pl-5">{quote.operations.map(op => <li key={op}>{op}</li>)}</ul>
+      <p>SAM estimate ${quote.sam_estimate_usd.toFixed(4)} + Muse reservation ${quote.muse_reservation_usd.toFixed(2)} = ${quote.estimated_max_usd.toFixed(4)}. Zero automatic paid retries.</p>
+      <p className="text-sm">{quote.note}</p>
+      {!budgetFits && <p role="alert">Estimate exceeds the remaining or per-run budget. No provider calls have been made. An owner must explicitly configure an adequate run limit; this page will not raise it.</p>}
+      <Button variant="primary" disabled={busy || !budgetFits} onClick={() => void approve()}>Analyze — approve estimated cost</Button>{" "}
+      <Button disabled={busy} onClick={() => setQuote(null)}>Cancel</Button>
+    </section>}
+    {error && <p role="alert" className="text-sm text-[var(--danger)]">{error}</p>}
+    {job && <div className="rounded-xl border border-[var(--border)] p-3 text-sm" aria-live="polite"><strong>Job {job.job_id} · {job.status}{job.dry_run === false ? " · Real Analysis" : job.dry_run === true ? " · Dry Run" : ""}</strong><p>{job.stages?.slice(-6).map(s => s.name).join(" → ") || "waiting…"}</p>{job.joint_limitations?.map(u => <p key={u}>{u}</p>)}</div>}
+  </Panel>;
 }

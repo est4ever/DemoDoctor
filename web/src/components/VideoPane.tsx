@@ -50,6 +50,7 @@ export function VideoPane({
   const [videoError, setVideoError] = useState(false);
   const [aspectRatio, setAspectRatio] = useState("4 / 3");
   const hasOverlay = Boolean(overlay?.available && overlaySrc);
+  const hasSamMasks = Boolean(tracks && Object.values(tracks.frames).some(ds => ds.some(d => d.mask)));
   const hasTracks = Boolean(
     tracks?.tracks && Object.keys(tracks.tracks).length,
   );
@@ -119,9 +120,9 @@ export function VideoPane({
       ? inSamWindow
         ? "Annotated · observed tracks"
         : "Annotated · outside SAM window"
-      : mode === "sam" && hasOverlay
+      : mode === "sam" && (hasOverlay || hasSamMasks)
         ? inSamWindow
-          ? "Cached SAM overlay · frozen"
+          ? hasOverlay ? "Cached SAM overlay · frozen" : "SAM masks · returned observations"
           : "No SAM masks at this time"
         : "Primary evidence · camera";
 
@@ -137,7 +138,7 @@ export function VideoPane({
         >
           Original
         </Button>
-        {hasOverlay ? (
+        {hasOverlay || hasSamMasks ? (
           <Button
             variant={mode === "sam" ? "primary" : "default"}
             onClick={() => onModeChange("sam")}
@@ -194,15 +195,15 @@ export function VideoPane({
             recording.
           </div>
         )}
-        {mode === "annotated" && tracks ? (
+        {(mode === "annotated" || (mode === "sam" && hasSamMasks && !hasOverlay)) && tracks ? (
           <AnnotatedVideoOverlay
             tracks={tracks}
             t={t}
             fps={fps}
             markers={markers}
             highlightObjectId={highlightObjectId}
-            showTrails
-            showLabels
+            showTrails={mode === "annotated"}
+            showLabels={mode === "annotated"}
             videoMode={mode}
           />
         ) : null}

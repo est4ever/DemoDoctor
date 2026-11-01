@@ -87,7 +87,16 @@ def _write_job(job_dir: Path, name: str, payload: Any) -> Path:
             serialized = serialized.replace(json.dumps(secret)[1:-1], "[REDACTED]")
     temporary.write_text(serialized + "\n", encoding="utf-8")
     with JOB_IO_LOCK:
-        temporary.replace(path)
+        # Windows scanners/readers can briefly hold an otherwise valid artifact.
+        # Retry only this local atomic rename, never an inference operation.
+        for attempt in range(5):
+            try:
+                temporary.replace(path)
+                break
+            except PermissionError:
+                if os.name != "nt" or attempt == 4:
+                    raise
+                time.sleep(0.025)
     return path
 
 
@@ -174,6 +183,8 @@ def _obs_to_tracks_json(
                 "bbox": pt["bbox"],
                 "confidence": float(o.confidence or 0.0),
                 "track_status": o.track_status,
+                "mask": ({"size": o.mask_rle["size"], "counts": T._coco_counts(o.mask_rle["counts"])}
+                         if o.mask_rle else None),
             }
         )
     legend = []
@@ -653,6 +664,8 @@ def run_analyze(req: AnalyzeRequest, progress: ProgressCb | None = None) -> dict
                 diagnosis_headline="Dry run ? no paid inference",
                 diagnosis_summary="Upload and replay verified. SAM and Muse were skipped; no physical findings were produced.")
             _write_job(job_dir, "analysis.json", analysis)
+            _write_job(job_dir, "tracks.json", tracks_meta)
+            _write_job(job_dir, "sam_overlay.json", overlay_meta)
             _write_job(job_dir, "failure_report.json", report.to_dict())
             _write_job(job_dir, "verification.json", vdict)
         else:

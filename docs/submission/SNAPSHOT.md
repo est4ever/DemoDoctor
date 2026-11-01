@@ -43,3 +43,14 @@ Original LICENSE, NOTICE and dataset/robot copyright notices are retained.
 This source snapshot does not grant new rights in upstream datasets, model outputs
 or final-video audio. Publisher-declared dataset licenses, parser SAM License and
 provider/audio permissions remain distinct; see THIRD_PARTY.md.
+
+## Incremental update — November 1, 2026
+
+The public root commit 26a8a9f remains the parent history of this update. Approved
+source/test/required setup-asset changes from f60965f and 097f8e1 were transferred
+as files, without copying Git metadata or private commit objects. Sanitized
+fixtures, all 19 replay asset hashes, licenses and notices remain unchanged.
+Documentation now distinguishes implemented self-service Real Analysis from
+credential-free replay and mocked validation. SOURCE_MANIFEST.json describes
+the updated source tree; original export metadata remains in
+SNAPSHOT_PROVENANCE.json with an appended incremental-update record.

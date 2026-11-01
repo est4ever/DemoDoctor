@@ -979,6 +979,10 @@ kbd,
   gap: 7px;
   margin-top: 10px;
 }
+.diagnostic-links { flex-wrap: wrap; }
+.diagnostic-hypotheses > p, .criterion-coverage > p { color: var(--muted); }
+.diagnostic-hypotheses small { display: block; margin-top: 8px; }
+.diagnostic-hypotheses button:focus-visible, .criterion-coverage button:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
 .claim-links button {
   font: 10px Consolas;
   color: var(--accent);

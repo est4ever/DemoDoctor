@@ -52,6 +52,7 @@ def test_upload_dry_run_returns_complete_results(client, tmp_path):
     assert result["dry_run"] is True
     assert result["task_outcome"] == "uncertain"
     assert result["evidence_catalog"] == []
+    assert client.get(f"/api/jobs/{job_id}/tracks").json()["frames"] == {}
     assert client.get("/api/budget").json()["spent_usd"] == 0
     assert client.get(f"/api/jobs/{job_id}/files/video.mp4").content == video.read_bytes()
 

@@ -1,5 +1,8 @@
 # Executed public-snapshot validation
 
+For the current incremental update, executed results and dependency findings, see
+[UPDATE_20261101.md](UPDATE_20261101.md). The October 31 record below is historical.
+
 Validated October 31, 2026 (Eastern), in the separate release directory. Source
 checkpoint: 05b175db352ae306c8607e6e08f06036f330b55b. Original development worktrees,
 private history, PR #3, application and final video were not modified. Only the

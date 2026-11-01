@@ -625,5 +625,15 @@
     "ignored environments, secrets, jobs, logs and video production",
     "unused original SAM response caches; React display tracks and overlays retained"
   ],
-  "scientific_values_and_evidence_ids_changed": false
+  "scientific_values_and_evidence_ids_changed": false,
+  "incremental_update": {
+    "source_checkpoint": "097f8e1e6509b512886fc8eebe564007758bb759",
+    "public_parent": "26a8a9f3d06631be956f181125274e829cae64da",
+    "source_changes": [
+      "f60965f",
+      "097f8e1"
+    ],
+    "private_history_imported": false,
+    "scientific_results_or_replay_assets_changed": false
+  }
 }

@@ -60,7 +60,9 @@ it("resumes a saved upload job after the panel remounts", async () => {
   await load("#upload");
   await act(async () => { await vi.advanceTimersByTimeAsync(1600); });
   expect(fetch).toHaveBeenCalledWith("/api/jobs/audit-job");
-  expect(host.textContent).toContain("Available in investigation");
+  expect(location.hash).toBe("#job/audit-job");
+  expect(host.textContent).toContain("Uploaded dry run");
+  expect(host.querySelector('[data-testid="video-src"]')?.textContent).toBe("/live-data/audit-job/video.mp4");
 });
 
 it("shows recording failures in the visible viewer shell and permits return", async () => {

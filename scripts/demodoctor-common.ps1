@@ -39,7 +39,7 @@ function Get-DemoIdentity([string]$Kind) {
     $item = Get-DemoJson $url
     if ($null -eq $item) { return $null }
     try {
-        if ($item.protocol -ne 1 -or $item.kind -ne $Kind -or !$item.offline) { return $null }
+        if ($item.protocol -ne 1 -or $item.kind -ne $Kind) { return $null }
         if ([IO.Path]::GetFullPath($item.root).TrimEnd('\') -ine $script:DemoRoot.TrimEnd('\')) { return $null }
         if ($Kind -eq 'frontend' -and $item.api -ne 'http://127.0.0.1:8765') { return $null }
         return $item
@@ -117,18 +117,29 @@ function Stop-DemoOwned($Record, [string]$Kind) {
     throw "The managed $Kind process did not exit. See $script:DemoRuntime."
 }
 
-function Start-DemoProcess([string]$Kind, [string]$Executable) {
+function Start-DemoProcess([string]$Kind, [string]$Executable, [switch]$RealAnalysis, [string]$CredentialsFile, [string]$PerRunBudgetUsd) {
     $instance = [Guid]::NewGuid().ToString('N')
     $entry = Join-Path $script:DemoRoot $(if ($Kind -eq 'backend') { 'scripts\launcher_backend.py' } else { 'scripts\launcher_frontend.mjs' })
     $stdout = Join-Path $script:DemoRuntime "$Kind-$instance.log"
     $stderr = Join-Path $script:DemoRuntime "$Kind-$instance.err.log"
     $previous = $env:DEMODOCTOR_LAUNCH_INSTANCE
+    $previousReal = $env:DEMODOCTOR_REAL_ANALYSIS
+    $previousCredentials = $env:DEMODOCTOR_CREDENTIALS_FILE
+    $previousLimit = $env:DEMODOCTOR_PER_RUN_BUDGET
     try {
         $env:DEMODOCTOR_LAUNCH_INSTANCE = $instance
+        $env:DEMODOCTOR_REAL_ANALYSIS = $(if ($RealAnalysis) { '1' } else { '0' })
+        $env:DEMODOCTOR_CREDENTIALS_FILE = $CredentialsFile
+        $env:DEMODOCTOR_PER_RUN_BUDGET = $PerRunBudgetUsd
         $process = Start-Process -FilePath $Executable -ArgumentList ('"' + $entry + '"') -WorkingDirectory $script:DemoRoot -WindowStyle Hidden -PassThru -RedirectStandardOutput $stdout -RedirectStandardError $stderr
         $ticks = $process.StartTime.ToUniversalTime().Ticks.ToString()
         return [pscustomobject]@{ pid = $process.Id; startedTicks = $ticks; launchPid = $process.Id; launchStartedTicks = $ticks; instance = $instance; stdout = $stdout; stderr = $stderr }
-    } finally { $env:DEMODOCTOR_LAUNCH_INSTANCE = $previous }
+    } finally {
+        $env:DEMODOCTOR_LAUNCH_INSTANCE = $previous
+        $env:DEMODOCTOR_REAL_ANALYSIS = $previousReal
+        $env:DEMODOCTOR_CREDENTIALS_FILE = $previousCredentials
+        $env:DEMODOCTOR_PER_RUN_BUDGET = $previousLimit
+    }
 }
 
 function Wait-DemoService([string]$Kind, $Record, [int]$TimeoutSeconds) {

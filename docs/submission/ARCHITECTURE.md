@@ -26,9 +26,15 @@ remain bound only to the original package.
   and numerical tracks. Loading or seeking a replay initiates no provider calls.
 - **PILOT read-only API:** FastAPI serves the sanitized packaged `before` and
   `after` contexts. Environment path overrides are optional maintainer tools.
-- **Upload UI:** sends `dry_run=true`, `run_muse=false`. It probes and replays the
-  upload but skips SAM/Muse; it creates no physical findings. This is not a live
-  inference demonstration. The backend's paid path exists but is not used here.
+- **Upload UI:** Dry Run is the default (`dry_run=true`, `run_muse=false`).
+  Explicit local Real Analysis opt-in enables prepare/quote, followed by an expiring,
+  file-bound, single-use approval. That executes the existing SAM tracking, destination
+  segmentation, reconstruction, verification and Muse path. Browser readiness exposes
+  configuration booleans only. Ledger admission, origin/host/path guards, zero paid
+  retries and stop-on-provider-failure remain enforced. Reload recovers the same job.
+- **Diagnostic presentation:** current-package saved hypotheses/visual interpretations
+  remain Unverified and separate from observed/inferred findings and outcomes. Coverage
+  shows available assessments and gaps, without adding unstated task criteria.
 - **Optional Rerun:** lazy loads its viewer only when requested, using the
   separate recorded ep010 event window. It is never reused for the SO-101 pilot.
 

@@ -220,6 +220,7 @@ export default function App() {
         args.analysis.timeline_markers[0]?.t ??
         0;
       playback.setT(seek, { pause: true });
+      window.location.hash = `job/${args.jobId}`;
     },
     [playback.setT],
   );

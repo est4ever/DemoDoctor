@@ -156,6 +156,29 @@ export function AnnotatedVideoOverlay({
         const [x1, y1, x2, y2] = d.bbox;
         const a = m.map(x1, y1);
         const b = m.map(x2, y2);
+        // Original SAM box-local RLE only. Never infer a mask from its bounding box.
+        if (d.mask) {
+          const [mh, mw] = d.mask.size;
+          const counts = d.mask.counts;
+          if (mh === Math.round(y2) - Math.round(y1) && mw === Math.round(x2) - Math.round(x1)
+              && counts.every(n => Number.isInteger(n) && n >= 0) && counts.reduce((a, n) => a + n, 0) === mh * mw) {
+            ctx.fillStyle = rgbCss(color, hi ? 0.3 : 0.1);
+            let position = 0;
+            for (let i = 0; i < counts.length; i++) {
+              const end = position + counts[i];
+              if (i % 2) {
+                while (position < end) {
+                  const row = position % mh, column = Math.floor(position / mh);
+                  const length = Math.min(end - position, mh - row);
+                  const p = m.map(Math.round(x1) + column, Math.round(y1) + row);
+                  ctx.fillRect(p.x, p.y, m.scale, length * m.scale);
+                  position += length;
+                }
+              }
+              position = end;
+            }
+          }
+        }
         ctx.strokeStyle = rgbCss(color, hi ? 1 : 0.35);
         ctx.lineWidth = hi ? 2.5 : 1.25;
         ctx.strokeRect(a.x, a.y, b.x - a.x, b.y - a.y);

@@ -1,0 +1,178 @@
+{
+  "concept": "white box",
+  "calibration_frame": 0,
+  "video_sha256": "6c3c8c9b651b55586da6ab1db5befd327054331b7cc0c10ef5399e9ae29298dc",
+  "polygon": [
+    [
+      231.95,
+      291.0
+    ],
+    [
+      409.77,
+      291.0
+    ],
+    [
+      374.39,
+      694.0
+    ],
+    [
+      172.19,
+      694.0
+    ]
+  ],
+  "method": "inner wall edges measured on an empty-container frame; straight-line fits intersected",
+  "measurements": {
+    "left_wall_points": [
+      [
+        230,
+        300
+      ],
+      [
+        226,
+        330
+      ],
+      [
+        222,
+        360
+      ],
+      [
+        218,
+        390
+      ],
+      [
+        213,
+        420
+      ],
+      [
+        208,
+        450
+      ],
+      [
+        204,
+        480
+      ],
+      [
+        200,
+        510
+      ],
+      [
+        195,
+        540
+      ],
+      [
+        190,
+        570
+      ]
+    ],
+    "right_wall_points": [
+      [
+        407,
+        300
+      ],
+      [
+        406,
+        330
+      ],
+      [
+        405,
+        360
+      ],
+      [
+        402,
+        390
+      ],
+      [
+        400,
+        420
+      ],
+      [
+        396,
+        450
+      ],
+      [
+        393,
+        480
+      ],
+      [
+        390,
+        510
+      ],
+      [
+        387,
+        540
+      ],
+      [
+        301,
+        570
+      ]
+    ],
+    "top_points": [
+      [
+        240,
+        275
+      ],
+      [
+        280,
+        291
+      ],
+      [
+        320,
+        291
+      ],
+      [
+        360,
+        291
+      ]
+    ],
+    "bottom_points": [
+      [
+        240,
+        693
+      ],
+      [
+        280,
+        694
+      ],
+      [
+        320,
+        694
+      ],
+      [
+        360,
+        696
+      ]
+    ],
+    "left_fit_x_of_y": [
+      -0.14828282828282813,
+      275.1030303030302
+    ],
+    "right_fit_x_of_y": [
+      -0.0877777777777782,
+      435.31111111111136
+    ],
+    "max_fit_residual_px": {
+      "left": 0.7272727272727479,
+      "right": 1.9777777777778738
+    },
+    "rejected_outliers": {
+      "left": [],
+      "right": [
+        [
+          301,
+          570
+        ]
+      ],
+      "top_y": [
+        275
+      ],
+      "bottom_y": []
+    },
+    "top_y": 291.0,
+    "bottom_y": 694.0
+  },
+  "footprint_area": 107452,
+  "notes": [
+    "Fixed camera and container position assumed; validated per frame against the SAM footprint.",
+    "Frame 0 chosen because the container is empty (screwdriver still on the mat)."
+  ]
+}

@@ -1,0 +1,68 @@
+{
+  "urdf_source": {
+    "repo": "https://github.com/TheRobotStudio/SO-ARM100",
+    "path": "Simulation/SO100/so100.urdf",
+    "license": "Apache-2.0",
+    "local": "web/public/robots/so100/"
+  },
+  "dataset": {
+    "robot_type": "so100",
+    "repo": "kantine/BotFails",
+    "units": "degrees for arm joints; gripper ~0\u2013100 open fraction",
+    "names": [
+      "main_shoulder_pan",
+      "main_shoulder_lift",
+      "main_elbow_flex",
+      "main_wrist_flex",
+      "main_wrist_roll",
+      "main_gripper"
+    ]
+  },
+  "transform": [
+    {
+      "dataset": "main_shoulder_pan",
+      "urdf": "shoulder_pan",
+      "formula": "urdf = -deg2rad(motor)"
+    },
+    {
+      "dataset": "main_shoulder_lift",
+      "urdf": "shoulder_lift",
+      "formula": "urdf = deg2rad(motor)"
+    },
+    {
+      "dataset": "main_elbow_flex",
+      "urdf": "elbow_flex",
+      "formula": "urdf = -deg2rad(motor)"
+    },
+    {
+      "dataset": "main_wrist_flex",
+      "urdf": "wrist_flex",
+      "formula": "urdf = -deg2rad(motor)"
+    },
+    {
+      "dataset": "main_wrist_roll",
+      "urdf": "wrist_roll",
+      "formula": "urdf = deg2rad(motor)"
+    },
+    {
+      "dataset": "main_gripper",
+      "urdf": "gripper",
+      "formula": "urdf = (motor/100)*pi"
+    }
+  ],
+  "known_limitations": [
+    "Experimental BotFails\u2192URDF mapping: absolute zero offsets vs stock SO-100 URDF are unknown.",
+    "elbow_flex and wrist_flex use -deg2rad so BotFails motor ranges fit stock URDF limits (no limit widening).",
+    "Gripper URDF is revolute; LeRobot gripper is ~0\u2013100 open fraction.",
+    "No scene meshes or plate poses \u2014 3D is joint-driven visualization only; trust the camera for physical claims."
+  ],
+  "out_of_limit_frames": {
+    "shoulder_pan": 0,
+    "shoulder_lift": 0,
+    "elbow_flex": 0,
+    "wrist_flex": 0,
+    "wrist_roll": 0,
+    "gripper": 0
+  },
+  "available": true
+}

@@ -1,0 +1,51 @@
+{
+  "verdict": "success",
+  "task_description": "store dishes in a dish rack (BotFails domotic_dishTidyUp)",
+  "summary": "Robot successfully stored dishes in dish rack. Initial frames show one plate already in rack and two on table/handled; final frame shows table clear and multiple green plates upright in rack, indicating all dishes were placed in rack.",
+  "observed_actions": [
+    "Robot gripper holds green plate above dish rack (frame 0)",
+    "Robot places green plate into dish rack slot (frame 1)",
+    "Robot reaches to grasp second green plate remaining on table (frame 2)",
+    "Table becomes empty with plates now in rack (frame 3)"
+  ],
+  "failure_mode": null,
+  "evidence": [
+    {
+      "timestamp_s": 53.567,
+      "description": "Red robot arm holding green plate over metal dish rack; one green plate already in rack left side, one green plate on table to right",
+      "kind": "observed",
+      "frame_index": 0
+    },
+    {
+      "timestamp_s": 54.567,
+      "description": "Robot lowering green plate into rack slot next to existing plate",
+      "kind": "observed",
+      "frame_index": 1
+    },
+    {
+      "timestamp_s": 57.533,
+      "description": "Robot gripper contacting second green plate on table; rack now contains at least two plates",
+      "kind": "observed",
+      "frame_index": 2
+    },
+    {
+      "timestamp_s": 69.167,
+      "description": "Table surface clear of plates; dish rack contains two green plates upright in slots (and third plate visible in rack), robot retracted",
+      "kind": "observed",
+      "frame_index": 3
+    }
+  ],
+  "uncertainty_notes": [
+    "Final rack contents partially occluded by rack wires; exact count of plates in rack is slightly ambiguous but at least two upright plates are clearly visible and table is empty",
+    "Intermediate transport of second plate not fully shown between frame 2 and 3, inferred from start and end states"
+  ],
+  "assumptions": [
+    "Plates visible in rack in final frame are the same plates previously on table, not pre-existing duplicates",
+    "No plates remain off-camera that were part of task"
+  ],
+  "confidence": 0.68,
+  "model_name": "accounts/fireworks/models/muse-spark-open",
+  "tracking_used": false,
+  "provisional": true,
+  "raw_model_text": "{\n  \"verdict\": \"success\",\n  \"summary\": \"Robot successfully stored dishes in dish rack. Initial frames show one plate already in rack and two on table/handled; final frame shows table clear and multiple green plates upright in rack, indicating all dishes were placed in rack.\",\n  \"observed_actions\": [\n    \"Robot gripper holds green plate above dish rack (frame 0)\",\n    \"Robot places green plate into dish rack slot (frame 1)\",\n    \"Robot reaches to grasp second green plate remaining on table (frame 2)\",\n    \"Table becomes empty with plates now in rack (frame 3)\"\n  ],\n  \"failure_mode\": null,\n  \"evidence\": [\n    {\n      \"timestamp_s\": 53.567,\n      \"description\": \"Red robot arm holding green plate over metal dish rack; one green plate already in rack left side, one green plate on table to right\",\n      \"kind\": \"observed\",\n      \"frame_index\": 0\n    },\n    {\n      \"timestamp_s\": 54.567,\n      \"description\": \"Robot lowering green plate into rack slot next to existing plate\",\n      \"kind\": \"observed\",\n      \"frame_index\": 1\n    },\n    {\n      \"timestamp_s\": 57.533,\n      \"description\": \"Robot gripper contacting second green plate on table; rack now contains at least two plates\",\n      \"kind\": \"observed\",\n      \"frame_index\": 2\n    },\n    {\n      \"timestamp_s\": 69.167,\n      \"description\": \"Table surface clear of plates; dish rack contains two green plates upright in slots (and third plate visible in rack), robot retracted\",\n      \"kind\": \"observed\",\n      \"frame_index\": 3\n    }\n  ],\n  \"assumptions\": [\n    \"Plates visible in rack in final frame are the same plates previously on table, not pre-existing duplicates\",\n    \"No plates remain off-camera that were part of task\"\n  ],\n  \"uncertainty_notes\": [\n    \"Final rack contents partially occluded by rack wires; exact count of plates in rack is slightly ambiguous but at least two upright plates are clearly visible and table is empty\",\n    \"Intermediate transport of second plate not fully shown between frame 2 and 3, inferred from start and end states\"\n  ],\n  \"confidence\": 0.68\n}"
+}

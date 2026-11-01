@@ -1,0 +1,22 @@
+{
+  "repo_id": "ankithreddy/so101_pickplace_uno",
+  "repo_type": "dataset",
+  "license": "apache-2.0",
+  "attribution": "Data from the Hugging Face dataset ankithreddy/so101_pickplace_uno (Apache-2.0), unmodified copy of the listed files at the given revision.",
+  "revision": "f47dcf21b0bf8bd0f83cec8fd74755c65dfc012b",
+  "files": {
+    "data/chunk-000/episode_000000.parquet": {
+      "sha256": "253504940140a9a521b1e6812f2bfaaf2f1e5afbbd3ffcf4d8aeb2df9b26c727",
+      "bytes": 35201
+    },
+    "meta/info.json": {
+      "sha256": "62c53d8b76318cba83046f94c54801b5bcd9378c905639f5bc27964f93e6afb8",
+      "bytes": 3241
+    }
+  },
+  "paired_video": {
+    "filename": "videos/chunk-000/observation.images.images.top/episode_000000.mp4",
+    "local": "sample_videos/sample.mp4",
+    "sha256": "6c3c8c9b651b55586da6ab1db5befd327054331b7cc0c10ef5399e9ae29298dc"
+  }
+}

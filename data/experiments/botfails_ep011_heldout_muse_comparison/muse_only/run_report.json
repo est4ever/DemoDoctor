@@ -1,0 +1,89 @@
+{
+  "experiment_id": "botfails_ep011_w1518_heldout_muse_only_matched",
+  "condition": "muse_only",
+  "dev_or_heldout": "heldout",
+  "finished_at": "2026-10-27T06:04:23.299329+00:00",
+  "model": "accounts/fireworks/models/muse-spark-open",
+  "reasoning_effort": "low",
+  "temperature": 0.2,
+  "max_tokens": 2048,
+  "jpeg_quality": 75,
+  "frames": [
+    {
+      "request_frame_index": 0,
+      "video_frame_index": 1518,
+      "timestamp_s": 50.6,
+      "role": "window_start"
+    },
+    {
+      "request_frame_index": 1,
+      "video_frame_index": 1548,
+      "timestamp_s": 51.6,
+      "role": "gripper_open_measured"
+    },
+    {
+      "request_frame_index": 2,
+      "video_frame_index": 1638,
+      "timestamp_s": 54.6,
+      "role": "window_end_last_obs"
+    },
+    {
+      "request_frame_index": 3,
+      "video_frame_index": 2058,
+      "timestamp_s": 68.6,
+      "role": "end_state"
+    }
+  ],
+  "verdict": "failure",
+  "confidence": 0.7,
+  "summary": "Robot attempted to store two green plates but only one was placed in the dish rack; one plate remains on the table in the final frame, so not all dishes were stored.",
+  "failure_mode": "incomplete placement - one dish left on table",
+  "observed_actions": [
+    "robot grasping green plate over table (frame 0)",
+    "robot lifting plate with second plate on table (frame 1)",
+    "robot releasing/placing plate onto table near rack (frame 2)",
+    "one additional plate now in dish rack while one plate remains on table (frame 3)"
+  ],
+  "assumptions": [
+    "Task requires storing all visible dishes (both green plates) in rack",
+    "Final frame represents end of demonstration segment"
+  ],
+  "uncertainty_notes": [
+    "Sparse sampling between 54.6s and 68.6s, exact placement motion not directly observed, but final state clearly shows incomplete storage"
+  ],
+  "evidence": [
+    {
+      "timestamp_s": 50.6,
+      "description": "Robot gripper holding green plate above table, second green plate on table, dish rack contains one green plate",
+      "kind": "observed",
+      "frame_index": 0
+    },
+    {
+      "timestamp_s": 51.6,
+      "description": "Robot lifting one plate vertically while second plate rests on table",
+      "kind": "observed",
+      "frame_index": 1
+    },
+    {
+      "timestamp_s": 54.6,
+      "description": "Both green plates now on table surface, robot gripper empty and positioned above one plate",
+      "kind": "observed",
+      "frame_index": 2
+    },
+    {
+      "timestamp_s": 68.6,
+      "description": "Dish rack now holds two green plates, but one green plate still remains on table, not stored",
+      "kind": "observed",
+      "frame_index": 3
+    }
+  ],
+  "frozen_experiment_hashes": {
+    "failure_report_sha256": "5ff8e5507e6889fef81f0a978c66f5fc966ef653def673c1bc78f22e85b3232b",
+    "frozen_config_sha256": "df37ea43e25fb4ddfc8eeef70bd5c83f336c3c63f4d8e79d6b7868703b7d8948",
+    "verification_sha256": "4f8e4bd3eb3805a0ee016305b1625e220d37938643cb8328cedf25c75b4ab02e",
+    "run_report_sha256": "2b0ac7597b18a4159e81d2ab522f4fc1beeb297496a1702cc1471f46bacb850a"
+  },
+  "paid_calls": 1,
+  "includes_sam_or_joints": false,
+  "parse_ok": true
+}

@@ -1,0 +1,9 @@
+{
+  "findings": [],
+  "event_verdicts": {
+    "0": "supported"
+  },
+  "claims_checked": 3,
+  "claims_failed": 0,
+  "claims_unverifiable": 0
+}

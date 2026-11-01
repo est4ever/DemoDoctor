@@ -1,0 +1,25 @@
+{
+  "description": "Manually verified failure-event annotations. Fill in only after watching the video. first_mishandling.frame is the first frame where mishandling or a drop is visible. Dataset anomaly flags are NOT stored here.",
+  "episodes": [
+    {
+      "example_id": "botfails_dish_test_ep000",
+      "video_path": "eval_videos/botfails/botfails_dish_test_ep000.mp4",
+      "first_mishandling": null,
+      "recovered": null,
+      "final_outcome": "success",
+      "notes": "The robot successfully stores the required dishes in the rack, with no visible task failure.",
+      "verified": true,
+      "updated_at": "2026-10-27T04:17:01+00:00"
+    },
+    {
+      "example_id": "botfails_dish_test_ep010",
+      "video_path": "eval_videos/botfails/botfails_dish_test_ep010.mp4",
+      "first_mishandling": null,
+      "recovered": "no",
+      "final_outcome": "failure",
+      "notes": "The robot attempts to store dishes in the rack. The green plate is misplaced, and the task is not completed successfully.",
+      "verified": true,
+      "updated_at": "2026-10-27T04:16:19+00:00"
+    }
+  ]
+}

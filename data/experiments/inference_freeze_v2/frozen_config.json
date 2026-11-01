@@ -1,0 +1,54 @@
+{
+  "name": "inference_freeze_v2",
+  "frozen_at": "2026-10-28T02:36:51.333262+00:00",
+  "git_head_at_freeze_script": "92e6e3c028e981c318cd09b345012ee8b9b56ed0",
+  "preserves_v1": true,
+  "file_sha256": {
+    "failures.py": "3232d525277edc788f68ff0daf9f728230cf95be912178c70d0e755ef3d7908c",
+    "failure_inputs.py": "0f8c03f586295f55761cba05be3dfb62989710d4fe86c6af4ea742fa71294164",
+    "container.py": "5c7a68337ce1a9f73c633cffb69b2db59b23ffc7034b0ed5b4099979a0ec1dd3",
+    "verification.py": "53a207a3a61586de4d0dabb4e1fa5320466e15c55533cd9cbbaf6b9173a447d3",
+    "tracking.py": "3d58b9099ea12276bf3d915e80ed00d8db45bc82569bf6bef3fdefb839e1b8be",
+    "proprio.py": "c4c0ba084fcc82842bf34b33a0012c695337fa3721bce2929f93a009b05bbf9d",
+    "window_candidates.py": "2089ea028afae10b7e8acba9bc866a2732988df4b34538a1b45a4f963f313929",
+    "final_state.py": "f541fc166b5f8c4461056fca1402e26b35e8c51baa57dcfcac110388a02a1a2b",
+    "data/calibration/so100_botfails_gripper.json": "208416d409661d95fbefcdf2f1ea165ed241ae976fcdd423d3d6ae05233b0118",
+    "data/tasks/botfails_dish.json": "e3e4d08cb3db8db0ff1c78447c22e1082208db0a6266eaf0709978e806d321b3"
+  },
+  "parameter_hashes": {
+    "final_state": "7eebfe18748899d837723ffd3c053c3a4fb1023137879fbb9e8434451b9a0a3e",
+    "window_selector": "6ece3d09b6de169675880b1fc911e4117acf83cbe036ea0dacc255fa34f64c7e",
+    "gripper_calibration_file": "208416d409661d95fbefcdf2f1ea165ed241ae976fcdd423d3d6ae05233b0118"
+  },
+  "final_state_params": {
+    "erode_px": 12,
+    "inside_frac": 0.85,
+    "outside_footprint_frac": 0.05,
+    "near_rack_dilate_px": 20,
+    "near_rack_frac": 0.5
+  },
+  "window_selector": {
+    "profile": "efficient",
+    "selection_policy": "rank0_plus_latest_among_top3",
+    "max_windows": 2,
+    "max_duration_s": 4.0,
+    "dedup_iou": 0.5,
+    "require_secondary_later_than_rank0": true,
+    "params": {
+      "pre_s": 1.0,
+      "post_s": 3.0,
+      "arm_radius_s": 1.0,
+      "arm_speed_percentile": 70.0,
+      "merge_gap_s": 0.5,
+      "max_duration_s": 4.0,
+      "max_merged_opens": 2,
+      "rank_prefer_compact": true
+    }
+  },
+  "held_out_not_run_at_freeze": true,
+  "budget_ceiling": {
+    "sam_video_frames": 960,
+    "sam_images": 12,
+    "retries": 0
+  }
+}

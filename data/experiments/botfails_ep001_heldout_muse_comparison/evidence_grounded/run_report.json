@@ -1,0 +1,259 @@
+{
+  "experiment_id": "botfails_ep001_w1203_heldout_muse_evidence_matched",
+  "condition": "evidence_grounded",
+  "dev_or_heldout": "heldout",
+  "finished_at": "2026-10-27T06:04:06.180897+00:00",
+  "model": "accounts/fireworks/models/muse-spark-open",
+  "reasoning_effort": "low",
+  "temperature": 0.2,
+  "max_tokens": 2048,
+  "jpeg_quality": 75,
+  "frames": [
+    {
+      "request_frame_index": 0,
+      "video_frame_index": 1203,
+      "timestamp_s": 40.1,
+      "frame_ref": "F0",
+      "role": "window_start"
+    },
+    {
+      "request_frame_index": 1,
+      "video_frame_index": 1233,
+      "timestamp_s": 41.1,
+      "frame_ref": "F1",
+      "role": "gripper_open_measured"
+    },
+    {
+      "request_frame_index": 2,
+      "video_frame_index": 1323,
+      "timestamp_s": 44.1,
+      "frame_ref": "F2",
+      "role": "window_end_last_obs"
+    },
+    {
+      "request_frame_index": 3,
+      "video_frame_index": 2061,
+      "timestamp_s": 68.7,
+      "frame_ref": "F3",
+      "role": "end_state"
+    }
+  ],
+  "package": {
+    "evidence_ids": [
+      "E0",
+      "E1",
+      "E2",
+      "E3",
+      "E4"
+    ],
+    "n_physical_events": 0,
+    "deterministic_verdict": "uncertain"
+  },
+  "validated": {
+    "ok": true,
+    "explanation": "The deterministic pipeline reports verdict uncertain with zero supported physical failure events for this window. Gripper joint data cannot determine holding (E0), and a measured opening at 41.1s (E3) alone is not a drop. Window tracks show motion but without release criteria do not constitute a failure event (E4). End-of-episode plate detections are region=unknown with no interior calibration, so final placement inside the rack is not established (E1, E2).",
+    "task_outcome": "uncertain",
+    "earliest_failure_interval": null,
+    "factual_claims": [
+      {
+        "text": "Pipeline found no supported physical failure events in this window (n_physical_events=0, verdict uncertain).",
+        "evidence_ids": [
+          "E0",
+          "E1"
+        ]
+      },
+      {
+        "text": "Gripper reading cannot show whether an object is held; a thin plate does not change the closed reading.",
+        "evidence_ids": [
+          "E0"
+        ]
+      },
+      {
+        "text": "Measured gripper opening at 41.1s (frame 1233, measured=15.598) is observed but opening alone is not a drop and holding is not detectable from this joint.",
+        "evidence_ids": [
+          "E3"
+        ]
+      },
+      {
+        "text": "Not every expected object has an established final position: green plate 0/? established inside.",
+        "evidence_ids": [
+          "E1"
+        ]
+      },
+      {
+        "text": "End-of-episode plate observations at frame 2061 are region=unknown with confidences ~0.91-0.94; inside requires interior calibration and footprint-only yields outside or unknown.",
+        "evidence_ids": [
+          "E2"
+        ]
+      },
+      {
+        "text": "Window track motion summary shows displacement for green plate:1 and :2 but displacement alone without rest->move->rest + release criteria does not constitute a supported physical failure event.",
+        "evidence_ids": [
+          "E4"
+        ]
+      }
+    ],
+    "hypotheses": [
+      {
+        "text": "The robot may have been attempting to place a plate in the rack around 41.1s when the gripper was measured open, but this cannot be confirmed as a successful placement or a drop from joint data alone.",
+        "related_evidence_ids": [
+          "E0",
+          "E3",
+          "E4"
+        ],
+        "label": "hypothesis"
+      },
+      {
+        "text": "End-state plates appearing in the rack in the final image could represent successful placements, but pipeline marks them as unknown due to missing interior calibration, so success cannot be verified.",
+        "related_evidence_ids": [
+          "E1",
+          "E2"
+        ],
+        "label": "hypothesis"
+      }
+    ],
+    "visual_interpretations": [
+      {
+        "text": "F0 (40.1s) appears to show the red arm holding a green plate above the dish rack, with two green plates on the table.",
+        "frame_ref": "F0",
+        "not_verified_by_pipeline": true
+      },
+      {
+        "text": "F1 (41.1s) appears to show the gripper lowered into the rack with the plate vertically oriented, coinciding with measured opening.",
+        "frame_ref": "F1",
+        "not_verified_by_pipeline": true
+      },
+      {
+        "text": "F2 (44.1s) appears to show the arm reaching toward a green plate on the table, suggesting a subsequent pick attempt.",
+        "frame_ref": "F2",
+        "not_verified_by_pipeline": true
+      },
+      {
+        "text": "F3 (68.7s) appears to show multiple green plates standing in the dish rack, but pipeline does not verify they are inside due to lack of interior calibration.",
+        "frame_ref": "F3",
+        "not_verified_by_pipeline": true
+      }
+    ],
+    "limitations": [
+      "Gripper joint cannot distinguish empty closed vs holding thin plate (E0), so grasp/hold state is unverifiable.",
+      "Inside vs outside determination requires interior calibration; footprint-only yields unknown (E1, E2).",
+      "Object ids from window SAM tracks vs end-of-episode SAM are not matched, preventing cross-gap identity claims.",
+      "No physical_events were emitted; motion/displacement alone is insufficient for failure event support (E4)."
+    ],
+    "outcome_evidence_ids": [
+      "E0",
+      "E1",
+      "E2"
+    ],
+    "validation_errors": [],
+    "validation_warnings": [],
+    "raw": {
+      "explanation": "The deterministic pipeline reports verdict uncertain with zero supported physical failure events for this window. Gripper joint data cannot determine holding (E0), and a measured opening at 41.1s (E3) alone is not a drop. Window tracks show motion but without release criteria do not constitute a failure event (E4). End-of-episode plate detections are region=unknown with no interior calibration, so final placement inside the rack is not established (E1, E2).",
+      "earliest_failure_interval": null,
+      "task_outcome": "uncertain",
+      "outcome_evidence_ids": [
+        "E0",
+        "E1",
+        "E2"
+      ],
+      "factual_claims": [
+        {
+          "text": "Pipeline found no supported physical failure events in this window (n_physical_events=0, verdict uncertain).",
+          "evidence_ids": [
+            "E0",
+            "E1"
+          ]
+        },
+        {
+          "text": "Gripper reading cannot show whether an object is held; a thin plate does not change the closed reading.",
+          "evidence_ids": [
+            "E0"
+          ]
+        },
+        {
+          "text": "Measured gripper opening at 41.1s (frame 1233, measured=15.598) is observed but opening alone is not a drop and holding is not detectable from this joint.",
+          "evidence_ids": [
+            "E3"
+          ]
+        },
+        {
+          "text": "Not every expected object has an established final position: green plate 0/? established inside.",
+          "evidence_ids": [
+            "E1"
+          ]
+        },
+        {
+          "text": "End-of-episode plate observations at frame 2061 are region=unknown with confidences ~0.91-0.94; inside requires interior calibration and footprint-only yields outside or unknown.",
+          "evidence_ids": [
+            "E2"
+          ]
+        },
+        {
+          "text": "Window track motion summary shows displacement for green plate:1 and :2 but displacement alone without rest->move->rest + release criteria does not constitute a supported physical failure event.",
+          "evidence_ids": [
+            "E4"
+          ]
+        }
+      ],
+      "hypotheses": [
+        {
+          "text": "The robot may have been attempting to place a plate in the rack around 41.1s when the gripper was measured open, but this cannot be confirmed as a successful placement or a drop from joint data alone.",
+          "related_evidence_ids": [
+            "E0",
+            "E3",
+            "E4"
+          ]
+        },
+        {
+          "text": "End-state plates appearing in the rack in the final image could represent successful placements, but pipeline marks them as unknown due to missing interior calibration, so success cannot be verified.",
+          "related_evidence_ids": [
+            "E1",
+            "E2"
+          ]
+        }
+      ],
+      "visual_interpretations": [
+        {
+          "text": "F0 (40.1s) appears to show the red arm holding a green plate above the dish rack, with two green plates on the table.",
+          "frame_ref": "F0",
+          "not_verified_by_pipeline": true
+        },
+        {
+          "text": "F1 (41.1s) appears to show the gripper lowered into the rack with the plate vertically oriented, coinciding with measured opening.",
+          "frame_ref": "F1",
+          "not_verified_by_pipeline": true
+        },
+        {
+          "text": "F2 (44.1s) appears to show the arm reaching toward a green plate on the table, suggesting a subsequent pick attempt.",
+          "frame_ref": "F2",
+          "not_verified_by_pipeline": true
+        },
+        {
+          "text": "F3 (68.7s) appears to show multiple green plates standing in the dish rack, but pipeline does not verify they are inside due to lack of interior calibration.",
+          "frame_ref": "F3",
+          "not_verified_by_pipeline": true
+        }
+      ],
+      "limitations": [
+        "Gripper joint cannot distinguish empty closed vs holding thin plate (E0), so grasp/hold state is unverifiable.",
+        "Inside vs outside determination requires interior calibration; footprint-only yields unknown (E1, E2).",
+        "Object ids from window SAM tracks vs end-of-episode SAM are not matched, preventing cross-gap identity claims.",
+        "No physical_events were emitted; motion/displacement alone is insufficient for failure event support (E4)."
+      ]
+    }
+  },
+  "accepted": true,
+  "semantic_flags": [],
+  "frozen_experiment_hashes": {
+    "failure_report_sha256": "3896637b8faf2614cd1079cfcdf9c1313f076a6df7eca1be4365a19ce203e91e",
+    "frozen_config_sha256": "16edba3ce5c2138b70677ae53c0b37fc6a697cc64d9b2015b7f514e5d8c53598",
+    "verification_sha256": "4f8e4bd3eb3805a0ee016305b1625e220d37938643cb8328cedf25c75b4ab02e",
+    "run_report_sha256": "b5e55073eee70260391242a4e90a6f6960212d5bb2635a07ab3ebef0f033e5e1"
+  },
+  "paid_calls": 1,
+  "payload_summary": {
+    "n_evidence_items": 5,
+    "n_frames": 4,
+    "user_text_chars": 9050
+  }
+}

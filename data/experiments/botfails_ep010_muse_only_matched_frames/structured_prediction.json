@@ -1,0 +1,45 @@
+{
+  "verdict": "failure",
+  "task_description": "store dishes in a dish rack (BotFails domotic_dishTidyUp)",
+  "summary": "Robot attempts to store green plate in dish rack but drops it onto table; no plates are placed in rack across frames.",
+  "observed_actions": [
+    "robot gripper contacts green plate on table (frame 0)",
+    "plate in motion falling toward table edge near rack, not inserted (frame 1)",
+    "plate comes to rest flat on table outside rack (frame 2)",
+    "robot moves away from dropped plate toward remaining plates without correcting (frame 3)"
+  ],
+  "failure_mode": "dropped object / failed placement - plate not stored in dish rack",
+  "evidence": [
+    {
+      "timestamp_s": 43.1,
+      "description": "Red Lerobot arm gripper positioned on green plate on table, dish rack empty of plates on left",
+      "kind": "observed",
+      "frame_index": 0
+    },
+    {
+      "timestamp_s": 44.5,
+      "description": "Green plate blurred in mid-air falling toward table surface adjacent to rack, gripper open and empty",
+      "kind": "observed",
+      "frame_index": 1
+    },
+    {
+      "timestamp_s": 45.0,
+      "description": "Green plate lying flat on table outside dish rack, not slotted vertically inside",
+      "kind": "observed",
+      "frame_index": 2
+    },
+    {
+      "timestamp_s": 46.0,
+      "description": "Robot arm repositioned over other green plates, dropped plate remains on table unrecovered",
+      "kind": "observed",
+      "frame_index": 3
+    }
+  ],
+  "uncertainty_notes": [],
+  "assumptions": [],
+  "confidence": 0.88,
+  "model_name": "accounts/fireworks/models/muse-spark-open",
+  "tracking_used": false,
+  "provisional": true,
+  "raw_model_text": "{\"verdict\":\"failure\",\"summary\":\"Robot attempts to store green plate in dish rack but drops it onto table; no plates are placed in rack across frames.\",\"observed_actions\":[\"robot gripper contacts green plate on table (frame 0)\",\"plate in motion falling toward table edge near rack, not inserted (frame 1)\",\"plate comes to rest flat on table outside rack (frame 2)\",\"robot moves away from dropped plate toward remaining plates without correcting (frame 3)\"],\"failure_mode\":\"dropped object / failed placement - plate not stored in dish rack\",\"evidence\":[{\"timestamp_s\":43.1,\"description\":\"Red Lerobot arm gripper positioned on green plate on table, dish rack empty of plates on left\",\"kind\":\"observed\",\"frame_index\":0},{\"timestamp_s\":44.5,\"description\":\"Green plate blurred in mid-air falling toward table surface adjacent to rack, gripper open and empty\",\"kind\":\"observed\",\"frame_index\":1},{\"timestamp_s\":45.0,\"description\":\"Green plate lying flat on table outside dish rack, not slotted vertically inside\",\"kind\":\"observed\",\"frame_index\":2},{\"timestamp_s\":46.0,\"description\":\"Robot arm repositioned over other green plates, dropped plate remains on table unrecovered\",\"kind\":\"observed\",\"frame_index\":3}],\"assumptions\":[],\"uncertainty_notes\":[],\"confidence\":0.88}"
+}

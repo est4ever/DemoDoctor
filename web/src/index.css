@@ -1,0 +1,78 @@
+@import "tailwindcss";
+
+:root {
+  color-scheme: light;
+  --bg: #f3f1eb;
+  --panel: #ffffff;
+  --panel-soft: #f7f8fa;
+  --border: #d5dde8;
+  --text: #152033;
+  --muted: #5c6b80;
+  --accent: #0b6e99;
+  --accent-soft: #d7eef8;
+  --warn: #b86a1c;
+  --warn-soft: #f8e6cc;
+  --ok: #1f7a4c;
+  --ok-soft: #d8f0e3;
+  --danger: #a33b3b;
+  --inferred: #9a5b12;
+  --observed: #1f7a4c;
+  --uncertain: #5c6b80;
+  --shadow: 0 12px 32px rgba(21, 32, 51, 0.07);
+  --shell-pad: clamp(0.75rem, 1.5vw, 1.5rem);
+  font-family: "IBM Plex Sans", ui-sans-serif, system-ui, sans-serif;
+  font-size: 16px;
+  line-height: 1.5;
+}
+
+html,
+body,
+#root {
+  min-height: 100%;
+  margin: 0;
+  background:
+    radial-gradient(1400px 560px at 8% -12%, #dceaf5 0%, transparent 55%),
+    radial-gradient(1000px 420px at 92% 0%, #efe6d6 0%, transparent 48%),
+    var(--bg);
+  color: var(--text);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+h1,
+h2,
+h3,
+.brand {
+  font-family: Sora, "IBM Plex Sans", sans-serif;
+}
+
+button,
+input,
+select {
+  font: inherit;
+}
+
+.app-shell {
+  /* Prefer ~94% of the viewport so 1440/1920 desktops are not letterboxed.
+     Soft cap only for ultra-wide (>2k) so lines stay readable. */
+  width: min(94vw, 1800px);
+  margin-inline: auto;
+  padding: 1.1rem var(--shell-pad) 2.25rem;
+}
+
+@media (max-width: 1280px) {
+  .app-shell {
+    width: min(98vw, 1800px);
+  }
+}
+
+.scroll-thin::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+.scroll-thin::-webkit-scrollbar-thumb {
+  background: #c3cedc;
+  border-radius: 99px;
+}

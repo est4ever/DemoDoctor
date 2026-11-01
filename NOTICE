@@ -1,0 +1,55 @@
+DemoDoctor
+Copyright 2026 DemoDoctor contributors
+
+Original DemoDoctor source code and project documentation are licensed under
+the Apache License, Version 2.0. See LICENSE. Existing third-party copyright
+and license notices remain applicable. This NOTICE is informational and does
+not modify the terms of any license.
+
+Recorded datasets and derived media
+----------------------------------
+kantine/BotFails, Apache-2.0, revision:
+3478e49d91e1737eb76dfee2d81bb22617039c13
+https://huggingface.co/datasets/kantine/BotFails
+Research citation: Quentin Rolland, Fabrice Mayran de Chamisso and
+Jean-Baptiste Mouret, "Failure Identification in Imitation Learning via
+Statistical and Semantic Filtering," ICRA 2026.
+
+ankithreddy/so101_pickplace_uno, Apache-2.0, revision:
+f47dcf21b0bf8bd0f83cec8fd74755c65dfc012b
+https://huggingface.co/datasets/ankithreddy/so101_pickplace_uno
+The source card credits LeRobot.
+
+These sources include retained dataset subsets under data/lerobot, research
+frame previews, replay footage and derived recordings. DemoDoctor's display
+transcodes, masks, annotations and research transformations are described in
+data/submission_demo/NOTICE.md, web/public/replays/NOTICE.md, the relevant
+SOURCE.json files and prototype/export documentation. The submission manifest
+retains exact hashes. The optional EP010 Rerun recordings and prototype
+event-window video also derive from BotFails. Source-dataset rights are not
+replaced by the license on DemoDoctor's original code.
+
+Robot assets
+------------
+SO-ARM100 URDF and mesh assets: TheRobotStudio/SO-ARM100, Apache-2.0.
+https://github.com/TheRobotStudio/SO-ARM100
+Retained notices and license texts: web/public/robots/NOTICE,
+web/public/robots/SO-ARM100_LICENSE and SO-ARM100_LICENSE.txt.
+
+Dependencies, models and other media
+----------------------------------
+Dependency implementations retain their own licenses. In particular,
+meta-sam-parser 0.1.0 declares the separate SAM License, not Apache-2.0.
+See docs/submission/THIRD_PARTY.md and its versioned license inventories.
+Dependency environments, model weights and compiled dependency binaries are
+not included in this source release.
+
+Recorded Meta SAM 3.1 results and Muse Spark Open explanations are identified
+as model outputs. Their use remains subject to applicable provider terms and
+third-party rights; this source-code license does not grant rights beyond
+those held by the contributors. Historical Muse citations remain tied to
+their original evidence package.
+
+The separately supplied final-video narration and music are not source-code
+assets and are not relicensed by LICENSE. Their permissions are handled
+separately. See docs/submission/VIDEO.md and docs/submission/THIRD_PARTY.md.

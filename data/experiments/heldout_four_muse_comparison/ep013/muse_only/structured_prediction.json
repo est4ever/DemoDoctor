@@ -1,0 +1,44 @@
+{
+  "verdict": "failure",
+  "task_description": "store dishes in a dish rack (BotFails domotic_dishTidyUp)",
+  "summary": "Robot placed the green whisk into the dish rack but failed to store the green plate/dish; the plate remains on the table in the final frame, moved from the back to the front of the table, not in the rack.",
+  "observed_actions": [
+    "robot arm positioned over dish rack",
+    "robot grasps green whisk",
+    "robot transports whisk to rack",
+    "whisk ends inside rack alongside cups",
+    "green plate remains on table outside rack, repositioned but not stored"
+  ],
+  "failure_mode": "wrong object stored / dish not placed in rack",
+  "evidence": [
+    {
+      "timestamp_s": 49.933,
+      "description": "Dish rack on left contains two green plates and two cups; one green plate sits on table at back right, whisk on table center",
+      "kind": "observed",
+      "frame_index": 0
+    },
+    {
+      "timestamp_s": 53.9,
+      "description": "Robot gripper holds green whisk above table",
+      "kind": "observed",
+      "frame_index": 2
+    },
+    {
+      "timestamp_s": 69.167,
+      "description": "Whisk now inside dish rack on left; green plate now on table foreground center, not in rack",
+      "kind": "observed",
+      "frame_index": 3
+    }
+  ],
+  "uncertainty_notes": [
+    "Sparse 4-frame sampling may miss intermediate attempts, but final frame clearly shows dish outside rack"
+  ],
+  "assumptions": [
+    "Task requires placing the green plate/dish into the rack; whisk is not considered a dish for this task"
+  ],
+  "confidence": 0.85,
+  "model_name": "accounts/fireworks/models/muse-spark-open",
+  "tracking_used": false,
+  "provisional": true,
+  "raw_model_text": "{\"verdict\":\"failure\",\"summary\":\"Robot placed the green whisk into the dish rack but failed to store the green plate/dish; the plate remains on the table in the final frame, moved from the back to the front of the table, not in the rack.\",\"observed_actions\":[\"robot arm positioned over dish rack\",\"robot grasps green whisk\",\"robot transports whisk to rack\",\"whisk ends inside rack alongside cups\",\"green plate remains on table outside rack, repositioned but not stored\"],\"failure_mode\":\"wrong object stored / dish not placed in rack\",\"evidence\":[{\"timestamp_s\":49.933,\"description\":\"Dish rack on left contains two green plates and two cups; one green plate sits on table at back right, whisk on table center\",\"kind\":\"observed\",\"frame_index\":0},{\"timestamp_s\":53.9,\"description\":\"Robot gripper holds green whisk above table\",\"kind\":\"observed\",\"frame_index\":2},{\"timestamp_s\":69.167,\"description\":\"Whisk now inside dish rack on left; green plate now on table foreground center, not in rack\",\"kind\":\"observed\",\"frame_index\":3}],\"assumptions\":[\"Task requires placing the green plate/dish into the rack; whisk is not considered a dish for this task\"],\"uncertainty_notes\":[\"Sparse 4-frame sampling may miss intermediate attempts, but final frame clearly shows dish outside rack\"],\"confidence\":0.85}"
+}

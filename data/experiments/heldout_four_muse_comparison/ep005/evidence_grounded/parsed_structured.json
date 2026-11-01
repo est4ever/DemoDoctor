@@ -1,0 +1,98 @@
+{
+  "explanation": "The deterministic pipeline reports verdict uncertain with zero physical failure events reconstructed [E0, E1, E2]. Gripper joint readings cannot indicate holding for thin plates [E0], and the measured opening at 54.567s [E5] is not a verified drop. Window track coverage for green plates is present [E6, E7] but no rest\u2192move\u2192rest release event was reconstructed. End-of-episode geometry shows three green plate detections with region=unknown and insufficient_geometry_unknown, so inside/outside containment is not established [E4, E1, E2], and 2D containment does not verify upright orientation [E3].",
+  "earliest_failure_interval": null,
+  "task_outcome": "uncertain",
+  "outcome_evidence_ids": [
+    "E1",
+    "E2",
+    "E4",
+    "E0"
+  ],
+  "factual_claims": [
+    {
+      "text": "Pipeline found no supported physical failure events (n_physical_events=0) and verdict is uncertain",
+      "evidence_ids": [
+        "E2",
+        "E0"
+      ]
+    },
+    {
+      "text": "Gripper reading cannot show whether an object is held; thin plate does not change closed reading",
+      "evidence_ids": [
+        "E0"
+      ]
+    },
+    {
+      "text": "Measured gripper opening at frame 1637 (54.567s) is observed but opening alone is not a drop and holding is not detectable",
+      "evidence_ids": [
+        "E5"
+      ]
+    },
+    {
+      "text": "Window track coverage for green plates exists for 1392-1511 and 1607-1726 but no release event was reconstructed",
+      "evidence_ids": [
+        "E6",
+        "E7"
+      ]
+    },
+    {
+      "text": "End-of-episode plate observations have region=unknown with insufficient_geometry_unknown and end_state_verdict=uncertain",
+      "evidence_ids": [
+        "E4",
+        "E1",
+        "E2"
+      ]
+    },
+    {
+      "text": "2D containment does not equal verified upright orientation",
+      "evidence_ids": [
+        "E3"
+      ]
+    }
+  ],
+  "hypotheses": [
+    {
+      "text": "The arm may have attempted to place a plate in the rack between 53.5-57.5s, but without a reconstructed release event this remains speculative",
+      "related_evidence_ids": [
+        "E7",
+        "E5"
+      ]
+    },
+    {
+      "text": "Final plates appearing in/near rack could be inside but geometry was insufficient to confirm, or could be incorrectly oriented flat",
+      "related_evidence_ids": [
+        "E4",
+        "E3",
+        "E1"
+      ]
+    }
+  ],
+  "visual_interpretations": [
+    {
+      "text": "F0 appears to show red gripper holding a green plate above the dish rack",
+      "frame_ref": "F0",
+      "not_verified_by_pipeline": true
+    },
+    {
+      "text": "F1 appears to show gripper positioned over rack with a green plate partially in rack",
+      "frame_ref": "F1",
+      "not_verified_by_pipeline": true
+    },
+    {
+      "text": "F2 appears to show gripper contacting a green plate on the table outside the rack",
+      "frame_ref": "F2",
+      "not_verified_by_pipeline": true
+    },
+    {
+      "text": "F3 appears to show three green plates in/around rack at end of episode",
+      "frame_ref": "F3",
+      "not_verified_by_pipeline": true
+    }
+  ],
+  "limitations": [
+    "Gripper joint cannot detect holding for thin plates [E0]",
+    "Final-state geometry is 2D image-plane containment only; orientation not verified [E3, E4]",
+    "Object ids across window video vs end-image are not matched [E4]",
+    "No physical events reconstructed; track coverage alone does not prove placement [E6, E7]"
+  ]
+}

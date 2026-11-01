@@ -1,0 +1,51 @@
+{
+  "verdict": "success",
+  "task_description": "store dishes in a dish rack (BotFails domotic_dishTidyUp)",
+  "summary": "Robot successfully stored all visible green dishes in the dish rack. Frame 0-1 shows placement of first plate, frame 2 shows reaching for remaining plates, and final frame shows all three plates upright in rack with empty table.",
+  "observed_actions": [
+    "robot arm holds green plate above dish rack",
+    "robot lowers and inserts plate into rack slot",
+    "robot reaches toward remaining plates on table",
+    "all plates end upright in dish rack, table cleared"
+  ],
+  "failure_mode": null,
+  "evidence": [
+    {
+      "timestamp_s": 40.1,
+      "description": "Red robot gripper holds green plate over metal dish rack; two additional green plates lie flat on table to the right",
+      "kind": "observed",
+      "frame_index": 0
+    },
+    {
+      "timestamp_s": 41.1,
+      "description": "Robot arm lowered, green plate now partially inserted vertically into rack slot",
+      "kind": "observed",
+      "frame_index": 1
+    },
+    {
+      "timestamp_s": 44.1,
+      "description": "One green plate remains visible upright in rack; robot arm extended to table grasping second green plate, one plate still on table",
+      "kind": "observed",
+      "frame_index": 2
+    },
+    {
+      "timestamp_s": 68.7,
+      "description": "Three green plates standing vertically in dish rack; table surface empty, robot arm retracted",
+      "kind": "observed",
+      "frame_index": 3
+    }
+  ],
+  "uncertainty_notes": [
+    "Large temporal gap (24.6s) between frame 2 and 3 means intermediate grasps/placements are inferred, not directly observed",
+    "Stability and correct slot alignment cannot be fully verified from single final viewpoint"
+  ],
+  "assumptions": [
+    "Three green plates constitute the full set of dishes to be stored",
+    "Plates remaining upright in rack at final frame indicates stable placement without falling"
+  ],
+  "confidence": 0.7,
+  "model_name": "accounts/fireworks/models/muse-spark-open",
+  "tracking_used": false,
+  "provisional": true,
+  "raw_model_text": "{\n  \"verdict\": \"success\",\n  \"summary\": \"Robot successfully stored all visible green dishes in the dish rack. Frame 0-1 shows placement of first plate, frame 2 shows reaching for remaining plates, and final frame shows all three plates upright in rack with empty table.\",\n  \"observed_actions\": [\n    \"robot arm holds green plate above dish rack\",\n    \"robot lowers and inserts plate into rack slot\",\n    \"robot reaches toward remaining plates on table\",\n    \"all plates end upright in dish rack, table cleared\"\n  ],\n  \"failure_mode\": null,\n  \"evidence\": [\n    {\n      \"timestamp_s\": 40.1,\n      \"description\": \"Red robot gripper holds green plate over metal dish rack; two additional green plates lie flat on table to the right\",\n      \"kind\": \"observed\",\n      \"frame_index\": 0\n    },\n    {\n      \"timestamp_s\": 41.1,\n      \"description\": \"Robot arm lowered, green plate now partially inserted vertically into rack slot\",\n      \"kind\": \"observed\",\n      \"frame_index\": 1\n    },\n    {\n      \"timestamp_s\": 44.1,\n      \"description\": \"One green plate remains visible upright in rack; robot arm extended to table grasping second green plate, one plate still on table\",\n      \"kind\": \"observed\",\n      \"frame_index\": 2\n    },\n    {\n      \"timestamp_s\": 68.7,\n      \"description\": \"Three green plates standing vertically in dish rack; table surface empty, robot arm retracted\",\n      \"kind\": \"observed\",\n      \"frame_index\": 3\n    }\n  ],\n  \"assumptions\": [\n    \"Three green plates constitute the full set of dishes to be stored\",\n    \"Plates remaining upright in rack at final frame indicates stable placement without falling\"\n  ],\n  \"uncertainty_notes\": [\n    \"Large temporal gap (24.6s) between frame 2 and 3 means intermediate grasps/placements are inferred, not directly observed\",\n    \"Stability and correct slot alignment cannot be fully verified from single final viewpoint\"\n  ],\n  \"confidence\": 0.7\n}"
+}

@@ -1,0 +1,89 @@
+{
+  "explanation": "The deterministic pipeline reports verdict uncertain with zero physical failure events reconstructed (physical_events is empty). Gripper joint data cannot determine holding (E0) and a measured opening at ~51s (E5) is not a drop by itself. Window tracks show green plates present in 42.8-46.8s (E6) and 50-54s (E7) but no rest\u2192move\u2192rest release was reconstructed. End-of-episode geometry shows one plate inside and two with insufficient containment support (E4), leaving not every expected object established inside (E1) and overall episode basis insufficient_inside_or_outside with uncertain verdicts (E2). 2D containment does not verify upright orientation (E3).",
+  "earliest_failure_interval": null,
+  "task_outcome": "uncertain",
+  "outcome_evidence_ids": [
+    "E1",
+    "E2",
+    "E4"
+  ],
+  "factual_claims": [
+    {
+      "text": "Pipeline found no supported physical failure events for this episode",
+      "evidence_ids": [
+        "E2"
+      ]
+    },
+    {
+      "text": "Gripper reading cannot show whether an object is held; thin plate does not change closed reading",
+      "evidence_ids": [
+        "E0"
+      ]
+    },
+    {
+      "text": "Measured gripper opening at frame 1530 (51.0s) is observed but opening alone is not a drop and holding is not detectable",
+      "evidence_ids": [
+        "E5"
+      ]
+    },
+    {
+      "text": "Window track coverage for green plates 1285-1404 and 1500-1619 shows presence only, no release event reconstructed",
+      "evidence_ids": [
+        "E6",
+        "E7"
+      ]
+    },
+    {
+      "text": "End-of-episode plate observations: two plates region=unknown, one plate region=inside with reliable_interior_inside",
+      "evidence_ids": [
+        "E4"
+      ]
+    },
+    {
+      "text": "Not every expected object has an established final position inside",
+      "evidence_ids": [
+        "E1"
+      ]
+    },
+    {
+      "text": "Episode prediction basis is insufficient_inside_or_outside with uncertain window and end-state verdicts",
+      "evidence_ids": [
+        "E2"
+      ]
+    },
+    {
+      "text": "2D containment does not equal verified upright orientation",
+      "evidence_ids": [
+        "E3"
+      ]
+    }
+  ],
+  "hypotheses": [
+    {
+      "text": "Apparent placement of a plate into the rack between 50-54s may have occurred but was not verified as a physical release event by the pipeline",
+      "related_evidence_ids": [
+        "E5",
+        "E7",
+        "E4"
+      ]
+    }
+  ],
+  "visual_interpretations": [
+    {
+      "text": "In F0-F2 the red arm appears to move from above the rack toward a green plate on the table, and in F3 multiple green plates appear in/near the rack; this visual impression is not verified as a successful placement by the pipeline",
+      "frame_ref": "F0",
+      "not_verified_by_pipeline": true
+    },
+    {
+      "text": "F1 corresponds to the measured gripper opening at 51s, but the image alone does not confirm grasp or release",
+      "frame_ref": "F1",
+      "not_verified_by_pipeline": true
+    }
+  ],
+  "limitations": [
+    "Gripper joint cannot detect holding (E0)",
+    "Final-state geometry is 2D image-plane containment only, orientation not verified (E3)",
+    "Object ids across window vs end-image SAM requests are not matched (identity_caveat)",
+    "Missing SAM detections are not proof of absence"
+  ]
+}

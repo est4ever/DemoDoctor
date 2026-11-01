@@ -1,0 +1,279 @@
+{
+  "episode_key": "pilot",
+  "title": "Recorded SO-101 pilot · endpoint evidence",
+  "task": "Place the screwdriver in the white tray.",
+  "split": "recorded",
+  "available_episodes": [],
+  "has_joint_animation": false,
+  "pipeline_verdict": "uncertain",
+  "analysis_scope": {
+    "complete_demonstration": true,
+    "declared_complete": true,
+    "frame_start": 0,
+    "frame_end": 737,
+    "source_frames": 737
+  },
+  "task_outcome": "uncertain",
+  "outcome_label": "uncertain",
+  "diagnosis_headline": "Observed image-space change; task outcome remains uncertain.",
+  "diagnosis_summary": "Only observed image-space endpoints were compared; no grasp or release is established.",
+  "earliest_failure": null,
+  "physical_events": [
+    {
+      "event_index": 0,
+      "kind": "image_position_change",
+      "subtype": "endpoint_displacement",
+      "status": "observed",
+      "track_id": "screwdriver:0",
+      "frame_start": 0,
+      "frame_end": 737,
+      "t_start": 0.0,
+      "t_end": 24.567,
+      "inference": null,
+      "uncertainties": [
+        "Only 2D box-center positions of one SAM track ID are compared; no depth or physical identity guarantee.",
+        "No continuous trajectory is established across missing detections.",
+        "This does not establish grasp, holding, release, placement, or task success/failure."
+      ],
+      "evidence_ids": [
+        "E0",
+        "E1"
+      ]
+    }
+  ],
+  "highlight_interval": {
+    "t_start": 0.0,
+    "t_end": 24.567,
+    "label": "suspected event interval",
+    "status": "observed",
+    "note": ""
+  },
+  "timeline_markers": [
+    {
+      "id": "event_0",
+      "label": "endpoint_displacement",
+      "t": 0.0,
+      "kind": "observed_measurement",
+      "evidence_ids": [
+        "E0",
+        "E1"
+      ]
+    }
+  ],
+  "evidence_catalog": [
+    {
+      "evidence_id": "E0",
+      "source": "sam:screwdriver",
+      "kind": "detection",
+      "status_context": "observed",
+      "frame_start": 0,
+      "frame_end": 737,
+      "t_start": 0.0,
+      "t_end": 24.567,
+      "summary": "The box center for SAM track screwdriver:0 differs by 609.01px between observed frames 0 and 736; endpoint comparison only.",
+      "claims": [
+        {
+          "type": "displacement",
+          "track_id": "screwdriver:0",
+          "from_frame": 0,
+          "to_frame": 736,
+          "value_px": 609.01
+        }
+      ],
+      "track_id": "screwdriver:0",
+      "event_index": 0,
+      "note": null
+    },
+    {
+      "evidence_id": "E1",
+      "source": "sam:screwdriver",
+      "kind": "comparison",
+      "status_context": "observed",
+      "frame_start": 0,
+      "frame_end": 737,
+      "t_start": 0.0,
+      "t_end": 24.567,
+      "summary": "632 of 737 frames have returned detections; 105 frames unobserved. No interpolation.",
+      "claims": [
+        {
+          "type": "observation_coverage",
+          "track_id": "screwdriver:0",
+          "frame_start": 0,
+          "frame_end": 737,
+          "frames_with_detections": 632,
+          "missing_frames": 105,
+          "missing_ranges": [
+            {
+              "frame_start": 433,
+              "frame_end": 538
+            }
+          ]
+        }
+      ],
+      "track_id": "screwdriver:0",
+      "event_index": 0,
+      "note": null
+    },
+    {
+      "evidence_id": "E2",
+      "source": "pipeline:report",
+      "kind": "derived",
+      "status_context": "uncertain",
+      "frame_start": null,
+      "frame_end": null,
+      "t_start": null,
+      "t_end": null,
+      "summary": "No joint data: releases and grasps cannot be measured; conclusions are video-only.",
+      "claims": [],
+      "track_id": null,
+      "event_index": null,
+      "note": "report-level uncertainty (not a physical event)"
+    },
+    {
+      "evidence_id": "E3",
+      "source": "pipeline:report",
+      "kind": "derived",
+      "status_context": "uncertain",
+      "frame_start": null,
+      "frame_end": null,
+      "t_start": null,
+      "t_end": null,
+      "summary": "Not every expected object has an established final position: screwdriver: 0/? established inside.",
+      "claims": [],
+      "track_id": null,
+      "event_index": null,
+      "note": "report-level uncertainty (not a physical event)"
+    },
+    {
+      "evidence_id": "E4",
+      "source": "pipeline:report",
+      "kind": "derived",
+      "status_context": "uncertain",
+      "frame_start": null,
+      "frame_end": null,
+      "t_start": null,
+      "t_end": null,
+      "summary": "Target 'white tray' segmentation unavailable (empty_result); containment, placement and target-relative failure cannot be established.",
+      "claims": [],
+      "track_id": null,
+      "event_index": null,
+      "note": "report-level uncertainty (not a physical event)"
+    },
+    {
+      "evidence_id": "E5",
+      "source": "sam:video",
+      "kind": "detection",
+      "status_context": "observed",
+      "frame_start": 0,
+      "frame_end": 737,
+      "t_start": 0.0,
+      "t_end": 24.533,
+      "summary": "SAM returned 632 2D detections for track screwdriver:0 at frames 0 through 736; this does not establish holding, gripper opening, or task completion.",
+      "claims": [],
+      "track_id": "screwdriver:0",
+      "event_index": null,
+      "note": null
+    }
+  ],
+  "frame_catalog": [
+    {
+      "frame_ref": "F0",
+      "frame_index": 0,
+      "timestamp_s": 0.0,
+      "tied_evidence_ids": [
+        "E0",
+        "E1",
+        "E5"
+      ],
+      "role": "event_start+observation_start"
+    },
+    {
+      "frame_ref": "F1",
+      "frame_index": 736,
+      "timestamp_s": 24.533,
+      "tied_evidence_ids": [
+        "E0",
+        "E1",
+        "E5"
+      ],
+      "role": "event_end+observation_end"
+    },
+    {
+      "frame_ref": "F2",
+      "frame_index": 368,
+      "timestamp_s": 12.266666666666667,
+      "tied_evidence_ids": [],
+      "role": "context"
+    }
+  ],
+  "observed": [
+    {
+      "text": "The box center for SAM track screwdriver:0 differs by 609.01px between observed frames 0 and 736; endpoint comparison only.",
+      "evidence_ids": [
+        "E0"
+      ],
+      "t": 0.0
+    },
+    {
+      "text": "632 of 737 frames have returned detections; 105 frames unobserved. No interpolation.",
+      "evidence_ids": [
+        "E1"
+      ],
+      "t": 0.0
+    },
+    {
+      "text": "SAM returned 632 2D detections for track screwdriver:0 at frames 0 through 736; this does not establish holding, gripper opening, or task completion.",
+      "evidence_ids": [
+        "E5"
+      ],
+      "t": 0.0
+    }
+  ],
+  "inferred": [],
+  "hypotheses": [],
+  "unknowns": [
+    "No joint data: releases and grasps cannot be measured; conclusions are video-only.",
+    "Not every expected object has an established final position: screwdriver: 0/? established inside.",
+    "Target 'white tray' segmentation unavailable (empty_result); containment, placement and target-relative failure cannot be established."
+  ],
+  "muse_explanation": null,
+  "factual_claims": [],
+  "visual_interpretations": [],
+  "limitations": [
+    "Offline reconstruction only. Muse was not rerun; the original response belongs to the before catalog."
+  ],
+  "muse_only": null,
+  "evidence_muse_outcome": null,
+  "comparison_note": null,
+  "highlight_muse_comparison": false,
+  "sam_overlay": {
+    "available": false,
+    "source": "live_pipeline",
+    "concept": "screwdriver:0",
+    "frame_start": null,
+    "frame_end": null,
+    "t_start": null,
+    "t_end": null,
+    "video": null,
+    "note": null,
+    "legend": [
+      {
+        "object_id": "screwdriver:0",
+        "color_rgb": [
+          255,
+          0,
+          200
+        ],
+        "label": "screwdriver:0"
+      }
+    ]
+  },
+  "video": {
+    "rel": "recorded pilot camera",
+    "duration_s": 24.566666666666666,
+    "primary_evidence": true
+  },
+  "disclaimer": "Live DemoDoctor analysis. Camera is primary evidence. 3D kinematics (if shown) remain unvalidated.",
+  "initial_seek_s": 0.0,
+  "live": true
+}

@@ -1,0 +1,17 @@
+{
+  "robot": "so100 (kantine/BotFails, joint 'main_gripper')",
+  "joint": "main_gripper",
+  "source": "Verified success episode botfails_dish_test_ep000 (joint data + video), inspected 2026-10-26; relative-rise thresholds derived 2026-10-27 from ep000 closed-plateau noise and SO-101 sample openings only.",
+  "basis": "In ep000 the gripper visibly holds a green plate at ~48 s while observation.state[main_gripper] reads 0.4, the same as an empty closure (0.4-0.6 measured vs commanded ~-0.2); a thin plate does not change the closed reading. Larger measured values mean more open (open_sign=+1). Closed-plateau |frame-diff| p95 on ep000 is ~1.8 on a span of ~86; open_rise_frac=0.15 and noise_mult=5 keep the rise threshold at 0.15*span (noise term does not dominate). On the SO-101 sample the same relative defaults recover the two documented openings (~4.5 s, ~16.6 s) and the stalled close after grasp. close_band_frac=0.25 accepts stalled-closed levels (SO-101 ~6.4 on span ~26) while rejecting mid-open settles. persist_s=0.15 and baseline_s=0.5 match the prior calibration timescale. Parameters were not chosen from ep010.",
+  "holding_detectable": false,
+  "persist_s": 0.15,
+  "detector": "relative_rise",
+  "open_sign": 1,
+  "open_rise_frac": 0.15,
+  "noise_mult": 5.0,
+  "baseline_s": 0.5,
+  "settle_frac": 0.02,
+  "settle_noise_mult": 2.0,
+  "close_settle_frac": 0.05,
+  "close_band_frac": 0.25
+}

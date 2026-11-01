@@ -1,0 +1,87 @@
+{
+  "explanation": "The deterministic pipeline reports verdict uncertain with zero physical failure events for window 1518-1639 (50.6-54.6s) and does not establish a failure type or earliest failure. Joint data shows a measured gripper opening at 51.6s but holding is not detectable from this joint, so opening alone is not a verified drop. End-of-episode SAM at 68.6s finds green plates outside/unknown relative to the rack, but the pipeline notes not every expected object has an established final position inside and that end-state cannot be established from mid-window observations far from episode end.",
+  "earliest_failure_interval": null,
+  "task_outcome": "uncertain",
+  "outcome_evidence_ids": [
+    "E0",
+    "E1",
+    "E2"
+  ],
+  "factual_claims": [
+    {
+      "text": "Pipeline found no supported physical failure events in this window (n_physical_events=0, verdict uncertain).",
+      "evidence_ids": [
+        "E0",
+        "E1"
+      ]
+    },
+    {
+      "text": "Gripper reading cannot show whether an object is held; a thin plate does not change the closed reading (0.4-0.6 measured vs commanded ~-0.2), so holding is not detectable from this joint.",
+      "evidence_ids": [
+        "E0"
+      ]
+    },
+    {
+      "text": "Not every expected object has an established final position: green plate 0/? established inside.",
+      "evidence_ids": [
+        "E1"
+      ]
+    },
+    {
+      "text": "End-of-episode plate observations at frame 2058: green plate:0 region=outside conf 0.97, green plate:1 region=unknown conf 0.89, green plate:2 region=unknown conf 0.92; end-state assessed from keyframe SAM only and ids not matched to window tracks.",
+      "evidence_ids": [
+        "E2"
+      ]
+    },
+    {
+      "text": "Measured gripper opening at frame 1548 (51.6s) measured=14.991; opening alone is not a drop and holding is not detectable.",
+      "evidence_ids": [
+        "E3"
+      ]
+    }
+  ],
+  "hypotheses": [
+    {
+      "text": "The gripper opening at ~51.6s may correspond to a release attempt, but without detectable holding signal the pipeline cannot verify whether a plate was held or dropped.",
+      "related_evidence_ids": [
+        "E0",
+        "E3"
+      ]
+    },
+    {
+      "text": "Plates observed outside/unknown at end-of-episode may indicate incomplete placement in rack, but final outcome is not established due to missing interior calibration and gap between window end and episode end.",
+      "related_evidence_ids": [
+        "E1",
+        "E2"
+      ]
+    }
+  ],
+  "visual_interpretations": [
+    {
+      "text": "F0 (50.6s) appears to show the red arm holding two green plates over the table near the dish rack.",
+      "frame_ref": "F0",
+      "not_verified_by_pipeline": true
+    },
+    {
+      "text": "F1 (51.6s) appears to show one plate tilted/released while the gripper is open above another plate on the table.",
+      "frame_ref": "F1",
+      "not_verified_by_pipeline": true
+    },
+    {
+      "text": "F2 (54.6s) appears to show two green plates resting on the table surface outside the rack with the gripper empty and lowered.",
+      "frame_ref": "F2",
+      "not_verified_by_pipeline": true
+    },
+    {
+      "text": "F3 (68.6s) appears to show one green plate on the table and at least one plate in the rack at episode end.",
+      "frame_ref": "F3",
+      "not_verified_by_pipeline": true
+    }
+  ],
+  "limitations": [
+    "Gripper joint cannot distinguish holding vs empty closure for thin plates (E0), so grasp/drop cannot be verified from proprioception alone.",
+    "No interior calibration for rack footprint; final inside/outside assessments are unreliable (E2).",
+    "End-state SAM ids are from separate request and not matched to window track ids; mid-window engine cannot establish final outcomes when last observations are far from episode end (E2).",
+    "Missing SAM detections are not proof of absence; pipeline reported zero physical events."
+  ]
+}

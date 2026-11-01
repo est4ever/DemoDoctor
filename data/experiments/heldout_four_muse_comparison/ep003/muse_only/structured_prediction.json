@@ -1,0 +1,44 @@
+{
+  "verdict": "success",
+  "task_description": "store dishes in a dish rack (BotFails domotic_dishTidyUp)",
+  "summary": "Robot successfully places a green plate into the dish rack. Frame 0 shows grasp above rack, Frame 1 shows insertion, Frames 2-3 show plate stably stored with robot retracted.",
+  "observed_actions": [
+    "robot arm holds green plate above dish rack",
+    "robot inserts plate into rack slot alongside other plates",
+    "robot retracts leaving plate upright in rack"
+  ],
+  "failure_mode": null,
+  "evidence": [
+    {
+      "timestamp_s": 61.5,
+      "description": "Red robot gripper holds green plate directly above metal dish rack which already contains two green plates",
+      "kind": "observed",
+      "frame_index": 0
+    },
+    {
+      "timestamp_s": 62.5,
+      "description": "Plate lowered into rack slot, now vertical and aligned with other plates",
+      "kind": "observed",
+      "frame_index": 1
+    },
+    {
+      "timestamp_s": 65.467,
+      "description": "Robot arm retracted away from rack, three green plates remain upright in rack",
+      "kind": "observed",
+      "frame_index": 2
+    },
+    {
+      "timestamp_s": 69.167,
+      "description": "Final stable state with plate still stored in rack, no displacement or fall",
+      "kind": "observed",
+      "frame_index": 3
+    }
+  ],
+  "uncertainty_notes": [],
+  "assumptions": [],
+  "confidence": 0.85,
+  "model_name": "accounts/fireworks/models/muse-spark-open",
+  "tracking_used": false,
+  "provisional": true,
+  "raw_model_text": "{\"verdict\":\"success\",\"summary\":\"Robot successfully places a green plate into the dish rack. Frame 0 shows grasp above rack, Frame 1 shows insertion, Frames 2-3 show plate stably stored with robot retracted.\",\"observed_actions\":[\"robot arm holds green plate above dish rack\",\"robot inserts plate into rack slot alongside other plates\",\"robot retracts leaving plate upright in rack\"],\"failure_mode\":null,\"evidence\":[{\"timestamp_s\":61.5,\"description\":\"Red robot gripper holds green plate directly above metal dish rack which already contains two green plates\",\"kind\":\"observed\",\"frame_index\":0},{\"timestamp_s\":62.5,\"description\":\"Plate lowered into rack slot, now vertical and aligned with other plates\",\"kind\":\"observed\",\"frame_index\":1},{\"timestamp_s\":65.467,\"description\":\"Robot arm retracted away from rack, three green plates remain upright in rack\",\"kind\":\"observed\",\"frame_index\":2},{\"timestamp_s\":69.167,\"description\":\"Final stable state with plate still stored in rack, no displacement or fall\",\"kind\":\"observed\",\"frame_index\":3}],\"assumptions\":[],\"uncertainty_notes\":[],\"confidence\":0.85}"
+}

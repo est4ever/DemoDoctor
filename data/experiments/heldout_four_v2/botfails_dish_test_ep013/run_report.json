@@ -1,0 +1,681 @@
+{
+  "experiment": "heldout_four_v2",
+  "freeze": "inference_freeze_v2",
+  "ran_at": "2026-10-28T02:41:41.814593+00:00",
+  "example_id": "botfails_dish_test_ep013",
+  "episode_index": 13,
+  "policy": "rank0_plus_latest_among_top3",
+  "windows_planned": [
+    {
+      "role": "rank0",
+      "frames": [
+        1498,
+        1618
+      ],
+      "t_s": [
+        49.933,
+        53.933
+      ],
+      "duration_s": 4.0,
+      "n_frames": 120,
+      "anchor_frame": 1528,
+      "score": 3.1744,
+      "selection_dedup": {
+        "skipped_latest": 1481,
+        "iou": 0.437,
+        "dedup_iou": 0.5,
+        "reason": "not_later_than_rank0"
+      },
+      "sam_video": {
+        "concept": "green plate",
+        "frames": [
+          1498,
+          1618
+        ],
+        "est_video_frames_processed": 120
+      },
+      "sam_image_rack": {
+        "concept": "dish rack",
+        "frame": 1498,
+        "est_images_processed": 1
+      }
+    }
+  ],
+  "sam": {
+    "windows": [
+      {
+        "role": "rank0",
+        "frames": [
+          1498,
+          1618
+        ],
+        "anchor_frame": 1528,
+        "video_calls": [
+          {
+            "request": "green_plate_video",
+            "role": "rank0",
+            "frames": [
+              1498,
+              1618
+            ],
+            "status": "completed",
+            "n_observations": 360,
+            "from_cache": false,
+            "reason": null,
+            "units": {
+              "video_frames_processed": 120,
+              "images_processed": 0
+            }
+          }
+        ],
+        "rack_available": true,
+        "rack_n_obs": 1,
+        "n_track_obs": 360
+      }
+    ],
+    "end_frame": 2075,
+    "end_plate_n_obs": 3,
+    "usage_log": [
+      {
+        "request": "green_plate_video",
+        "role": "rank0",
+        "frames": [
+          1498,
+          1618
+        ],
+        "status": "completed",
+        "n_observations": 360,
+        "from_cache": false,
+        "reason": null,
+        "units": {
+          "video_frames_processed": 120,
+          "images_processed": 0
+        }
+      },
+      {
+        "request": "dish_rack_image",
+        "role": "rank0",
+        "frame": 1498,
+        "n_observations": 1,
+        "available": true,
+        "from_cache": false,
+        "units": {
+          "video_frames_processed": 0,
+          "images_processed": 1
+        }
+      },
+      {
+        "request": "green_plate_end_image",
+        "frame": 2075,
+        "n_observations": 3,
+        "available": true,
+        "from_cache": false,
+        "units": {
+          "video_frames_processed": 0,
+          "images_processed": 1
+        }
+      }
+    ],
+    "actual_paid_units": {
+      "video_frames_processed": 120,
+      "images_processed": 2
+    }
+  },
+  "window_reports": [
+    {
+      "role": "rank0",
+      "frames": [
+        1498,
+        1618
+      ],
+      "anchor_frame": 1528,
+      "failure_report": {
+        "task_id": "botfails_dish",
+        "verdict": "uncertain",
+        "failure_type": null,
+        "earliest_failure": null,
+        "physical_events": [],
+        "recoveries": [],
+        "object_outcomes": [
+          {
+            "track_id": "green plate:0",
+            "concept": "green plate",
+            "final_region": "unknown",
+            "status": "uncertain",
+            "frames": [
+              1498,
+              1499,
+              1500,
+              1501,
+              1502,
+              1503,
+              1504,
+              1505,
+              1506,
+              1507,
+              1508,
+              1509,
+              1510,
+              1511,
+              1512,
+              1513,
+              1514,
+              1515,
+              1516,
+              1517,
+              1518,
+              1519,
+              1520,
+              1521,
+              1522,
+              1523,
+              1524,
+              1525,
+              1526,
+              1527,
+              1528,
+              1529,
+              1530,
+              1531,
+              1532,
+              1533,
+              1534,
+              1535,
+              1536,
+              1537,
+              1538,
+              1539,
+              1540,
+              1541,
+              1542,
+              1543,
+              1544,
+              1545,
+              1546,
+              1547,
+              1548,
+              1549,
+              1550,
+              1551,
+              1552,
+              1553,
+              1554,
+              1555,
+              1556,
+              1557,
+              1558,
+              1559,
+              1560,
+              1561,
+              1562,
+              1563,
+              1564,
+              1565,
+              1566,
+              1567,
+              1568,
+              1569,
+              1570,
+              1571,
+              1572,
+              1573,
+              1574,
+              1575,
+              1576,
+              1577,
+              1578,
+              1579,
+              1580,
+              1581,
+              1582,
+              1583,
+              1584,
+              1585,
+              1586,
+              1587,
+              1588,
+              1589,
+              1590,
+              1591,
+              1592,
+              1593,
+              1594,
+              1595,
+              1596,
+              1597,
+              1598,
+              1599,
+              1600,
+              1601,
+              1602,
+              1603,
+              1604,
+              1605,
+              1606,
+              1607,
+              1608,
+              1609,
+              1610,
+              1611,
+              1612,
+              1613,
+              1614,
+              1615,
+              1616,
+              1617
+            ],
+            "uncertainties": [
+              "Last observation at frame 1617 (state there: outside); frames 1618-2089 unobserved, so the final position is not established."
+            ]
+          },
+          {
+            "track_id": "green plate:1",
+            "concept": "green plate",
+            "final_region": "unknown",
+            "status": "uncertain",
+            "frames": [],
+            "uncertainties": [
+              "Last observation at frame 1617 (state there: unknown); frames 1618-2089 unobserved, so the final position is not established."
+            ]
+          },
+          {
+            "track_id": "green plate:2",
+            "concept": "green plate",
+            "final_region": "unknown",
+            "status": "uncertain",
+            "frames": [],
+            "uncertainties": [
+              "Object was last observed moving (or never at rest); its final position is not observed."
+            ]
+          }
+        ],
+        "uncertainties": [
+          "Gripper reading cannot show whether an object is held (In ep000 the gripper visibly holds a green plate at ~48 s while observation.state[main_gripper] reads 0.4, the same as an empty closure (0.4-0.6 measured vs commanded ~-0.2); a thin plate does not change the closed reading. Larger measured values mean more open (open_sign=+1). Closed-plateau |frame-diff| p95 on ep000 is ~1.8 on a span of ~86; open_rise_frac=0.15 and noise_mult=5 keep the rise threshold at 0.15*span (noise term does not dominate). On the SO-101 sample the same relative defaults recover the two documented openings (~4.5 s, ~16.6 s) and the stalled close after grasp. close_band_frac=0.25 accepts stalled-closed levels (SO-101 ~6.4 on span ~26) while rejecting mid-open settles. persist_s=0.15 and baseline_s=0.5 match the prior calibration timescale. Parameters were not chosen from ep010.); joint data is used only for measured opening/closing.",
+          "Not every expected object has an established final position: green plate: 0/? established inside."
+        ],
+        "inputs": {
+          "fps": 30.0,
+          "n_frames": 2090,
+          "tracks": [
+            "green plate:0",
+            "green plate:1",
+            "green plate:2"
+          ],
+          "joint_data": true,
+          "gripper_calibration": {
+            "source": "Verified success episode botfails_dish_test_ep000 (joint data + video), inspected 2026-10-26; relative-rise thresholds derived 2026-10-27 from ep000 closed-plateau noise and SO-101 sample openings only.",
+            "basis": "In ep000 the gripper visibly holds a green plate at ~48 s while observation.state[main_gripper] reads 0.4, the same as an empty closure (0.4-0.6 measured vs commanded ~-0.2); a thin plate does not change the closed reading. Larger measured values mean more open (open_sign=+1). Closed-plateau |frame-diff| p95 on ep000 is ~1.8 on a span of ~86; open_rise_frac=0.15 and noise_mult=5 keep the rise threshold at 0.15*span (noise term does not dominate). On the SO-101 sample the same relative defaults recover the two documented openings (~4.5 s, ~16.6 s) and the stalled close after grasp. close_band_frac=0.25 accepts stalled-closed levels (SO-101 ~6.4 on span ~26) while rejecting mid-open settles. persist_s=0.15 and baseline_s=0.5 match the prior calibration timescale. Parameters were not chosen from ep010.",
+            "holding_detectable": false,
+            "persist_s": 0.15,
+            "detector": "relative_rise",
+            "open_sign": 1,
+            "open_rise_frac": 0.15,
+            "noise_mult": 5.0,
+            "baseline_s": 0.5,
+            "settle_frac": 0.02,
+            "settle_noise_mult": 2.0,
+            "close_settle_frac": 0.05,
+            "close_band_frac": 0.25
+          },
+          "params": {
+            "rest_motion_rel": 0.02,
+            "rest_min_s": 0.3,
+            "moved_rel": 0.5,
+            "max_gap_s": 0.5,
+            "release_window_s": 0.7,
+            "final_min_span_s": 0.5
+          },
+          "sources": {
+            "video": "eval_videos/botfails/botfails_dish_test_ep013.mp4",
+            "video_sha256": "6f39cbbd669e6a41cbef9cecffc672d19e0b79e18c09d8b48ddbe3234f486a12",
+            "window": [
+              1498,
+              1618
+            ],
+            "sam_call": {
+              "chunk_index": -1,
+              "concept": "green plate",
+              "status": "completed",
+              "reason": null,
+              "n_records": 720,
+              "n_observations": 360,
+              "file_id": "file-1104972745681280",
+              "prompt_mode": "concept",
+              "from_cache": false
+            },
+            "container": {
+              "concept": "dish rack",
+              "frame": 1498,
+              "cached": true,
+              "n_observations": 1,
+              "confidences": [
+                0.9804878830909729
+              ]
+            },
+            "joint_data": {
+              "dir": "data/lerobot/kantine__BotFails/test/domotic_dishTidyUp_anomaly",
+              "episode": 13,
+              "joint": "main_gripper",
+              "calibration": "data/calibration/so100_botfails_gripper.json"
+            }
+          }
+        }
+      },
+      "verification": {
+        "report": {
+          "findings": [],
+          "event_verdicts": {},
+          "claims_checked": 0,
+          "claims_failed": 0,
+          "claims_unverifiable": 0
+        },
+        "summary": {
+          "claims_checked": 0,
+          "claims_failed": 0,
+          "claims_unverifiable": 0,
+          "event_verdicts": {}
+        }
+      },
+      "track_quality": [
+        {
+          "track_id": "green plate:0",
+          "n_frames": 120,
+          "frame_span": [
+            1498,
+            1617
+          ]
+        },
+        {
+          "track_id": "green plate:1",
+          "n_frames": 120,
+          "frame_span": [
+            1498,
+            1617
+          ]
+        },
+        {
+          "track_id": "green plate:2",
+          "n_frames": 120,
+          "frame_span": [
+            1498,
+            1617
+          ]
+        }
+      ],
+      "n_observations": 360,
+      "sam_call_status": "completed"
+    }
+  ],
+  "end_state": {
+    "frame": 2075,
+    "rack_frame": 1498,
+    "approx_ok": true,
+    "approx_error": null,
+    "approx_method": "approximate interior = morphological erosion of SAM footprint by 12px (no empty-container wall fit)",
+    "plates": [
+      {
+        "object_id": "green plate:0",
+        "confidence": 0.9609756469726562,
+        "bbox": [
+          164.0,
+          191.0,
+          232.0,
+          300.0
+        ],
+        "region": "unknown",
+        "geometry_rule": "insufficient_geometry_unknown",
+        "reliable": true,
+        "assessment": {
+          "reliable": true,
+          "interior_fraction": 0.0,
+          "footprint_fraction": 0.1544,
+          "raw_mask_fraction": 0.1544,
+          "footprint_iou": 1.0,
+          "polygon_in_footprint": 1.0,
+          "reason": null,
+          "geometry_rule": "insufficient_geometry_unknown"
+        },
+        "reason": "insufficient support for inside or outside",
+        "notes": [
+          "Retaining unknown — containment not sufficiently supported."
+        ]
+      },
+      {
+        "object_id": "green plate:1",
+        "confidence": 0.9569892287254333,
+        "bbox": [
+          97.0,
+          203.0,
+          156.0,
+          317.0
+        ],
+        "region": "inside",
+        "geometry_rule": "reliable_interior_inside",
+        "reliable": true,
+        "assessment": {
+          "reliable": true,
+          "interior_fraction": 1.0,
+          "footprint_fraction": 1.0,
+          "raw_mask_fraction": 0.0,
+          "footprint_iou": 1.0,
+          "polygon_in_footprint": 1.0,
+          "reason": null,
+          "geometry_rule": "reliable_interior_inside"
+        },
+        "reason": null,
+        "notes": [
+          "Inside requires reliable interior assessment and high interior_fraction."
+        ]
+      },
+      {
+        "object_id": "green plate:2",
+        "confidence": 0.976608157157898,
+        "bbox": [
+          290.0,
+          297.0,
+          411.0,
+          392.0
+        ],
+        "region": "outside",
+        "geometry_rule": "footprint_outside_clearly_separated",
+        "reliable": true,
+        "assessment": {
+          "reliable": true,
+          "interior_fraction": 0.0,
+          "footprint_fraction": 0.0,
+          "raw_mask_fraction": 0.0,
+          "footprint_iou": 1.0,
+          "polygon_in_footprint": 1.0,
+          "reason": null,
+          "near_container_fraction": 0.1358,
+          "near_rack_dilate_px": 20,
+          "near_rack_frac_threshold": 0.5,
+          "geometry_rule": "footprint_outside_clearly_separated"
+        },
+        "reason": null,
+        "notes": [
+          "Outside uses footprint overlap only (no interior required)."
+        ]
+      }
+    ],
+    "regions": [
+      "unknown",
+      "inside",
+      "outside"
+    ],
+    "end_state_verdict": "failure"
+  },
+  "prediction": {
+    "verdict": "failure",
+    "basis": "end_state_outside",
+    "latest_window_verdict": "uncertain",
+    "end_state_verdict": "failure",
+    "physical_events_latest": [],
+    "earliest_failure_latest": null,
+    "object_outcomes_latest": [
+      {
+        "track_id": "green plate:0",
+        "concept": "green plate",
+        "final_region": "unknown",
+        "status": "uncertain",
+        "frames": [
+          1498,
+          1499,
+          1500,
+          1501,
+          1502,
+          1503,
+          1504,
+          1505,
+          1506,
+          1507,
+          1508,
+          1509,
+          1510,
+          1511,
+          1512,
+          1513,
+          1514,
+          1515,
+          1516,
+          1517,
+          1518,
+          1519,
+          1520,
+          1521,
+          1522,
+          1523,
+          1524,
+          1525,
+          1526,
+          1527,
+          1528,
+          1529,
+          1530,
+          1531,
+          1532,
+          1533,
+          1534,
+          1535,
+          1536,
+          1537,
+          1538,
+          1539,
+          1540,
+          1541,
+          1542,
+          1543,
+          1544,
+          1545,
+          1546,
+          1547,
+          1548,
+          1549,
+          1550,
+          1551,
+          1552,
+          1553,
+          1554,
+          1555,
+          1556,
+          1557,
+          1558,
+          1559,
+          1560,
+          1561,
+          1562,
+          1563,
+          1564,
+          1565,
+          1566,
+          1567,
+          1568,
+          1569,
+          1570,
+          1571,
+          1572,
+          1573,
+          1574,
+          1575,
+          1576,
+          1577,
+          1578,
+          1579,
+          1580,
+          1581,
+          1582,
+          1583,
+          1584,
+          1585,
+          1586,
+          1587,
+          1588,
+          1589,
+          1590,
+          1591,
+          1592,
+          1593,
+          1594,
+          1595,
+          1596,
+          1597,
+          1598,
+          1599,
+          1600,
+          1601,
+          1602,
+          1603,
+          1604,
+          1605,
+          1606,
+          1607,
+          1608,
+          1609,
+          1610,
+          1611,
+          1612,
+          1613,
+          1614,
+          1615,
+          1616,
+          1617
+        ],
+        "uncertainties": [
+          "Last observation at frame 1617 (state there: outside); frames 1618-2089 unobserved, so the final position is not established."
+        ]
+      },
+      {
+        "track_id": "green plate:1",
+        "concept": "green plate",
+        "final_region": "unknown",
+        "status": "uncertain",
+        "frames": [],
+        "uncertainties": [
+          "Last observation at frame 1617 (state there: unknown); frames 1618-2089 unobserved, so the final position is not established."
+        ]
+      },
+      {
+        "track_id": "green plate:2",
+        "concept": "green plate",
+        "final_region": "unknown",
+        "status": "uncertain",
+        "frames": [],
+        "uncertainties": [
+          "Object was last observed moving (or never at rest); its final position is not observed."
+        ]
+      }
+    ],
+    "uncertainties_latest": [
+      "Gripper reading cannot show whether an object is held (In ep000 the gripper visibly holds a green plate at ~48 s while observation.state[main_gripper] reads 0.4, the same as an empty closure (0.4-0.6 measured vs commanded ~-0.2); a thin plate does not change the closed reading. Larger measured values mean more open (open_sign=+1). Closed-plateau |frame-diff| p95 on ep000 is ~1.8 on a span of ~86; open_rise_frac=0.15 and noise_mult=5 keep the rise threshold at 0.15*span (noise term does not dominate). On the SO-101 sample the same relative defaults recover the two documented openings (~4.5 s, ~16.6 s) and the stalled close after grasp. close_band_frac=0.25 accepts stalled-closed levels (SO-101 ~6.4 on span ~26) while rejecting mid-open settles. persist_s=0.15 and baseline_s=0.5 match the prior calibration timescale. Parameters were not chosen from ep010.); joint data is used only for measured opening/closing.",
+      "Not every expected object has an established final position: green plate: 0/? established inside."
+    ]
+  },
+  "integrity": {
+    "video_sha256": "6f39cbbd669e6a41cbef9cecffc672d19e0b79e18c09d8b48ddbe3234f486a12",
+    "n_frames": 2090,
+    "fps": 30.0
+  },
+  "muse": {
+    "status": "not_run"
+  }
+}

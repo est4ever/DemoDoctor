@@ -1,0 +1,8 @@
+SO-ARM100 URDF and STL assets
+=============================
+
+Source: https://github.com/TheRobotStudio/SO-ARM100
+License: Apache License 2.0 (see SO-ARM100_LICENSE / SO-ARM100_LICENSE.txt)
+
+These files are redistributed unmodified (aside from local path layout under
+public/robots/so100/) for offline DemoDoctor joint visualization.

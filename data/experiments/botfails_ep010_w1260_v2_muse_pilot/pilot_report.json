@@ -1,0 +1,323 @@
+{
+  "pilot": "botfails_ep010_w1260_v2_muse_pilot",
+  "model": "accounts/fireworks/models/muse-spark-open",
+  "reasoning_effort": "low",
+  "started_at": "2026-10-27T05:33:27.208559+00:00",
+  "finished_at": "2026-10-27T05:33:40.637002+00:00",
+  "pre_hashes": {
+    "frozen_sha256": "fc2b5efb4fd6ccff440535fd473c41e924a5468132df82d03ff8fb8a3f6500f3",
+    "failure_report_sha256": "7bf40ee642a9dffbf27be7b383012057d53002fb0d3b79c3bbf01c380192f56f",
+    "started_at": "2026-10-27T05:33:27.208559+00:00"
+  },
+  "post_hashes": {
+    "frozen_sha256": "fc2b5efb4fd6ccff440535fd473c41e924a5468132df82d03ff8fb8a3f6500f3",
+    "failure_report_sha256": "7bf40ee642a9dffbf27be7b383012057d53002fb0d3b79c3bbf01c380192f56f"
+  },
+  "package": {
+    "evidence_ids": [
+      "E0",
+      "E1",
+      "E2",
+      "E3",
+      "E4"
+    ],
+    "frame_refs": [
+      {
+        "frame_ref": "F0",
+        "frame_index": 1293,
+        "timestamp_s": 43.1,
+        "tied_evidence_ids": [
+          "E0"
+        ],
+        "role": "event_start+earliest_failure_start"
+      },
+      {
+        "frame_ref": "F1",
+        "frame_index": 1335,
+        "timestamp_s": 44.5,
+        "tied_evidence_ids": [
+          "E2"
+        ],
+        "role": "gripper_open"
+      },
+      {
+        "frame_ref": "F2",
+        "frame_index": 1350,
+        "timestamp_s": 45.0,
+        "tied_evidence_ids": [
+          "E0",
+          "E1"
+        ],
+        "role": "event_end+event_start"
+      },
+      {
+        "frame_ref": "F3",
+        "frame_index": 1380,
+        "timestamp_s": 46.0,
+        "tied_evidence_ids": [
+          "E1"
+        ],
+        "role": "event_end"
+      }
+    ],
+    "deterministic_verdict": "uncertain",
+    "n_physical_events": 1
+  },
+  "validated": {
+    "ok": true,
+    "explanation": "The pipeline infers a single transport event for green plate:1 between 43.1s and 45.0s (F0 to F2) with ~86px displacement (E0), during which a measured gripper opening occurred at 44.5s (E2, F1). The plate came to rest outside the target region for 31 consecutive rest observations from 45.0s to 46.0s (E1, F2-F3), consistent with being released outside the target. The deterministic pipeline verdict remains uncertain and the event status is inferred, not observed.",
+    "task_outcome": "uncertain",
+    "earliest_failure_interval": {
+      "t_start": 43.1,
+      "t_end": 45.033,
+      "evidence_ids": [
+        "E0",
+        "E1",
+        "E2"
+      ],
+      "note": "Inferred dropped_in_transport (released_outside_target) for green plate:1; gripper opening measured during move and rest outside target observed."
+    },
+    "factual_claims": [
+      {
+        "text": "Track green plate:1 moved ~85.87px (0.5x its size) from rest at frame 1293 (43.1s, F0) to rest at frame 1350 (45.0s, F2).",
+        "evidence_ids": [
+          "E0"
+        ]
+      },
+      {
+        "text": "Green plate:1 came to rest outside the target for 31 rest observations from frame 1350 to 1380 (45.0s to 46.033s, F2-F3).",
+        "evidence_ids": [
+          "E1"
+        ]
+      },
+      {
+        "text": "Measured gripper opening occurred at frame 1335 (44.5s, F1), during or just after the move.",
+        "evidence_ids": [
+          "E2"
+        ]
+      },
+      {
+        "text": "Gripper reading cannot show whether an object is held; joint data is used only for measured opening/closing.",
+        "evidence_ids": [
+          "E3"
+        ]
+      },
+      {
+        "text": "Not every expected object has an established final position: 0/? green plates established inside.",
+        "evidence_ids": [
+          "E4"
+        ]
+      }
+    ],
+    "hypotheses": [
+      {
+        "text": "The opening at 44.5s may correspond to an intentional release or an unintended drop, but the pipeline does not establish intent; release is inferred from opening together with coming to rest outside target.",
+        "related_evidence_ids": [
+          "E0",
+          "E1",
+          "E2"
+        ],
+        "label": "hypothesis"
+      }
+    ],
+    "visual_interpretations": [
+      {
+        "text": "F0 shows the red arm with gripper apparently over a green plate on the table near the dish rack. F1 shows a green plate in motion/blur near the rack edge while the gripper appears open. F2-F3 show a green plate at rest on the table outside the rack.",
+        "frame_ref": "F0",
+        "not_verified_by_pipeline": true
+      },
+      {
+        "text": "F1 appears to capture the plate mid-air during the transport, consistent with the inferred movement interval, but depth and contact are not verified by the pipeline.",
+        "frame_ref": "F1",
+        "not_verified_by_pipeline": true
+      }
+    ],
+    "limitations": [
+      "Only 2D image positions are used; no depth (per event uncertainties).",
+      "A measured gripper opening is not by itself proof of a drop; release is inferred from opening together with coming to rest outside target and does not establish intent.",
+      "Gripper reading cannot show whether an object is held (E3).",
+      "Final placement inside target not established for green plates (E4).",
+      "Object ids from separate SAM requests are not assumed to be same physical instance across gaps."
+    ],
+    "outcome_evidence_ids": [
+      "E0",
+      "E1",
+      "E2",
+      "E3",
+      "E4"
+    ],
+    "validation_errors": [],
+    "validation_warnings": [],
+    "raw": {
+      "explanation": "The pipeline infers a single transport event for green plate:1 between 43.1s and 45.0s (F0 to F2) with ~86px displacement (E0), during which a measured gripper opening occurred at 44.5s (E2, F1). The plate came to rest outside the target region for 31 consecutive rest observations from 45.0s to 46.0s (E1, F2-F3), consistent with being released outside the target. The deterministic pipeline verdict remains uncertain and the event status is inferred, not observed.",
+      "earliest_failure_interval": {
+        "t_start": 43.1,
+        "t_end": 45.033,
+        "evidence_ids": [
+          "E0",
+          "E1",
+          "E2"
+        ],
+        "note": "Inferred dropped_in_transport (released_outside_target) for green plate:1; gripper opening measured during move and rest outside target observed."
+      },
+      "task_outcome": "uncertain",
+      "outcome_evidence_ids": [
+        "E0",
+        "E1",
+        "E2",
+        "E3",
+        "E4"
+      ],
+      "factual_claims": [
+        {
+          "text": "Track green plate:1 moved ~85.87px (0.5x its size) from rest at frame 1293 (43.1s, F0) to rest at frame 1350 (45.0s, F2).",
+          "evidence_ids": [
+            "E0"
+          ]
+        },
+        {
+          "text": "Green plate:1 came to rest outside the target for 31 rest observations from frame 1350 to 1380 (45.0s to 46.033s, F2-F3).",
+          "evidence_ids": [
+            "E1"
+          ]
+        },
+        {
+          "text": "Measured gripper opening occurred at frame 1335 (44.5s, F1), during or just after the move.",
+          "evidence_ids": [
+            "E2"
+          ]
+        },
+        {
+          "text": "Gripper reading cannot show whether an object is held; joint data is used only for measured opening/closing.",
+          "evidence_ids": [
+            "E3"
+          ]
+        },
+        {
+          "text": "Not every expected object has an established final position: 0/? green plates established inside.",
+          "evidence_ids": [
+            "E4"
+          ]
+        }
+      ],
+      "hypotheses": [
+        {
+          "text": "The opening at 44.5s may correspond to an intentional release or an unintended drop, but the pipeline does not establish intent; release is inferred from opening together with coming to rest outside target.",
+          "related_evidence_ids": [
+            "E0",
+            "E1",
+            "E2"
+          ]
+        }
+      ],
+      "visual_interpretations": [
+        {
+          "text": "F0 shows the red arm with gripper apparently over a green plate on the table near the dish rack. F1 shows a green plate in motion/blur near the rack edge while the gripper appears open. F2-F3 show a green plate at rest on the table outside the rack.",
+          "frame_ref": "F0",
+          "not_verified_by_pipeline": true
+        },
+        {
+          "text": "F1 appears to capture the plate mid-air during the transport, consistent with the inferred movement interval, but depth and contact are not verified by the pipeline.",
+          "frame_ref": "F1",
+          "not_verified_by_pipeline": true
+        }
+      ],
+      "limitations": [
+        "Only 2D image positions are used; no depth (per event uncertainties).",
+        "A measured gripper opening is not by itself proof of a drop; release is inferred from opening together with coming to rest outside target and does not establish intent.",
+        "Gripper reading cannot show whether an object is held (E3).",
+        "Final placement inside target not established for green plates (E4).",
+        "Object ids from separate SAM requests are not assumed to be same physical instance across gaps."
+      ]
+    }
+  },
+  "accepted": true,
+  "semantic_flags": [],
+  "claim_review": [
+    {
+      "index": 0,
+      "text": "Track green plate:1 moved ~85.87px (0.5x its size) from rest at frame 1293 (43.1s, F0) to rest at frame 1350 (45.0s, F2).",
+      "evidence_ids": [
+        "E0"
+      ],
+      "support": [
+        {
+          "evidence_id": "E0",
+          "found": true,
+          "status_context": "inferred",
+          "summary": "track green plate:1 moved 86px (0.5x its size) from rest at frame 1293 to rest at frame 1350"
+        }
+      ],
+      "note": "ID-valid does not imply the claim text is a faithful paraphrase"
+    },
+    {
+      "index": 1,
+      "text": "Green plate:1 came to rest outside the target for 31 rest observations from frame 1350 to 1380 (45.0s to 46.033s, F2-F3).",
+      "evidence_ids": [
+        "E1"
+      ],
+      "support": [
+        {
+          "evidence_id": "E1",
+          "found": true,
+          "status_context": "inferred",
+          "summary": "came to rest outside the target (31 of 31 rest observations)"
+        }
+      ],
+      "note": "ID-valid does not imply the claim text is a faithful paraphrase"
+    },
+    {
+      "index": 2,
+      "text": "Measured gripper opening occurred at frame 1335 (44.5s, F1), during or just after the move.",
+      "evidence_ids": [
+        "E2"
+      ],
+      "support": [
+        {
+          "evidence_id": "E2",
+          "found": true,
+          "status_context": "inferred",
+          "summary": "measured gripper opened at frame 1335 (44.5s), during or just after the move"
+        }
+      ],
+      "note": "ID-valid does not imply the claim text is a faithful paraphrase"
+    },
+    {
+      "index": 3,
+      "text": "Gripper reading cannot show whether an object is held; joint data is used only for measured opening/closing.",
+      "evidence_ids": [
+        "E3"
+      ],
+      "support": [
+        {
+          "evidence_id": "E3",
+          "found": true,
+          "status_context": "uncertain",
+          "summary": "Gripper reading cannot show whether an object is held (In ep000 the gripper visibly holds a green plate at ~48 s while observation.state[main_gripper] reads 0.4, the same as an empty closure (0.4-0.6 measured vs commanded ~-0.2); a thin plate does not change the closed reading. Larger measured values mean more open (open_sign=+1). Closed-plateau |frame-diff| p95 on ep000 is ~1.8 on a span of ~86; open_rise_frac=0.15 and noise_mult=5 keep the rise threshold at 0.15*span (noise term does not domin"
+        }
+      ],
+      "note": "ID-valid does not imply the claim text is a faithful paraphrase"
+    },
+    {
+      "index": 4,
+      "text": "Not every expected object has an established final position: 0/? green plates established inside.",
+      "evidence_ids": [
+        "E4"
+      ],
+      "support": [
+        {
+          "evidence_id": "E4",
+          "found": true,
+          "status_context": "uncertain",
+          "summary": "Not every expected object has an established final position: green plate: 0/? established inside."
+        }
+      ],
+      "note": "ID-valid does not imply the claim text is a faithful paraphrase"
+    }
+  ],
+  "payload_summary": {
+    "n_evidence_items": 5,
+    "n_frames": 4,
+    "user_text_chars": 8101
+  }
+}

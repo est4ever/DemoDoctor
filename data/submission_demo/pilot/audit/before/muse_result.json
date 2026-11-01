@@ -1,0 +1,30 @@
+{
+  "notice": "Historical published Muse output. Citations belong only to the before package. Raw transport payloads excluded.",
+  "explanation": "Task outcome: uncertain. [E0] (uncertain) No joint data: releases and grasps cannot be measured; conclusions are video-only. [E1] (uncertain) Not every expected object has an established final position: screwdriver: 0/? established inside. [E2] (uncertain) No joint-state data: gripper open/close and proprioceptive release timing cannot be measured. [E3] (observed) SAM returned 632 2D detections for track screwdriver:0 at frames 0 through 736; this does not establish holding, gripper opening, or task completion.",
+  "factual_claims": [
+    {
+      "text": "No joint data: releases and grasps cannot be measured; conclusions are video-only.",
+      "evidence_ids": [
+        "E0"
+      ]
+    },
+    {
+      "text": "Not every expected object has an established final position: screwdriver: 0/? established inside.",
+      "evidence_ids": [
+        "E1"
+      ]
+    },
+    {
+      "text": "No joint-state data: gripper open/close and proprioceptive release timing cannot be measured.",
+      "evidence_ids": [
+        "E2"
+      ]
+    },
+    {
+      "text": "SAM returned 632 2D detections for track screwdriver:0 at frames 0 through 736; this does not establish holding, gripper opening, or task completion.",
+      "evidence_ids": [
+        "E3"
+      ]
+    }
+  ]
+}

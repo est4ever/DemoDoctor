@@ -1,0 +1,84 @@
+{
+  "experiment_id": "botfails_dish_test_ep013_muse_only_matched",
+  "condition": "muse_only",
+  "dev_or_heldout": "heldout",
+  "finished_at": "2026-10-28T03:07:08.341143+00:00",
+  "model": "accounts/fireworks/models/muse-spark-open",
+  "reasoning_effort": "low",
+  "temperature": 0.2,
+  "max_tokens": 2048,
+  "jpeg_quality": 75,
+  "frames": [
+    {
+      "request_frame_index": 0,
+      "video_frame_index": 1498,
+      "timestamp_s": 49.933,
+      "role": "window_start"
+    },
+    {
+      "request_frame_index": 1,
+      "video_frame_index": 1528,
+      "timestamp_s": 50.933,
+      "role": "gripper_open_measured"
+    },
+    {
+      "request_frame_index": 2,
+      "video_frame_index": 1617,
+      "timestamp_s": 53.9,
+      "role": "window_end_last_obs"
+    },
+    {
+      "request_frame_index": 3,
+      "video_frame_index": 2075,
+      "timestamp_s": 69.167,
+      "role": "end_state"
+    }
+  ],
+  "verdict": "failure",
+  "confidence": 0.85,
+  "summary": "Robot placed the green whisk into the dish rack but failed to store the green plate/dish; the plate remains on the table in the final frame, moved from the back to the front of the table, not in the rack.",
+  "failure_mode": "wrong object stored / dish not placed in rack",
+  "observed_actions": [
+    "robot arm positioned over dish rack",
+    "robot grasps green whisk",
+    "robot transports whisk to rack",
+    "whisk ends inside rack alongside cups",
+    "green plate remains on table outside rack, repositioned but not stored"
+  ],
+  "assumptions": [
+    "Task requires placing the green plate/dish into the rack; whisk is not considered a dish for this task"
+  ],
+  "uncertainty_notes": [
+    "Sparse 4-frame sampling may miss intermediate attempts, but final frame clearly shows dish outside rack"
+  ],
+  "evidence": [
+    {
+      "timestamp_s": 49.933,
+      "description": "Dish rack on left contains two green plates and two cups; one green plate sits on table at back right, whisk on table center",
+      "kind": "observed",
+      "frame_index": 0
+    },
+    {
+      "timestamp_s": 53.9,
+      "description": "Robot gripper holds green whisk above table",
+      "kind": "observed",
+      "frame_index": 2
+    },
+    {
+      "timestamp_s": 69.167,
+      "description": "Whisk now inside dish rack on left; green plate now on table foreground center, not in rack",
+      "kind": "observed",
+      "frame_index": 3
+    }
+  ],
+  "source_hashes": {
+    "run_report_sha256": "d0483859833c5b8db63f14686e7acc5444c5f37fec0f3e029b0e363e5ba33e39",
+    "freeze_v2_plan_sha256": "677a57a2b20fc92a2a656fbdb7337ec84000dce72e32798dbc8f13fc2a44ec0f",
+    "freeze_v2_config_sha256": "70d9f393e221e020a121d228ac1b27e686430e2714d64a1ad9ba9403308b4dff"
+  },
+  "paid_calls": 1,
+  "paid_call_index_global": 5,
+  "includes_sam_or_joints": false,
+  "parse_ok": true,
+  "api_error": null
+}

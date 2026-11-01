@@ -1,0 +1,44 @@
+{
+  "available": true,
+  "source": "data/demo_cache/ep013/sam_window/green_plate.json",
+  "concept": "green plate",
+  "frame_start": 1498,
+  "frame_end": 1617,
+  "t_start": 49.93333333333333,
+  "t_end": 53.9,
+  "n_observations": 360,
+  "n_frames_with_masks": 120,
+  "painted_frames": 120,
+  "total_frames_written": 2090,
+  "video": "overlay.mp4",
+  "codec": "libx264",
+  "style_version": 2,
+  "legend": [
+    {
+      "object_id": "green plate:0",
+      "color_rgb": [
+        255,
+        0,
+        200
+      ]
+    },
+    {
+      "object_id": "green plate:1",
+      "color_rgb": [
+        255,
+        210,
+        0
+      ]
+    },
+    {
+      "object_id": "green plate:2",
+      "color_rgb": [
+        80,
+        120,
+        255
+      ]
+    }
+  ],
+  "note": "High-contrast masks painted from frozen data/demo_cache SAM window only (cyan/magenta/gold \u2014 not object color). Outside this window there is no segmentation: the overlay matches the original camera.",
+  "skipped_rebuild": true
+}

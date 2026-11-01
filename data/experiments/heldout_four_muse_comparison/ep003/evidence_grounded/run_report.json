@@ -1,0 +1,277 @@
+{
+  "experiment_id": "botfails_dish_test_ep003_muse_evidence_matched",
+  "condition": "evidence_grounded",
+  "dev_or_heldout": "heldout",
+  "finished_at": "2026-10-28T03:05:44.443025+00:00",
+  "model": "accounts/fireworks/models/muse-spark-open",
+  "reasoning_effort": "low",
+  "temperature": 0.2,
+  "max_tokens": 2048,
+  "jpeg_quality": 75,
+  "frames": [
+    {
+      "request_frame_index": 0,
+      "video_frame_index": 1845,
+      "timestamp_s": 61.5,
+      "frame_ref": "F0",
+      "role": "window_start"
+    },
+    {
+      "request_frame_index": 1,
+      "video_frame_index": 1875,
+      "timestamp_s": 62.5,
+      "frame_ref": "F1",
+      "role": "gripper_open_measured"
+    },
+    {
+      "request_frame_index": 2,
+      "video_frame_index": 1964,
+      "timestamp_s": 65.467,
+      "frame_ref": "F2",
+      "role": "window_end_last_obs"
+    },
+    {
+      "request_frame_index": 3,
+      "video_frame_index": 2075,
+      "timestamp_s": 69.167,
+      "frame_ref": "F3",
+      "role": "end_state"
+    }
+  ],
+  "package": {
+    "evidence_ids": [
+      "E0",
+      "E1",
+      "E2",
+      "E3",
+      "E4",
+      "E5",
+      "E6",
+      "E7"
+    ],
+    "n_physical_events": 0,
+    "deterministic_verdict": "success"
+  },
+  "validated": {
+    "ok": true,
+    "explanation": "The deterministic pipeline reports zero physical failure events for this episode and a verdict of success based on end-state geometry. End-of-episode SAM detections place three green plates inside the dish-rack footprint with high confidence and reliable interior containment (E4). Window tracking shows plate presence in 35.0-39.0s and 61.5-65.5s (E6, E7) but no rest→move→rest release event was reconstructed. A measured gripper opening at 62.5s is observed (E5) but holding is not detectable from this joint (E0), so opening alone is not a drop. Uncertainties remain about final positions and orientation verification (E1, E2, E3).",
+    "task_outcome": "success",
+    "earliest_failure_interval": null,
+    "factual_claims": [
+      {
+        "text": "Pipeline found no supported physical failure events (n_physical_events=0).",
+        "evidence_ids": [
+          "E6",
+          "E7"
+        ]
+      },
+      {
+        "text": "End-of-episode detections show three green plates inside the rack with reliable interior containment: conf 0.9416, 0.9139, 0.9298, geometry_rule reliable_interior_inside.",
+        "evidence_ids": [
+          "E4"
+        ]
+      },
+      {
+        "text": "Episode prediction basis is end_state_inside with latest_window_verdict=uncertain and end_state_verdict=success.",
+        "evidence_ids": [
+          "E2"
+        ]
+      },
+      {
+        "text": "Gripper reading cannot show whether an object is held; a thin plate does not change the closed reading.",
+        "evidence_ids": [
+          "E0"
+        ]
+      },
+      {
+        "text": "Measured gripper opening at frame 1875 (62.5s) with window score 3.1378; opening alone is not a drop and holding is not detectable.",
+        "evidence_ids": [
+          "E5"
+        ]
+      },
+      {
+        "text": "Window track coverage for green plates 1050-1169 (35.0-39.0s) and 1845-1964 (61.5-65.5s) with 120 frames each; no release event reconstructed.",
+        "evidence_ids": [
+          "E6",
+          "E7"
+        ]
+      },
+      {
+        "text": "2D containment does not verify upright orientation; orientation failures may remain uncertain.",
+        "evidence_ids": [
+          "E3"
+        ]
+      },
+      {
+        "text": "Not every expected object has an established final position: green plate 0/? established inside.",
+        "evidence_ids": [
+          "E1"
+        ]
+      }
+    ],
+    "hypotheses": [
+      {
+        "text": "The measured opening at 62.5s may correspond to a release of a plate into the rack, consistent with plates being inside at end-state, but this is not verified as a physical release event by the pipeline.",
+        "related_evidence_ids": [
+          "E5",
+          "E7",
+          "E4"
+        ],
+        "label": "hypothesis"
+      },
+      {
+        "text": "Plates appearing inside in 2D could still be incorrectly oriented (e.g., lying flat) which the pipeline explicitly does not verify.",
+        "related_evidence_ids": [
+          "E3",
+          "E4"
+        ],
+        "label": "hypothesis"
+      }
+    ],
+    "visual_interpretations": [
+      {
+        "text": "F0 (61.5s) appears to show the red gripper holding a green plate above the rack; F1 (62.5s) shows the gripper near the rack with plates visible inside; F2-F3 show the gripper retracted with three green plates standing in the rack. These are visual impressions only, not verified physical events by the pipeline.",
+        "frame_ref": "F0",
+        "not_verified_by_pipeline": true
+      },
+      {
+        "text": "F1 corresponds to the measured gripper opening window, visually consistent with a placement action, but the pipeline states opening alone is not a drop and holding is not detectable.",
+        "frame_ref": "F1",
+        "not_verified_by_pipeline": true
+      },
+      {
+        "text": "F3 end-state view shows three green plates inside the rack footprint, matching the SAM inside regions, but 2D containment does not confirm upright orientation.",
+        "frame_ref": "F3",
+        "not_verified_by_pipeline": true
+      }
+    ],
+    "limitations": [
+      "Gripper joint cannot indicate holding (E0); open/close measurements do not prove grasp or release.",
+      "Final-state inside is 2D image-plane containment vs eroded interior only; orientation not verified (E3, E4).",
+      "Window verdicts are uncertain and no rest→move→rest release event was reconstructed (E2, E6, E7).",
+      "Object ids from window video vs end-image are not matched across gaps; missing SAM detections are not proof of absence."
+    ],
+    "outcome_evidence_ids": [
+      "E4",
+      "E2"
+    ],
+    "validation_errors": [],
+    "validation_warnings": [],
+    "raw": {
+      "explanation": "The deterministic pipeline reports zero physical failure events for this episode and a verdict of success based on end-state geometry. End-of-episode SAM detections place three green plates inside the dish-rack footprint with high confidence and reliable interior containment (E4). Window tracking shows plate presence in 35.0-39.0s and 61.5-65.5s (E6, E7) but no rest→move→rest release event was reconstructed. A measured gripper opening at 62.5s is observed (E5) but holding is not detectable from this joint (E0), so opening alone is not a drop. Uncertainties remain about final positions and orientation verification (E1, E2, E3).",
+      "earliest_failure_interval": null,
+      "task_outcome": "success",
+      "outcome_evidence_ids": [
+        "E4",
+        "E2"
+      ],
+      "factual_claims": [
+        {
+          "text": "Pipeline found no supported physical failure events (n_physical_events=0).",
+          "evidence_ids": [
+            "E6",
+            "E7"
+          ]
+        },
+        {
+          "text": "End-of-episode detections show three green plates inside the rack with reliable interior containment: conf 0.9416, 0.9139, 0.9298, geometry_rule reliable_interior_inside.",
+          "evidence_ids": [
+            "E4"
+          ]
+        },
+        {
+          "text": "Episode prediction basis is end_state_inside with latest_window_verdict=uncertain and end_state_verdict=success.",
+          "evidence_ids": [
+            "E2"
+          ]
+        },
+        {
+          "text": "Gripper reading cannot show whether an object is held; a thin plate does not change the closed reading.",
+          "evidence_ids": [
+            "E0"
+          ]
+        },
+        {
+          "text": "Measured gripper opening at frame 1875 (62.5s) with window score 3.1378; opening alone is not a drop and holding is not detectable.",
+          "evidence_ids": [
+            "E5"
+          ]
+        },
+        {
+          "text": "Window track coverage for green plates 1050-1169 (35.0-39.0s) and 1845-1964 (61.5-65.5s) with 120 frames each; no release event reconstructed.",
+          "evidence_ids": [
+            "E6",
+            "E7"
+          ]
+        },
+        {
+          "text": "2D containment does not verify upright orientation; orientation failures may remain uncertain.",
+          "evidence_ids": [
+            "E3"
+          ]
+        },
+        {
+          "text": "Not every expected object has an established final position: green plate 0/? established inside.",
+          "evidence_ids": [
+            "E1"
+          ]
+        }
+      ],
+      "hypotheses": [
+        {
+          "text": "The measured opening at 62.5s may correspond to a release of a plate into the rack, consistent with plates being inside at end-state, but this is not verified as a physical release event by the pipeline.",
+          "related_evidence_ids": [
+            "E5",
+            "E7",
+            "E4"
+          ]
+        },
+        {
+          "text": "Plates appearing inside in 2D could still be incorrectly oriented (e.g., lying flat) which the pipeline explicitly does not verify.",
+          "related_evidence_ids": [
+            "E3",
+            "E4"
+          ]
+        }
+      ],
+      "visual_interpretations": [
+        {
+          "text": "F0 (61.5s) appears to show the red gripper holding a green plate above the rack; F1 (62.5s) shows the gripper near the rack with plates visible inside; F2-F3 show the gripper retracted with three green plates standing in the rack. These are visual impressions only, not verified physical events by the pipeline.",
+          "frame_ref": "F0",
+          "not_verified_by_pipeline": true
+        },
+        {
+          "text": "F1 corresponds to the measured gripper opening window, visually consistent with a placement action, but the pipeline states opening alone is not a drop and holding is not detectable.",
+          "frame_ref": "F1",
+          "not_verified_by_pipeline": true
+        },
+        {
+          "text": "F3 end-state view shows three green plates inside the rack footprint, matching the SAM inside regions, but 2D containment does not confirm upright orientation.",
+          "frame_ref": "F3",
+          "not_verified_by_pipeline": true
+        }
+      ],
+      "limitations": [
+        "Gripper joint cannot indicate holding (E0); open/close measurements do not prove grasp or release.",
+        "Final-state inside is 2D image-plane containment vs eroded interior only; orientation not verified (E3, E4).",
+        "Window verdicts are uncertain and no rest→move→rest release event was reconstructed (E2, E6, E7).",
+        "Object ids from window video vs end-image are not matched across gaps; missing SAM detections are not proof of absence."
+      ]
+    }
+  },
+  "accepted": true,
+  "semantic_flags": [],
+  "source_hashes": {
+    "run_report_sha256": "7c07051a5131f6cb767982411fc0ae12ad4edcb94ac2bfa5e41368b777e19b94",
+    "freeze_v2_plan_sha256": "677a57a2b20fc92a2a656fbdb7337ec84000dce72e32798dbc8f13fc2a44ec0f",
+    "freeze_v2_config_sha256": "70d9f393e221e020a121d228ac1b27e686430e2714d64a1ad9ba9403308b4dff"
+  },
+  "paid_calls": 1,
+  "paid_call_index_global": 2,
+  "payload_summary": {
+    "n_evidence_items": 8,
+    "n_frames": 4,
+    "user_text_chars": 13202
+  },
+  "raw_preserved": true
+}

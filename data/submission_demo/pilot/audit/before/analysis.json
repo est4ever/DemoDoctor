@@ -1,0 +1,215 @@
+{
+  "episode_key": "live_20261030",
+  "title": "Live analysis · 20261030",
+  "task": "Place the screwdriver in the white tray.",
+  "split": "live",
+  "available_episodes": [],
+  "has_joint_animation": false,
+  "pipeline_verdict": "uncertain",
+  "analysis_scope": {
+    "complete_demonstration": true,
+    "declared_complete": true,
+    "frame_start": 0,
+    "frame_end": 737,
+    "source_frames": 737
+  },
+  "task_outcome": "uncertain",
+  "outcome_label": "uncertain",
+  "diagnosis_headline": "Task outcome: uncertain. [E0] (uncertain) No joint data: releases and grasps cannot be measured; conclusions are video-o",
+  "diagnosis_summary": "Task outcome: uncertain. [E0] (uncertain) No joint data: releases and grasps cannot be measured; conclusions are video-only. [E1] (uncertain) Not every expected object has an established final position: screwdriver: 0/? established inside. [E2] (uncertain) No joint-state data: gripper open/close and proprioceptive release timing cannot be measured. [E3] (observed) SAM returned 632 2D detections for track screwdriver:0 at frames 0 through 736; this does not establish holding, gripper opening, or task completion.",
+  "earliest_failure": null,
+  "physical_events": [],
+  "highlight_interval": null,
+  "timeline_markers": [],
+  "evidence_catalog": [
+    {
+      "evidence_id": "E0",
+      "source": "pipeline:report",
+      "kind": "derived",
+      "status_context": "uncertain",
+      "frame_start": null,
+      "frame_end": null,
+      "t_start": null,
+      "t_end": null,
+      "summary": "No joint data: releases and grasps cannot be measured; conclusions are video-only.",
+      "claims": []
+    },
+    {
+      "evidence_id": "E1",
+      "source": "pipeline:report",
+      "kind": "derived",
+      "status_context": "uncertain",
+      "frame_start": null,
+      "frame_end": null,
+      "t_start": null,
+      "t_end": null,
+      "summary": "Not every expected object has an established final position: screwdriver: 0/? established inside.",
+      "claims": []
+    },
+    {
+      "evidence_id": "E2",
+      "source": "pipeline:report",
+      "kind": "derived",
+      "status_context": "uncertain",
+      "frame_start": null,
+      "frame_end": null,
+      "t_start": null,
+      "t_end": null,
+      "summary": "No joint-state data: gripper open/close and proprioceptive release timing cannot be measured.",
+      "claims": []
+    },
+    {
+      "evidence_id": "E3",
+      "source": "sam:video",
+      "kind": "detection",
+      "status_context": "observed",
+      "frame_start": 0,
+      "frame_end": 737,
+      "t_start": 0.0,
+      "t_end": 24.533,
+      "summary": "SAM returned 632 2D detections for track screwdriver:0 at frames 0 through 736; this does not establish holding, gripper opening, or task completion.",
+      "claims": []
+    }
+  ],
+  "frame_catalog": [
+    {
+      "frame_ref": "F0",
+      "frame_index": 0,
+      "timestamp_s": 0.0,
+      "tied_evidence_ids": [
+        "E3"
+      ],
+      "role": "event_start"
+    },
+    {
+      "frame_ref": "F1",
+      "frame_index": 736,
+      "timestamp_s": 24.533,
+      "tied_evidence_ids": [
+        "E3"
+      ],
+      "role": "event_end"
+    },
+    {
+      "frame_ref": "F2",
+      "frame_index": 368,
+      "timestamp_s": 12.266666666666667,
+      "tied_evidence_ids": [],
+      "role": "context"
+    }
+  ],
+  "observed": [
+    {
+      "text": "SAM returned 632 2D detections for track screwdriver:0 at frames 0 through 736; this does not establish holding, gripper opening, or task completion.",
+      "evidence_ids": [
+        "E3"
+      ],
+      "t": 0.0
+    }
+  ],
+  "inferred": [],
+  "hypotheses": [
+    {
+      "text": "The screwdriver may have been picked and placed in the white tray during the interval, but without joint data and without an established final inside position, this cannot be confirmed as a verified pipeline event.",
+      "related_evidence_ids": [
+        "E0",
+        "E1",
+        "E2",
+        "E3"
+      ],
+      "label": "hypothesis"
+    }
+  ],
+  "unknowns": [
+    "No joint data: releases and grasps cannot be measured; conclusions are video-only.",
+    "Not every expected object has an established final position: screwdriver: 0/? established inside.",
+    "No joint-state data: gripper open/close and proprioceptive release timing cannot be measured.",
+    "No joint-state data: gripper open/close and proprioceptive release timing cannot be measured."
+  ],
+  "muse_explanation": "Task outcome: uncertain. [E0] (uncertain) No joint data: releases and grasps cannot be measured; conclusions are video-only. [E1] (uncertain) Not every expected object has an established final position: screwdriver: 0/? established inside. [E2] (uncertain) No joint-state data: gripper open/close and proprioceptive release timing cannot be measured. [E3] (observed) SAM returned 632 2D detections for track screwdriver:0 at frames 0 through 736; this does not establish holding, gripper opening, or task completion.",
+  "factual_claims": [
+    {
+      "text": "No joint data: releases and grasps cannot be measured; conclusions are video-only.",
+      "evidence_ids": [
+        "E0"
+      ]
+    },
+    {
+      "text": "Not every expected object has an established final position: screwdriver: 0/? established inside.",
+      "evidence_ids": [
+        "E1"
+      ]
+    },
+    {
+      "text": "No joint-state data: gripper open/close and proprioceptive release timing cannot be measured.",
+      "evidence_ids": [
+        "E2"
+      ]
+    },
+    {
+      "text": "SAM returned 632 2D detections for track screwdriver:0 at frames 0 through 736; this does not establish holding, gripper opening, or task completion.",
+      "evidence_ids": [
+        "E3"
+      ]
+    }
+  ],
+  "visual_interpretations": [
+    {
+      "text": "F0 appears to show the screwdriver resting on the gray surface to the right of the white tray with the gripper above, not holding it.",
+      "frame_ref": "F0",
+      "not_verified_by_pipeline": true
+    },
+    {
+      "text": "F1 appears to show the screwdriver inside the white tray at the end of the demonstration.",
+      "frame_ref": "F1",
+      "not_verified_by_pipeline": true
+    },
+    {
+      "text": "F2 appears to show the robot arm lowered near the table with the white tray empty, as a mid-demonstration context view.",
+      "frame_ref": "F2",
+      "not_verified_by_pipeline": true
+    }
+  ],
+  "limitations": [
+    "No joint-state data available, so gripper open/close and release timing cannot be measured (E0, E2).",
+    "Final position of screwdriver inside tray not established by pipeline (E1).",
+    "SAM 2D detections do not establish holding or task completion (E3).",
+    "Pipeline reported zero physical failure events for this window; context frames are not physical measurements.",
+    "Muse free-form narrative is retained only in raw diagnostics; published factual text is copied from the pipeline catalog.",
+    "No joint-state data: gripper open/close and proprioceptive release timing cannot be measured."
+  ],
+  "muse_only": null,
+  "evidence_muse_outcome": "uncertain",
+  "comparison_note": null,
+  "highlight_muse_comparison": false,
+  "sam_overlay": {
+    "available": false,
+    "source": "live_pipeline",
+    "concept": "screwdriver:0",
+    "frame_start": null,
+    "frame_end": null,
+    "t_start": null,
+    "t_end": null,
+    "video": null,
+    "note": "Use the original video and observed canvas tracks; painted-video browser decoding has not been verified.",
+    "legend": [
+      {
+        "object_id": "screwdriver:0",
+        "color_rgb": [
+          255,
+          0,
+          200
+        ],
+        "label": "screwdriver:0"
+      }
+    ]
+  },
+  "video": {
+    "rel": "recorded pilot camera",
+    "duration_s": 24.566666666666666,
+    "primary_evidence": true
+  },
+  "disclaimer": "Live DemoDoctor analysis. Camera is primary evidence. 3D kinematics (if shown) remain unvalidated.",
+  "initial_seek_s": 0.0,
+  "live": true
+}

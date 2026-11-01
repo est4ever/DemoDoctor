@@ -1,0 +1,58 @@
+{
+  "experiment": "botfails_ep001 window 1203-1323 held-out success control (frozen v2; not used for tuning)",
+  "frozen_at": "2026-10-27T05:22:37.850627+00:00",
+  "git_head": "6216a607837d4dd4ae82cd05eb84e1ae45d13e6a",
+  "file_sha256": {
+    "failures.py": "3232d525277edc788f68ff0daf9f728230cf95be912178c70d0e755ef3d7908c",
+    "failure_inputs.py": "ca80cffc5c71ac0638512c2500128f65fb6ad0d99e91440336d7b7db65a88b1a",
+    "container.py": "9d44fb03827fcbde3b7bb287864a693d93ed373e76ac256c4ea78dfca8c215f6",
+    "verification.py": "2ffc47145a6c74579f5c46d731d88c47877c4d7d18318f7f7616357479ae6d37",
+    "tracking.py": "9a5b0626fc6f1c4ddab0ef8a5b05e1eee8ffa6d8bbe049804e70b29de9e3d8a9",
+    "proprio.py": "414b2437417d0cd4844b9f86ed7ca232833180b3ab05f51aa057a2d9f64dcd75",
+    "data/calibration/so100_botfails_gripper.json": "32558f5d60140ca123e6ccc06d542dbcb80106f788fff5eef8938c58489da503",
+    "data/tasks/botfails_dish.json": "c2e01446343d316f6d4e7ce371e43b88aaa686f659ec82deaca20826c1077c00"
+  },
+  "failure_params": {
+    "rest_motion_rel": 0.02,
+    "rest_min_s": 0.3,
+    "moved_rel": 0.5,
+    "max_gap_s": 0.5,
+    "release_window_s": 0.7,
+    "final_min_span_s": 0.5
+  },
+  "gripper_calibration": {
+    "holding_detectable": false,
+    "persist_s": 0.15,
+    "detector": "relative_rise",
+    "open_sign": 1,
+    "open_rise_frac": 0.15,
+    "noise_mult": 5.0,
+    "baseline_s": 0.5,
+    "settle_frac": 0.02,
+    "settle_noise_mult": 2.0,
+    "close_settle_frac": 0.05,
+    "close_band_frac": 0.25
+  },
+  "classify_region": {
+    "inside_frac": 0.8,
+    "outside_footprint_frac": 0.05
+  },
+  "container_reliability": {
+    "MIN_FOOTPRINT_IOU": 0.95,
+    "MIN_POLYGON_IN_FOOTPRINT": 0.99
+  },
+  "sam_plan": {
+    "video": "eval_videos/botfails/botfails_dish_test_ep001.mp4",
+    "window": [
+      1203,
+      1324
+    ],
+    "object_prompt": "green plate",
+    "container_prompt": "dish rack",
+    "container_frame": 1203,
+    "end_frame_plate": 2061,
+    "prompt_mode": "text concept only",
+    "approved_requests": 3
+  },
+  "disclosure": "Held-out success-control episode. Window from measured gripper opens + arm speed + frame inspection only. Anomaly CSVs and ground-truth labels are not inference inputs. v2 gripper parameters unchanged; not tuned on ep001 or ep011."
+}

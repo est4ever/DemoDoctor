@@ -1,0 +1,32 @@
+.venv/
+venv/
+__pycache__/
+sample_videos/*.mp4
+eval_videos/**/*.mp4
+.streamlit/secrets.toml
+.env
+.env.*
+!.env.example
+/.aws/
+/.pytest_cache/
+data/predictions/*.json
+data/live_jobs/
+/qa-browser-artifacts/
+/.gstack/
+/.demodoctor/
+/node_modules/
+data/tracking_cache/
+data/tracking/
+!data/tracking/.gitkeep
+# Generated event timelines / failure reports (contain run-specific sources)
+data/events/
+
+# React web prototype
+web/node_modules/
+web/dist/
+web/public/data/**/*.mp4
+
+# Local video-production plans; final submission metadata is documented separately.
+/docs/submission/FINAL_VIDEO_PLAN.md
+/docs/submission/video-production/
+

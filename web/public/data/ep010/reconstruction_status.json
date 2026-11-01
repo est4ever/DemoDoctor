@@ -1,0 +1,20 @@
+{
+  "episode_key": "ep010",
+  "status": "approximate_unvalidated",
+  "primary_evidence": "camera",
+  "phase3_pose_reconstruction": {
+    "camera_extrinsics": "unknown — no chessboard/AprilTag or multi-view calibration in BotFails",
+    "joint_signs_and_zeros": "unvalidated — kinematic audit found hard camera↔FK conflicts (e.g. t=48.63s); no BotFails calibration offsets published",
+    "robot_keypoints": "not estimated — would require validated FK or manual 2D–3D correspondences",
+    "tabletop_plane": "illustrative only — assumed z=0 plane under robot base; not fit from video",
+    "plate_positions_3d": "unknown — 2D SAM centroids lack depth; 3D plate props are illustrative placeholders",
+    "decision": "Accurate calibrated reconstruction is not achievable with available data this session. Retain reliable 2D annotated camera as primary; keep 3D as optional approximate workspace."
+  },
+  "object_motion_3d_policy": "Never claim exact 3D plate trajectories, grasp contacts, or collisions from 2D SAM alone. Show unknown/estimated badges when depth is ambiguous.",
+  "provenance_legend": {
+    "observed": "Directly measured (joints, SAM detections in cached window, painted masks)",
+    "inferred": "Pipeline event combining observations (e.g. release outside target)",
+    "estimated": "Geometric estimate with residual uncertainty (none validated for ep010)",
+    "illustrative": "Scene prop for spatial context only — not measured pose"
+  }
+}

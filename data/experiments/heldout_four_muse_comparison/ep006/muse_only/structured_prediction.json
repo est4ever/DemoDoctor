@@ -1,0 +1,49 @@
+{
+  "verdict": "success",
+  "task_description": "store dishes in a dish rack (BotFails domotic_dishTidyUp)",
+  "summary": "Robot stores dishes in dish rack: one green plate is placed in rack by frame 1, and the remaining green plate on the table in frames 0-2 is grasped and placed in the rack by frame 3, leaving the table clear and rack containing both plates.",
+  "observed_actions": [
+    "robot arm positioned over dish rack with green plate newly seated in rack",
+    "robot arm extends to grasp green plate on table",
+    "green plate transported from table to dish rack"
+  ],
+  "failure_mode": null,
+  "evidence": [
+    {
+      "timestamp_s": 50.0,
+      "description": "Dish rack on left contains two green plates vertical, purple cup, and glasses; one green plate remains on table to the right; red robot arm behind rack",
+      "kind": "observed",
+      "frame_index": 0
+    },
+    {
+      "timestamp_s": 51.0,
+      "description": "Robot arm over rack; an additional green plate now seated in rack (three green plates visible), table plate still present",
+      "kind": "observed",
+      "frame_index": 1
+    },
+    {
+      "timestamp_s": 53.967,
+      "description": "Robot arm extended to table, gripper contacting green plate on table",
+      "kind": "observed",
+      "frame_index": 2
+    },
+    {
+      "timestamp_s": 69.167,
+      "description": "Table is clear; dish rack now holds two overlapping green plates in front section plus original plates, indicating second plate successfully stored",
+      "kind": "observed",
+      "frame_index": 3
+    }
+  ],
+  "uncertainty_notes": [
+    "Grasp and transport occur between sampled frames and are not continuously visible",
+    "Stability of final placement cannot be fully verified from single final viewpoint"
+  ],
+  "assumptions": [
+    "Plates seen in rack in final frame are the same plates from earlier frames and were placed stably, not just dropped"
+  ],
+  "confidence": 0.68,
+  "model_name": "accounts/fireworks/models/muse-spark-open",
+  "tracking_used": false,
+  "provisional": true,
+  "raw_model_text": "{\"verdict\":\"success\",\"summary\":\"Robot stores dishes in dish rack: one green plate is placed in rack by frame 1, and the remaining green plate on the table in frames 0-2 is grasped and placed in the rack by frame 3, leaving the table clear and rack containing both plates.\",\"observed_actions\":[\"robot arm positioned over dish rack with green plate newly seated in rack\",\"robot arm extends to grasp green plate on table\",\"green plate transported from table to dish rack\"],\"failure_mode\":null,\"evidence\":[{\"timestamp_s\":50.0,\"description\":\"Dish rack on left contains two green plates vertical, purple cup, and glasses; one green plate remains on table to the right; red robot arm behind rack\",\"kind\":\"observed\",\"frame_index\":0},{\"timestamp_s\":51.0,\"description\":\"Robot arm over rack; an additional green plate now seated in rack (three green plates visible), table plate still present\",\"kind\":\"observed\",\"frame_index\":1},{\"timestamp_s\":53.967,\"description\":\"Robot arm extended to table, gripper contacting green plate on table\",\"kind\":\"observed\",\"frame_index\":2},{\"timestamp_s\":69.167,\"description\":\"Table is clear; dish rack now holds two overlapping green plates in front section plus original plates, indicating second plate successfully stored\",\"kind\":\"observed\",\"frame_index\":3}],\"assumptions\":[\"Plates seen in rack in final frame are the same plates from earlier frames and were placed stably, not just dropped\"],\"uncertainty_notes\":[\"Grasp and transport occur between sampled frames and are not continuously visible\",\"Stability of final placement cannot be fully verified from single final viewpoint\"],\"confidence\":0.68}"
+}

@@ -1,0 +1,273 @@
+{
+  "task_id": "botfails_dish",
+  "task_description": "store dishes in a dish rack (BotFails domotic_dishTidyUp)",
+  "experiment_id": "botfails_ep001_w1203_heldout",
+  "provenance": {
+    "experiment_id": "botfails_ep001_w1203_heldout",
+    "task_id": "botfails_dish",
+    "inputs": {
+      "fps": 30.0,
+      "n_frames": 2090,
+      "joint_data": true,
+      "gripper_calibration": {
+        "source": "Verified success episode botfails_dish_test_ep000 (joint data + video), inspected 2026-10-26; relative-rise thresholds derived 2026-10-27 from ep000 closed-plateau noise and SO-101 sample openings only.",
+        "basis": "In ep000 the gripper visibly holds a green plate at ~48 s while observation.state[main_gripper] reads 0.4, the same as an empty closure (0.4-0.6 measured vs commanded ~-0.2); a thin plate does not change the closed reading. Larger measured values mean more open (open_sign=+1). Closed-plateau |frame-diff| p95 on ep000 is ~1.8 on a span of ~86; open_rise_frac=0.15 and noise_mult=5 keep the rise threshold at 0.15*span (noise term does not dominate). On the SO-101 sample the same relative defaults recover the two documented openings (~4.5 s, ~16.6 s) and the stalled close after grasp. close_band_frac=0.25 accepts stalled-closed levels (SO-101 ~6.4 on span ~26) while rejecting mid-open settles. persist_s=0.15 and baseline_s=0.5 match the prior calibration timescale. Parameters were not chosen from ep010.",
+        "holding_detectable": false,
+        "persist_s": 0.15,
+        "detector": "relative_rise",
+        "open_sign": 1,
+        "open_rise_frac": 0.15,
+        "noise_mult": 5.0,
+        "baseline_s": 0.5,
+        "settle_frac": 0.02,
+        "settle_noise_mult": 2.0,
+        "close_settle_frac": 0.05,
+        "close_band_frac": 0.25
+      }
+    },
+    "verification": {
+      "claims_checked": 0,
+      "claims_failed": 0,
+      "event_verdicts": {}
+    },
+    "frozen_config_experiment": "botfails_ep001 window 1203-1323 held-out success control (frozen v2; not used for tuning)",
+    "frozen_git_head": "6216a607837d4dd4ae82cd05eb84e1ae45d13e6a",
+    "gripper_detector": "relative_rise"
+  },
+  "identity_caveat": "Object ids from separate SAM requests (window video vs end-of-episode image) are not assumed to be the same physical instance across gaps.",
+  "deterministic_pipeline": {
+    "verdict": "uncertain",
+    "failure_type": null,
+    "earliest_failure": null,
+    "n_physical_events": 0
+  },
+  "physical_events": [],
+  "evidence_catalog": [
+    {
+      "evidence_id": "E0",
+      "source": "pipeline:report",
+      "kind": "derived",
+      "status_context": "uncertain",
+      "frame_start": null,
+      "frame_end": null,
+      "t_start": null,
+      "t_end": null,
+      "summary": "Gripper reading cannot show whether an object is held (In ep000 the gripper visibly holds a green plate at ~48 s while observation.state[main_gripper] reads 0.4, the same as an empty closure (0.4-0.6 measured vs commanded ~-0.2); a thin plate does not change the closed reading. Larger measured values mean more open (open_sign=+1). Closed-plateau |frame-diff| p95 on ep000 is ~1.8 on a span of ~86; open_rise_frac=0.15 and noise_mult=5 keep the rise threshold at 0.15*span (noise term does not domin",
+      "claims": [],
+      "track_id": null,
+      "event_index": null,
+      "note": "report-level uncertainty (not a physical event)"
+    },
+    {
+      "evidence_id": "E1",
+      "source": "pipeline:report",
+      "kind": "derived",
+      "status_context": "uncertain",
+      "frame_start": null,
+      "frame_end": null,
+      "t_start": null,
+      "t_end": null,
+      "summary": "Not every expected object has an established final position: green plate: 0/? established inside.",
+      "claims": [],
+      "track_id": null,
+      "event_index": null,
+      "note": "report-level uncertainty (not a physical event)"
+    },
+    {
+      "evidence_id": "E2",
+      "source": "sam:green plate (end keyframe)",
+      "kind": "detection",
+      "status_context": "uncertain",
+      "frame_start": 2061,
+      "frame_end": 2062,
+      "t_start": null,
+      "t_end": null,
+      "summary": "End-of-episode plate observations: green plate:0: region=unknown conf=0.941605806350708; green plate:1: region=unknown conf=0.9139785170555115; green plate:2: region=unknown conf=0.9298245906829834",
+      "claims": [],
+      "track_id": null,
+      "event_index": null,
+      "note": "End-image object ids are from a separate SAM request; not matched to window track ids. Inside requires interior calibration; footprint-only yields outside or unknown."
+    },
+    {
+      "evidence_id": "E3",
+      "source": "proprio:main_gripper",
+      "kind": "measurement",
+      "status_context": "observed",
+      "frame_start": 1233,
+      "frame_end": 1234,
+      "t_start": 41.1,
+      "t_end": 41.1,
+      "summary": "Measured gripper opening at frame 1233 (41.1s); measured=15.598. Opening alone is not a drop; holding is not detectable from this joint.",
+      "claims": [],
+      "track_id": null,
+      "event_index": null,
+      "note": "Observed joint measurement; not a localized physical failure event."
+    },
+    {
+      "evidence_id": "E4",
+      "source": "sam:green plate (window tracks)",
+      "kind": "derived",
+      "status_context": "uncertain",
+      "frame_start": null,
+      "frame_end": null,
+      "t_start": null,
+      "t_end": null,
+      "summary": "Window track motion summary (not a failure event): green plate:0: disp_px=0.0 disp_rel=0.0 regions=['outside'] phases=[['rest', 1203, 1323]]; green plate:1: disp_px=27.54 disp_rel=0.255 regions=['outside'] phases=[['rest', 1203, 1269], ['moving', 1270, 1275], ['rest', 1276, 1285], ['moving', 1286, 1290], ['rest', 1291, 1304], ['moving', 1305, 1312], ['rest', 1313, 1323]]; green plate:2: disp_px=59.82 disp_rel=0.404 regions=['outside', 'unknown'] phases=[['moving', 1203, 1234], ['rest', 1235, 1243], ['moving', 1244, 1249], ['rest', 1250, 1323]]",
+      "claims": [],
+      "track_id": null,
+      "event_index": null,
+      "note": "Displacement alone without rest\u2192move\u2192rest + release criteria does not constitute a supported physical failure event in this pipeline."
+    }
+  ],
+  "uncertainties": [
+    "Gripper reading cannot show whether an object is held (In ep000 the gripper visibly holds a green plate at ~48 s while observation.state[main_gripper] reads 0.4, the same as an empty closure (0.4-0.6 measured vs commanded ~-0.2); a thin plate does not change the closed reading. Larger measured values mean more open (open_sign=+1). Closed-plateau |frame-diff| p95 on ep000 is ~1.8 on a span of ~86; open_rise_frac=0.15 and noise_mult=5 keep the rise threshold at 0.15*span (noise term does not dominate). On the SO-101 sample the same relative defaults recover the two documented openings (~4.5 s, ~16.6 s) and the stalled close after grasp. close_band_frac=0.25 accepts stalled-closed levels (SO-101 ~6.4 on span ~26) while rejecting mid-open settles. persist_s=0.15 and baseline_s=0.5 match the prior calibration timescale. Parameters were not chosen from ep010.); joint data is used only for measured opening/closing.",
+    "Not every expected object has an established final position: green plate: 0/? established inside."
+  ],
+  "tracking_notes": [
+    "Missing SAM detections are never treated as proof of physical absence.",
+    "Pipeline reported zero physical failure events for this window."
+  ],
+  "final_state": {
+    "frame": 2061,
+    "rack_mask_source": "f1203",
+    "rack_mask_pixels": 44213,
+    "plate_observations": [
+      {
+        "object_id": "green plate:0",
+        "confidence": 0.941605806350708,
+        "bbox": [
+          150.0,
+          196.0,
+          204.0,
+          305.0
+        ],
+        "region": "unknown",
+        "assessment": {
+          "reliable": false,
+          "interior_fraction": null,
+          "footprint_fraction": 0.9249,
+          "raw_mask_fraction": 0.9226,
+          "footprint_iou": null,
+          "polygon_in_footprint": null,
+          "reason": "no interior calibration"
+        }
+      },
+      {
+        "object_id": "green plate:1",
+        "confidence": 0.9139785170555115,
+        "bbox": [
+          99.0,
+          199.0,
+          128.0,
+          316.0
+        ],
+        "region": "unknown",
+        "assessment": {
+          "reliable": false,
+          "interior_fraction": null,
+          "footprint_fraction": 0.5634,
+          "raw_mask_fraction": 0.5634,
+          "footprint_iou": null,
+          "polygon_in_footprint": null,
+          "reason": "no interior calibration"
+        }
+      },
+      {
+        "object_id": "green plate:2",
+        "confidence": 0.9298245906829834,
+        "bbox": [
+          125.0,
+          195.0,
+          153.0,
+          310.0
+        ],
+        "region": "unknown",
+        "assessment": {
+          "reliable": false,
+          "interior_fraction": null,
+          "footprint_fraction": 0.3602,
+          "raw_mask_fraction": 0.3602,
+          "footprint_iou": null,
+          "polygon_in_footprint": null,
+          "reason": "no interior calibration"
+        }
+      }
+    ],
+    "note": "Inside requires interior calibration; footprint-only yields outside or unknown."
+  },
+  "frame_catalog": [
+    {
+      "frame_ref": "F0",
+      "frame_index": 1203,
+      "timestamp_s": 40.1,
+      "tied_evidence_ids": [],
+      "role": "window_start"
+    },
+    {
+      "frame_ref": "F1",
+      "frame_index": 1233,
+      "timestamp_s": 41.1,
+      "tied_evidence_ids": [
+        "E3"
+      ],
+      "role": "gripper_open_measured"
+    },
+    {
+      "frame_ref": "F2",
+      "frame_index": 1323,
+      "timestamp_s": 44.1,
+      "tied_evidence_ids": [],
+      "role": "window_end_last_obs"
+    },
+    {
+      "frame_ref": "F3",
+      "frame_index": 2061,
+      "timestamp_s": 68.7,
+      "tied_evidence_ids": [
+        "E2"
+      ],
+      "role": "end_state"
+    }
+  ],
+  "instructions_for_model": {
+    "cite_only": "Use evidence_id values from evidence_catalog (E\u2026) and frame_ref (F\u2026) only.",
+    "do_not_invent": "Do not invent gripper openings, drops, or placements absent from the catalog.",
+    "status_rules": "Statuses observed/inferred/uncertain come from the pipeline. You may explain them; you must not upgrade uncertain\u2192inferred or inferred\u2192observed.",
+    "hypotheses": "Label speculative causes under hypotheses[], never as factual_claims[].",
+    "empty_events": "If physical_events is empty, say so; do not fabricate events from the images alone as verified pipeline findings."
+  },
+  "frame_refs": [
+    {
+      "frame_ref": "F0",
+      "frame_index": 1203,
+      "timestamp_s": 40.1,
+      "tied_evidence_ids": [],
+      "role": "window_start"
+    },
+    {
+      "frame_ref": "F1",
+      "frame_index": 1233,
+      "timestamp_s": 41.1,
+      "tied_evidence_ids": [
+        "E3"
+      ],
+      "role": "gripper_open_measured"
+    },
+    {
+      "frame_ref": "F2",
+      "frame_index": 1323,
+      "timestamp_s": 44.1,
+      "tied_evidence_ids": [],
+      "role": "window_end_last_obs"
+    },
+    {
+      "frame_ref": "F3",
+      "frame_index": 2061,
+      "timestamp_s": 68.7,
+      "tied_evidence_ids": [
+        "E2"
+      ],
+      "role": "end_state"
+    }
+  ]
+}

@@ -1,0 +1,213 @@
+{
+  "recorded_not_mock": true,
+  "new_inference_calls": 0,
+  "media_license": "Apache-2.0",
+  "entries": [
+    {
+      "file": "web/public/replays/ep010/video.mp4",
+      "source_sha256": "8f61d8613e820992f7db8f9c9cb930fb067a8fa39497b852ebfc23202fbb349a",
+      "sha256": "827e71923c18cfb8d70c8863af6638ca0b543129226b1a16dd8ac09d28407807",
+      "frames": 2090,
+      "fps": 30.0,
+      "width": 640,
+      "height": 480,
+      "bytes": 2096823,
+      "modified": "Lossy H.264 CRF 28; no audio; original frame indices, dimensions and rate retained.",
+      "dataset": "kantine/BotFails",
+      "revision": "3478e49d91e1737eb76dfee2d81bb22617039c13",
+      "episode": "ep010",
+      "role": "recorded camera"
+    },
+    {
+      "file": "web/public/replays/ep010/overlay.mp4",
+      "source_sha256": "d0022f05038fabff2951a79e118c66e6c36850520383997039b5b7a7b65f104a",
+      "sha256": "5a3a2177b2ac12eb307a98934f837a0c38db2c2c8fa166d114ce4b8441e713aa",
+      "frames": 2090,
+      "fps": 30.0,
+      "width": 640,
+      "height": 480,
+      "bytes": 2317021,
+      "modified": "Lossy H.264 CRF 28; no audio; original frame indices, dimensions and rate retained.",
+      "dataset": "kantine/BotFails",
+      "revision": "3478e49d91e1737eb76dfee2d81bb22617039c13",
+      "episode": "ep010",
+      "role": "recorded SAM overlay"
+    },
+    {
+      "file": "web/public/replays/ep005/video.mp4",
+      "source_sha256": "d0ca14fe894e96813231a57a00d57481f41744d9440e054895f821ab2ef632c3",
+      "sha256": "48c1b0f22bff63cbf6fa81c122bd35ac059c50fcfc020e192414af6718825a0c",
+      "frames": 2090,
+      "fps": 30.0,
+      "width": 640,
+      "height": 480,
+      "bytes": 2109742,
+      "modified": "Lossy H.264 CRF 28; no audio; original frame indices, dimensions and rate retained.",
+      "dataset": "kantine/BotFails",
+      "revision": "3478e49d91e1737eb76dfee2d81bb22617039c13",
+      "episode": "ep005",
+      "role": "recorded camera"
+    },
+    {
+      "file": "web/public/replays/ep005/overlay.mp4",
+      "source_sha256": "8f9b3a2d851b85f4f0ec41890dc50612201c9b08d70bbd3c57769cbe93e8595c",
+      "sha256": "05cc471ba946f4e7689ab2bd77c8dd5abe7f5e9725d1a4ccf23ff36b7499fb04",
+      "frames": 2090,
+      "fps": 30.0,
+      "width": 640,
+      "height": 480,
+      "bytes": 2323485,
+      "modified": "Lossy H.264 CRF 28; no audio; original frame indices, dimensions and rate retained.",
+      "dataset": "kantine/BotFails",
+      "revision": "3478e49d91e1737eb76dfee2d81bb22617039c13",
+      "episode": "ep005",
+      "role": "recorded SAM overlay"
+    },
+    {
+      "file": "web/public/replays/ep003/video.mp4",
+      "source_sha256": "c9633141294396f70a555088476b16af958a73ac05605925f8f9597db85c76c7",
+      "sha256": "d573539da40db910ad2b7c8accf5c2d00a38b9af25ea446cdc7950d27d001e90",
+      "frames": 2090,
+      "fps": 30.0,
+      "width": 640,
+      "height": 480,
+      "bytes": 2169002,
+      "modified": "Lossy H.264 CRF 28; no audio; original frame indices, dimensions and rate retained.",
+      "dataset": "kantine/BotFails",
+      "revision": "3478e49d91e1737eb76dfee2d81bb22617039c13",
+      "episode": "ep003",
+      "role": "recorded camera"
+    },
+    {
+      "file": "web/public/replays/ep003/overlay.mp4",
+      "source_sha256": "66fc5d99a0bd958cf5c67b343e53ddcea7a770793d566d7135478dea8dbe92a7",
+      "sha256": "3fed42c3460dbb9a2555f0047f46af549bfc3ce04ad5cd76a1a3f67f3bc71e1d",
+      "frames": 2090,
+      "fps": 30.0,
+      "width": 640,
+      "height": 480,
+      "bytes": 2374787,
+      "modified": "Lossy H.264 CRF 28; no audio; original frame indices, dimensions and rate retained.",
+      "dataset": "kantine/BotFails",
+      "revision": "3478e49d91e1737eb76dfee2d81bb22617039c13",
+      "episode": "ep003",
+      "role": "recorded SAM overlay"
+    },
+    {
+      "file": "web/public/replays/ep013/video.mp4",
+      "source_sha256": "6f39cbbd669e6a41cbef9cecffc672d19e0b79e18c09d8b48ddbe3234f486a12",
+      "sha256": "bae98c72a6850f272543cd6379e65eb612a7324a258be447fe2d73df19337165",
+      "frames": 2090,
+      "fps": 30.0,
+      "width": 640,
+      "height": 480,
+      "bytes": 2207460,
+      "modified": "Lossy H.264 CRF 28; no audio; original frame indices, dimensions and rate retained.",
+      "dataset": "kantine/BotFails",
+      "revision": "3478e49d91e1737eb76dfee2d81bb22617039c13",
+      "episode": "ep013",
+      "role": "recorded camera"
+    },
+    {
+      "file": "web/public/replays/ep013/overlay.mp4",
+      "source_sha256": "2166fae1d04949d2d504eb30a88e1b814e570d0bf04e07959f092cabd4bf9bb8",
+      "sha256": "38dc9ab59975ac06a6308a7491cb42777b8c4af3525d788029f6fcb892220c29",
+      "frames": 2090,
+      "fps": 30.0,
+      "width": 640,
+      "height": 480,
+      "bytes": 2440210,
+      "modified": "Lossy H.264 CRF 28; no audio; original frame indices, dimensions and rate retained.",
+      "dataset": "kantine/BotFails",
+      "revision": "3478e49d91e1737eb76dfee2d81bb22617039c13",
+      "episode": "ep013",
+      "role": "recorded SAM overlay"
+    },
+    {
+      "file": "web/public/replays/ep006/video.mp4",
+      "source_sha256": "de8bb8542e50dc71ba0131a6cc7b40afa60f174ccfb613e40744b8e5a0f0decd",
+      "sha256": "2c8fdd51b5d2cd7c7b29a194cd28c4a566a832884efed77a2a20d53ed9f69e49",
+      "frames": 2090,
+      "fps": 30.0,
+      "width": 640,
+      "height": 480,
+      "bytes": 2086191,
+      "modified": "Lossy H.264 CRF 28; no audio; original frame indices, dimensions and rate retained.",
+      "dataset": "kantine/BotFails",
+      "revision": "3478e49d91e1737eb76dfee2d81bb22617039c13",
+      "episode": "ep006",
+      "role": "recorded camera"
+    },
+    {
+      "file": "web/public/replays/ep006/overlay.mp4",
+      "source_sha256": "7c5c53f1d77244224423e89cbac1f73c2ace987437c7c47caff3fc036a3a739d",
+      "sha256": "3b1e4fb5d10cdd2cffc6f68bba3a2feffdc8eafb4cfe2fef53a4848ae0d69dee",
+      "frames": 2090,
+      "fps": 30.0,
+      "width": 640,
+      "height": 480,
+      "bytes": 2314023,
+      "modified": "Lossy H.264 CRF 28; no audio; original frame indices, dimensions and rate retained.",
+      "dataset": "kantine/BotFails",
+      "revision": "3478e49d91e1737eb76dfee2d81bb22617039c13",
+      "episode": "ep006",
+      "role": "recorded SAM overlay"
+    },
+    {
+      "file": "data/submission_demo/pilot/job/video.mp4",
+      "source_sha256": "bd3f7a4df11b9249f7ac5c2473aef44c6da9f2c06c01534ab11062e5457b5018",
+      "sha256": "8369c23fb3af1aca7373c685727df6b564ef8968c877e31d1693a091d5accf9d",
+      "frames": 737,
+      "fps": 30.0,
+      "width": 1280,
+      "height": 720,
+      "bytes": 2077292,
+      "modified": "Lossy H.264 CRF 28; no audio; original frame indices, dimensions and rate retained.",
+      "dataset": "ankithreddy/so101_pickplace_uno",
+      "revision": "f47dcf21b0bf8bd0f83cec8fd74755c65dfc012b",
+      "source_dataset_video_sha256": "6c3c8c9b651b55586da6ab1db5befd327054331b7cc0c10ef5399e9ae29298dc",
+      "role": "recorded pilot camera; no robot joints supplied to this analysis"
+    },
+    {
+      "file": "data/submission_demo/pilot/audit/after/analysis.json",
+      "sha256": "19dc84f79caf12ed9f7162151e14f15a93a5fe1376d1197016af5d0da530daad",
+      "bytes": 8233
+    },
+    {
+      "file": "data/submission_demo/pilot/audit/after/evidence_package.json",
+      "sha256": "174efe9beeef23d2fc47ba719f4a247bf198d0be40cd2f4060d6cf64c4433825",
+      "bytes": 8196
+    },
+    {
+      "file": "data/submission_demo/pilot/audit/after/verification.json",
+      "sha256": "578311905880860ff31420edf3b3e887faadf83b75db82a0ae8ce47a1b0f07d4",
+      "bytes": 166
+    },
+    {
+      "file": "data/submission_demo/pilot/audit/before/analysis.json",
+      "sha256": "ff89620fda21c4e693d4c2ec6d720b80948e7f91cd98b9c6e62b04a441837527",
+      "bytes": 8146
+    },
+    {
+      "file": "data/submission_demo/pilot/audit/before/evidence_package.json",
+      "sha256": "6aa828e6cb849b06f5992a6c4eeae17dc73228b98752cf3c73d8293c46da3824",
+      "bytes": 5096
+    },
+    {
+      "file": "data/submission_demo/pilot/audit/before/muse_result.json",
+      "sha256": "0ab5aca58a047bfa1ebb49f471cc8ee480ca202e3b3f7552b641758b6a05617b",
+      "bytes": 1448
+    },
+    {
+      "file": "data/submission_demo/pilot/audit/before/verification.json",
+      "sha256": "f6150a6d78911db6d3151bd4317860d01eaf42f8ed28ea273d0f4e3da7dd76cc",
+      "bytes": 140
+    },
+    {
+      "file": "data/submission_demo/pilot/job/tracks.json",
+      "sha256": "0b8a67c6c5471cae8c18709415a98387a1bf42309dbfa41e50c40a54051f5ba8",
+      "bytes": 152524
+    }
+  ],
+  "note": "Derived display media; measurements retain their original image coordinates. Historical and reconstructed catalogs stay separate."
+}

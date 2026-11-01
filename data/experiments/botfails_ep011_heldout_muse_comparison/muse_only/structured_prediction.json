@@ -1,0 +1,50 @@
+{
+  "verdict": "failure",
+  "task_description": "store dishes in a dish rack (BotFails domotic_dishTidyUp)",
+  "summary": "Robot attempted to store two green plates but only one was placed in the dish rack; one plate remains on the table in the final frame, so not all dishes were stored.",
+  "observed_actions": [
+    "robot grasping green plate over table (frame 0)",
+    "robot lifting plate with second plate on table (frame 1)",
+    "robot releasing/placing plate onto table near rack (frame 2)",
+    "one additional plate now in dish rack while one plate remains on table (frame 3)"
+  ],
+  "failure_mode": "incomplete placement - one dish left on table",
+  "evidence": [
+    {
+      "timestamp_s": 50.6,
+      "description": "Robot gripper holding green plate above table, second green plate on table, dish rack contains one green plate",
+      "kind": "observed",
+      "frame_index": 0
+    },
+    {
+      "timestamp_s": 51.6,
+      "description": "Robot lifting one plate vertically while second plate rests on table",
+      "kind": "observed",
+      "frame_index": 1
+    },
+    {
+      "timestamp_s": 54.6,
+      "description": "Both green plates now on table surface, robot gripper empty and positioned above one plate",
+      "kind": "observed",
+      "frame_index": 2
+    },
+    {
+      "timestamp_s": 68.6,
+      "description": "Dish rack now holds two green plates, but one green plate still remains on table, not stored",
+      "kind": "observed",
+      "frame_index": 3
+    }
+  ],
+  "uncertainty_notes": [
+    "Sparse sampling between 54.6s and 68.6s, exact placement motion not directly observed, but final state clearly shows incomplete storage"
+  ],
+  "assumptions": [
+    "Task requires storing all visible dishes (both green plates) in rack",
+    "Final frame represents end of demonstration segment"
+  ],
+  "confidence": 0.7,
+  "model_name": "accounts/fireworks/models/muse-spark-open",
+  "tracking_used": false,
+  "provisional": true,
+  "raw_model_text": "{\"verdict\":\"failure\",\"summary\":\"Robot attempted to store two green plates but only one was placed in the dish rack; one plate remains on the table in the final frame, so not all dishes were stored.\",\"observed_actions\":[\"robot grasping green plate over table (frame 0)\",\"robot lifting plate with second plate on table (frame 1)\",\"robot releasing/placing plate onto table near rack (frame 2)\",\"one additional plate now in dish rack while one plate remains on table (frame 3)\"],\"failure_mode\":\"incomplete placement - one dish left on table\",\"evidence\":[{\"timestamp_s\":50.6,\"description\":\"Robot gripper holding green plate above table, second green plate on table, dish rack contains one green plate\",\"kind\":\"observed\",\"frame_index\":0},{\"timestamp_s\":51.6,\"description\":\"Robot lifting one plate vertically while second plate rests on table\",\"kind\":\"observed\",\"frame_index\":1},{\"timestamp_s\":54.6,\"description\":\"Both green plates now on table surface, robot gripper empty and positioned above one plate\",\"kind\":\"observed\",\"frame_index\":2},{\"timestamp_s\":68.6,\"description\":\"Dish rack now holds two green plates, but one green plate still remains on table, not stored\",\"kind\":\"observed\",\"frame_index\":3}],\"assumptions\":[\"Task requires storing all visible dishes (both green plates) in rack\",\"Final frame represents end of demonstration segment\"],\"uncertainty_notes\":[\"Sparse sampling between 54.6s and 68.6s, exact placement motion not directly observed, but final state clearly shows incomplete storage\"],\"confidence\":0.7}"
+}

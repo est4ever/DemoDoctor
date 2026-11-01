@@ -1,0 +1,134 @@
+{
+  "repo_id": "kantine/BotFails",
+  "repo_type": "dataset",
+  "dataset_subdir": "BotFails/test/domotic_dishTidyUp_anomaly",
+  "license": "apache-2.0",
+  "revision": "3478e49d91e1737eb76dfee2d81bb22617039c13",
+  "files": {
+    "meta/info.json": {
+      "sha256": "c80cb1fb3ac1e3dcb63c9c1872a42dd3866a74a595dc94584bdff82a2645b1c9",
+      "bytes": 3367
+    },
+    "meta/episodes.jsonl": {
+      "sha256": "46d43ad83d7d7fe85a50b82985ad9f6913e693c486f22d0fec77693fbb5993bc",
+      "bytes": 2060
+    },
+    "meta/tasks.jsonl": {
+      "sha256": "a1d4b8a07527a69d5188cc466a448d65d2c1342ef9d117c71ff7386b227d6cc9",
+      "bytes": 115
+    },
+    "data/chunk-000/episode_000000.parquet": {
+      "sha256": "8398b6033de5f0967d97f6d72e2187cd18b9b7fb380a455966d36dbdfdc45a22",
+      "bytes": 113041
+    },
+    "data/chunk-000/episode_000010.parquet": {
+      "sha256": "6b659856fe24cfdf5ed853bde335fd93f7959b1d5f6644f07b8b5a248de28ffd",
+      "bytes": 110770
+    },
+    "data/chunk-000/episode_000001.parquet": {
+      "sha256": "fa06143cbd7f520ac9ab4d72ab0fdfd154981d252ae90a5fd721e204a0f02236",
+      "bytes": 109646
+    },
+    "data/chunk-000/episode_000011.parquet": {
+      "sha256": "7699e8227a5d536e8ebf5137b18c31fd3fe937cbaa5433977addb3a6c0b78467",
+      "bytes": 111841
+    },
+    "data/chunk-000/episode_000002.parquet": {
+      "sha256": "302b2fc6f4c3dc2097140ee049bf56921cd3e471c4df39360aafa7b3e5323fc6",
+      "bytes": 108629
+    },
+    "data/chunk-000/episode_000003.parquet": {
+      "sha256": "8cd5893cf5e1cf7afdd9f54f573b99ac67b976aa138f2109b6434fcbda81a650",
+      "bytes": 112258
+    },
+    "data/chunk-000/episode_000005.parquet": {
+      "sha256": "8bdc2131e2a494835758bf8f1810e828899e856226139f2c50fe42fdd74624aa",
+      "bytes": 108700
+    },
+    "data/chunk-000/episode_000006.parquet": {
+      "sha256": "87a79e22eb0328f1a7a81438a5109948252cabd82ed301883392f6748b80bec5",
+      "bytes": 105457
+    },
+    "data/chunk-000/episode_000012.parquet": {
+      "sha256": "232cbb0a0d25977cdd132eaf6ced42ff2d42999d7e88c9752639aa95882fb3a5",
+      "bytes": 109760
+    },
+    "data/chunk-000/episode_000013.parquet": {
+      "sha256": "12a3796a37e1de94df346cbd73213e758126422ec34fecb1c1de5f2e7cd9d8b2",
+      "bytes": 108608
+    }
+  },
+  "paired_videos": {
+    "0": {
+      "filename": "videos/chunk-000/observation.images.logitech_1/episode_000000.mp4",
+      "camera": "observation.images.logitech_1",
+      "local": "eval_videos/botfails/botfails_dish_test_ep000.mp4",
+      "sha256": "cea576db2d2a9b48ddf95c5cb6dbee38c032030459c28cb48f411f547bd54c99",
+      "matches_dataset_file": true
+    },
+    "10": {
+      "filename": "videos/chunk-000/observation.images.logitech_1/episode_000010.mp4",
+      "camera": "observation.images.logitech_1",
+      "local": "eval_videos/botfails/botfails_dish_test_ep010.mp4",
+      "sha256": "8f61d8613e820992f7db8f9c9cb930fb067a8fa39497b852ebfc23202fbb349a",
+      "matches_dataset_file": true
+    },
+    "1": {
+      "filename": "videos/chunk-000/observation.images.logitech_1/episode_000001.mp4",
+      "camera": "observation.images.logitech_1",
+      "local": "eval_videos/botfails/botfails_dish_test_ep001.mp4",
+      "sha256": "f3dcc251c16c4f5c88e134841754116a6fa8b237883767f808a6d8db16ad9f6e",
+      "matches_dataset_file": true
+    },
+    "11": {
+      "filename": "videos/chunk-000/observation.images.logitech_1/episode_000011.mp4",
+      "camera": "observation.images.logitech_1",
+      "local": "eval_videos/botfails/botfails_dish_test_ep011.mp4",
+      "sha256": "ba5db125f69dfd1849e722adfe3a3e0bbfe6d303dbaa903329c4148e703ee292",
+      "matches_dataset_file": true
+    },
+    "2": {
+      "filename": "videos/chunk-000/observation.images.logitech_1/episode_000002.mp4",
+      "camera": "observation.images.logitech_1",
+      "local": "eval_videos/botfails/botfails_dish_test_ep002.mp4",
+      "sha256": "2bd9fe874069a61654d19e3bfe1624653f2ee8d9a7792774163528c42db5d690",
+      "matches_dataset_file": true
+    },
+    "3": {
+      "filename": "videos/chunk-000/observation.images.logitech_1/episode_000003.mp4",
+      "camera": "observation.images.logitech_1",
+      "local": "eval_videos/botfails/botfails_dish_test_ep003.mp4",
+      "sha256": "c9633141294396f70a555088476b16af958a73ac05605925f8f9597db85c76c7",
+      "matches_dataset_file": true
+    },
+    "5": {
+      "filename": "videos/chunk-000/observation.images.logitech_1/episode_000005.mp4",
+      "camera": "observation.images.logitech_1",
+      "local": "eval_videos/botfails/botfails_dish_test_ep005.mp4",
+      "sha256": "d0ca14fe894e96813231a57a00d57481f41744d9440e054895f821ab2ef632c3",
+      "matches_dataset_file": true
+    },
+    "6": {
+      "filename": "videos/chunk-000/observation.images.logitech_1/episode_000006.mp4",
+      "camera": "observation.images.logitech_1",
+      "local": "eval_videos/botfails/botfails_dish_test_ep006.mp4",
+      "sha256": "de8bb8542e50dc71ba0131a6cc7b40afa60f174ccfb613e40744b8e5a0f0decd",
+      "matches_dataset_file": true
+    },
+    "12": {
+      "filename": "videos/chunk-000/observation.images.logitech_1/episode_000012.mp4",
+      "camera": "observation.images.logitech_1",
+      "local": "eval_videos/botfails/botfails_dish_test_ep012.mp4",
+      "sha256": "450f97dce3ab35013df5fb5d90f3839c34f2fa60612475ad7e2db4c2c32a40c5",
+      "matches_dataset_file": true
+    },
+    "13": {
+      "filename": "videos/chunk-000/observation.images.logitech_1/episode_000013.mp4",
+      "camera": "observation.images.logitech_1",
+      "local": "eval_videos/botfails/botfails_dish_test_ep013.mp4",
+      "sha256": "6f39cbbd669e6a41cbef9cecffc672d19e0b79e18c09d8b48ddbe3234f486a12",
+      "matches_dataset_file": true
+    }
+  },
+  "attribution": "Unmodified copies of files from the Hugging Face dataset kantine/BotFails (apache-2.0)."
+}

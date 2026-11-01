@@ -1,0 +1,8 @@
+{
+  "task_id": "botfails_dish",
+  "description": "store dishes in a dish rack (BotFails domotic_dishTidyUp)",
+  "objects": [{"concept": "green plate", "count": null}],
+  "target": "dish rack",
+  "success": "all_objects_in_target",
+  "notes": "Object count left unset: not established from the task text. Cups/whisk are also dishes in this task but are not tracked in this experiment."
+}

@@ -1,0 +1,16 @@
+{
+  "repo_id": "kantine/BotFails",
+  "revision": "3478e49d91e1737eb76dfee2d81bb22617039c13",
+  "license": "apache-2.0",
+  "note": "BotFails per-frame anomaly flags (dataset annotation, headerless CSV, one 0/1 value per frame). Anomaly != task failure; not our manually verified event times.",
+  "files": {
+    "episode_000000_labels.csv": {
+      "sha256": "e5ad33023cc5c705ae9531d26129962678286fc2d0cb3267beac989d9973bbcc",
+      "bytes": 4180
+    },
+    "episode_000010_labels.csv": {
+      "sha256": "f40d51493d9bdf7134faa02adb54f37912cab1b394cf6e693bdb670ea9528731",
+      "bytes": 4180
+    }
+  }
+}

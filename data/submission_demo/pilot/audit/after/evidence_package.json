@@ -1,0 +1,247 @@
+{
+  "task_id": "live_custom",
+  "task_description": "Place the screwdriver in the white tray.",
+  "experiment_id": "20261030T222607Z_7325777c_offline_reconstruction",
+  "provenance": {
+    "experiment_id": "20261030T222607Z_7325777c_offline_reconstruction",
+    "task_id": "live_custom",
+    "inputs": {
+      "fps": 30.0,
+      "n_frames": 737,
+      "joint_data": false
+    },
+    "verification": {
+      "claims_checked": 2,
+      "claims_failed": 0,
+      "event_verdicts": {
+        "0": "supported"
+      }
+    },
+    "frozen_config_experiment": null,
+    "frozen_git_head": null,
+    "gripper_detector": null,
+    "strict_grounding": true,
+    "analysis_scope": {
+      "complete_demonstration": true,
+      "declared_complete": true,
+      "frame_start": 0,
+      "frame_end": 737,
+      "source_frames": 737
+    },
+    "target_segmentation": {
+      "concept": "white tray",
+      "frame": 0,
+      "cached": true,
+      "n_observations": 0,
+      "status": "empty_result"
+    },
+    "observation_coverage": {
+      "frame_start": 0,
+      "frame_end": 737,
+      "frames_with_detections": 632,
+      "missing_frames": 105,
+      "expected_frames": 737,
+      "missing_ranges": [
+        {
+          "frame_start": 433,
+          "frame_end": 538
+        }
+      ],
+      "note": "Missing detections are unobserved, not proof of physical absence. No interpolation."
+    }
+  },
+  "identity_caveat": "Object ids from separate SAM requests (window video vs end-of-episode image) are not assumed to be the same physical instance across gaps.",
+  "deterministic_pipeline": {
+    "verdict": "uncertain",
+    "failure_type": null,
+    "earliest_failure": null,
+    "n_physical_events": 1
+  },
+  "physical_events": [
+    {
+      "event_index": 0,
+      "kind": "image_position_change",
+      "subtype": "endpoint_displacement",
+      "status": "observed",
+      "track_id": "screwdriver:0",
+      "frame_start": 0,
+      "frame_end": 737,
+      "t_start": 0.0,
+      "t_end": 24.567,
+      "inference": null,
+      "uncertainties": [
+        "Only 2D box-center positions of one SAM track ID are compared; no depth or physical identity guarantee.",
+        "No continuous trajectory is established across missing detections.",
+        "This does not establish grasp, holding, release, placement, or task success/failure."
+      ],
+      "evidence_ids": [
+        "E0",
+        "E1"
+      ]
+    }
+  ],
+  "evidence_catalog": [
+    {
+      "evidence_id": "E0",
+      "source": "sam:screwdriver",
+      "kind": "detection",
+      "status_context": "observed",
+      "frame_start": 0,
+      "frame_end": 737,
+      "t_start": 0.0,
+      "t_end": 24.567,
+      "summary": "The box center for SAM track screwdriver:0 differs by 609.01px between observed frames 0 and 736; endpoint comparison only.",
+      "claims": [
+        {
+          "type": "displacement",
+          "track_id": "screwdriver:0",
+          "from_frame": 0,
+          "to_frame": 736,
+          "value_px": 609.01
+        }
+      ],
+      "track_id": "screwdriver:0",
+      "event_index": 0,
+      "note": null
+    },
+    {
+      "evidence_id": "E1",
+      "source": "sam:screwdriver",
+      "kind": "comparison",
+      "status_context": "observed",
+      "frame_start": 0,
+      "frame_end": 737,
+      "t_start": 0.0,
+      "t_end": 24.567,
+      "summary": "632 of 737 frames have returned detections; 105 frames unobserved. No interpolation.",
+      "claims": [
+        {
+          "type": "observation_coverage",
+          "track_id": "screwdriver:0",
+          "frame_start": 0,
+          "frame_end": 737,
+          "frames_with_detections": 632,
+          "missing_frames": 105,
+          "missing_ranges": [
+            {
+              "frame_start": 433,
+              "frame_end": 538
+            }
+          ]
+        }
+      ],
+      "track_id": "screwdriver:0",
+      "event_index": 0,
+      "note": null
+    },
+    {
+      "evidence_id": "E2",
+      "source": "pipeline:report",
+      "kind": "derived",
+      "status_context": "uncertain",
+      "frame_start": null,
+      "frame_end": null,
+      "t_start": null,
+      "t_end": null,
+      "summary": "No joint data: releases and grasps cannot be measured; conclusions are video-only.",
+      "claims": [],
+      "track_id": null,
+      "event_index": null,
+      "note": "report-level uncertainty (not a physical event)"
+    },
+    {
+      "evidence_id": "E3",
+      "source": "pipeline:report",
+      "kind": "derived",
+      "status_context": "uncertain",
+      "frame_start": null,
+      "frame_end": null,
+      "t_start": null,
+      "t_end": null,
+      "summary": "Not every expected object has an established final position: screwdriver: 0/? established inside.",
+      "claims": [],
+      "track_id": null,
+      "event_index": null,
+      "note": "report-level uncertainty (not a physical event)"
+    },
+    {
+      "evidence_id": "E4",
+      "source": "pipeline:report",
+      "kind": "derived",
+      "status_context": "uncertain",
+      "frame_start": null,
+      "frame_end": null,
+      "t_start": null,
+      "t_end": null,
+      "summary": "Target 'white tray' segmentation unavailable (empty_result); containment, placement and target-relative failure cannot be established.",
+      "claims": [],
+      "track_id": null,
+      "event_index": null,
+      "note": "report-level uncertainty (not a physical event)"
+    },
+    {
+      "evidence_id": "E5",
+      "source": "sam:video",
+      "kind": "detection",
+      "status_context": "observed",
+      "frame_start": 0,
+      "frame_end": 737,
+      "t_start": 0.0,
+      "t_end": 24.533,
+      "summary": "SAM returned 632 2D detections for track screwdriver:0 at frames 0 through 736; this does not establish holding, gripper opening, or task completion.",
+      "claims": [],
+      "track_id": "screwdriver:0",
+      "event_index": null,
+      "note": null
+    }
+  ],
+  "uncertainties": [
+    "No joint data: releases and grasps cannot be measured; conclusions are video-only.",
+    "Not every expected object has an established final position: screwdriver: 0/? established inside.",
+    "Target 'white tray' segmentation unavailable (empty_result); containment, placement and target-relative failure cannot be established."
+  ],
+  "tracking_notes": [
+    "105 of 737 frames lack returned detections. Detection gaps are not continuous tracking or proof of absence.",
+    "For factual_claims, copy a cited evidence summary exactly. Free-form explanation is unverified and is not published as verified fact. Never upgrade the deterministic verdict; context frames are not event measurements.",
+    "Missing SAM detections are never treated as proof of physical absence."
+  ],
+  "final_state": null,
+  "frame_catalog": [
+    {
+      "frame_ref": "F0",
+      "frame_index": 0,
+      "timestamp_s": 0.0,
+      "tied_evidence_ids": [
+        "E0",
+        "E1",
+        "E5"
+      ],
+      "role": "event_start+observation_start"
+    },
+    {
+      "frame_ref": "F1",
+      "frame_index": 736,
+      "timestamp_s": 24.533,
+      "tied_evidence_ids": [
+        "E0",
+        "E1",
+        "E5"
+      ],
+      "role": "event_end+observation_end"
+    },
+    {
+      "frame_ref": "F2",
+      "frame_index": 368,
+      "timestamp_s": 12.266666666666667,
+      "tied_evidence_ids": [],
+      "role": "context"
+    }
+  ],
+  "instructions_for_model": {
+    "cite_only": "Use evidence_id values from evidence_catalog (E…) and frame_ref (F…) only.",
+    "do_not_invent": "Do not invent gripper openings, drops, or placements absent from the catalog.",
+    "status_rules": "Statuses observed/inferred/uncertain come from the pipeline. You may explain them; you must not upgrade uncertain→inferred or inferred→observed.",
+    "hypotheses": "Label speculative causes under hypotheses[], never as factual_claims[].",
+    "empty_events": "If physical_events is empty, say so; do not fabricate events from the images alone as verified pipeline findings."
+  }
+}

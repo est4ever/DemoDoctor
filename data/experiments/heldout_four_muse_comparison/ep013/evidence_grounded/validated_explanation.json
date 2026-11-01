@@ -1,0 +1,205 @@
+{
+  "ok": true,
+  "explanation": "The deterministic pipeline found no supported physical failure events (n_physical_events=0) and reports verdict failure due to incorrect final placement, not a localized drop/release. End-of-episode geometry shows one green plate inside the rack, one outside, and one with insufficient geometry (unknown), so not all expected plates are established inside. Gripper opening was measured at ~50.9s but holding is not detectable from this joint, and no rest\u2192move\u2192rest release was reconstructed.",
+  "task_outcome": "failure",
+  "earliest_failure_interval": null,
+  "factual_claims": [
+    {
+      "text": "Pipeline reported zero physical failure events for this window; no rest\u2192move\u2192rest release event was reconstructed.",
+      "evidence_ids": [
+        "E6"
+      ]
+    },
+    {
+      "text": "Measured gripper opening at frame 1528 (50.933s) is observed, but opening alone is not a drop and holding is not detectable from this joint.",
+      "evidence_ids": [
+        "E5",
+        "E0"
+      ]
+    },
+    {
+      "text": "Gripper reading cannot show whether an object is held; a thin plate does not change the closed reading (0.4-0.6 measured vs commanded ~-0.2).",
+      "evidence_ids": [
+        "E0"
+      ]
+    },
+    {
+      "text": "End-of-episode plate observations: one region=inside, one region=outside, one region=unknown; end_state_verdict=failure.",
+      "evidence_ids": [
+        "E4",
+        "E2"
+      ]
+    },
+    {
+      "text": "Not every expected object has an established final position: green plate 0/? established inside.",
+      "evidence_ids": [
+        "E1"
+      ]
+    },
+    {
+      "text": "Final-state regions are 2D image-plane containment vs dish-rack footprint/eroded interior only; incorrect orientation (e.g. plate lying flat) is NOT verified by this geometry.",
+      "evidence_ids": [
+        "E3",
+        "E4"
+      ]
+    },
+    {
+      "text": "Window track coverage for green plates 1498-1618 (120 frames each) is present but is not a failure event.",
+      "evidence_ids": [
+        "E6"
+      ]
+    }
+  ],
+  "hypotheses": [
+    {
+      "text": "The plate observed outside at end-of-episode may have never been placed in the rack, or may have been placed and then displaced; pipeline provides no verified physical event to distinguish.",
+      "related_evidence_ids": [
+        "E4",
+        "E6"
+      ],
+      "label": "hypothesis"
+    },
+    {
+      "text": "The unknown-region plate may be partially occluded or at rack edge causing insufficient geometry for inside/outside determination.",
+      "related_evidence_ids": [
+        "E4"
+      ],
+      "label": "hypothesis"
+    }
+  ],
+  "visual_interpretations": [
+    {
+      "text": "F0 (49.933s) appears to show robot arm over dish rack with two green plates already in rack and one green plate on table; no gripper object clearly visible.",
+      "frame_ref": "F0",
+      "not_verified_by_pipeline": true
+    },
+    {
+      "text": "F1 (50.933s) corresponds to measured gripper opening; visually gripper appears open/empty above rack.",
+      "frame_ref": "F1",
+      "not_verified_by_pipeline": true
+    },
+    {
+      "text": "F2 (53.9s) appears to show robot holding green whisk over table, not a plate.",
+      "frame_ref": "F2",
+      "not_verified_by_pipeline": true
+    },
+    {
+      "text": "F3 (69.167s) end-state appears to show two plates in rack, whisk in rack, and one green plate on table outside rack, consistent with outside detection.",
+      "frame_ref": "F3",
+      "not_verified_by_pipeline": true
+    }
+  ],
+  "limitations": [
+    "Gripper joint cannot indicate holding; thin plates do not change closed reading (E0).",
+    "Final-state geometry is 2D containment only; orientation failures may remain uncertain (E3).",
+    "Object ids from window video vs end-of-episode image are not assumed same physical instance.",
+    "No physical_events were verified; do not infer drops/releases from images alone."
+  ],
+  "outcome_evidence_ids": [
+    "E2",
+    "E4",
+    "E1"
+  ],
+  "validation_errors": [],
+  "validation_warnings": [],
+  "raw": {
+    "explanation": "The deterministic pipeline found no supported physical failure events (n_physical_events=0) and reports verdict failure due to incorrect final placement, not a localized drop/release. End-of-episode geometry shows one green plate inside the rack, one outside, and one with insufficient geometry (unknown), so not all expected plates are established inside. Gripper opening was measured at ~50.9s but holding is not detectable from this joint, and no rest\u2192move\u2192rest release was reconstructed.",
+    "earliest_failure_interval": null,
+    "task_outcome": "failure",
+    "outcome_evidence_ids": [
+      "E2",
+      "E4",
+      "E1"
+    ],
+    "factual_claims": [
+      {
+        "text": "Pipeline reported zero physical failure events for this window; no rest\u2192move\u2192rest release event was reconstructed.",
+        "evidence_ids": [
+          "E6"
+        ]
+      },
+      {
+        "text": "Measured gripper opening at frame 1528 (50.933s) is observed, but opening alone is not a drop and holding is not detectable from this joint.",
+        "evidence_ids": [
+          "E5",
+          "E0"
+        ]
+      },
+      {
+        "text": "Gripper reading cannot show whether an object is held; a thin plate does not change the closed reading (0.4-0.6 measured vs commanded ~-0.2).",
+        "evidence_ids": [
+          "E0"
+        ]
+      },
+      {
+        "text": "End-of-episode plate observations: one region=inside, one region=outside, one region=unknown; end_state_verdict=failure.",
+        "evidence_ids": [
+          "E4",
+          "E2"
+        ]
+      },
+      {
+        "text": "Not every expected object has an established final position: green plate 0/? established inside.",
+        "evidence_ids": [
+          "E1"
+        ]
+      },
+      {
+        "text": "Final-state regions are 2D image-plane containment vs dish-rack footprint/eroded interior only; incorrect orientation (e.g. plate lying flat) is NOT verified by this geometry.",
+        "evidence_ids": [
+          "E3",
+          "E4"
+        ]
+      },
+      {
+        "text": "Window track coverage for green plates 1498-1618 (120 frames each) is present but is not a failure event.",
+        "evidence_ids": [
+          "E6"
+        ]
+      }
+    ],
+    "hypotheses": [
+      {
+        "text": "The plate observed outside at end-of-episode may have never been placed in the rack, or may have been placed and then displaced; pipeline provides no verified physical event to distinguish.",
+        "related_evidence_ids": [
+          "E4",
+          "E6"
+        ]
+      },
+      {
+        "text": "The unknown-region plate may be partially occluded or at rack edge causing insufficient geometry for inside/outside determination.",
+        "related_evidence_ids": [
+          "E4"
+        ]
+      }
+    ],
+    "visual_interpretations": [
+      {
+        "text": "F0 (49.933s) appears to show robot arm over dish rack with two green plates already in rack and one green plate on table; no gripper object clearly visible.",
+        "frame_ref": "F0",
+        "not_verified_by_pipeline": true
+      },
+      {
+        "text": "F1 (50.933s) corresponds to measured gripper opening; visually gripper appears open/empty above rack.",
+        "frame_ref": "F1",
+        "not_verified_by_pipeline": true
+      },
+      {
+        "text": "F2 (53.9s) appears to show robot holding green whisk over table, not a plate.",
+        "frame_ref": "F2",
+        "not_verified_by_pipeline": true
+      },
+      {
+        "text": "F3 (69.167s) end-state appears to show two plates in rack, whisk in rack, and one green plate on table outside rack, consistent with outside detection.",
+        "frame_ref": "F3",
+        "not_verified_by_pipeline": true
+      }
+    ],
+    "limitations": [
+      "Gripper joint cannot indicate holding; thin plates do not change closed reading (E0).",
+      "Final-state geometry is 2D containment only; orientation failures may remain uncertain (E3).",
+      "Object ids from window video vs end-of-episode image are not assumed same physical instance.",
+      "No physical_events were verified; do not infer drops/releases from images alone."
+    ]
+  }
+}

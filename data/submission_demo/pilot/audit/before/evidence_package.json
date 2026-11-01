@@ -1,0 +1,145 @@
+{
+  "task_id": "live_custom",
+  "task_description": "Place the screwdriver in the white tray.",
+  "experiment_id": "20261030T222607Z_7325777c",
+  "provenance": {
+    "experiment_id": "20261030T222607Z_7325777c",
+    "task_id": "live_custom",
+    "inputs": {
+      "fps": 30.0,
+      "n_frames": 737,
+      "joint_data": false
+    },
+    "verification": {
+      "claims_checked": 0,
+      "claims_failed": 0,
+      "event_verdicts": {}
+    },
+    "frozen_config_experiment": null,
+    "frozen_git_head": null,
+    "gripper_detector": null,
+    "strict_grounding": true,
+    "analysis_scope": {
+      "complete_demonstration": true,
+      "declared_complete": true,
+      "frame_start": 0,
+      "frame_end": 737,
+      "source_frames": 737
+    }
+  },
+  "identity_caveat": "Object ids from separate SAM requests (window video vs end-of-episode image) are not assumed to be the same physical instance across gaps.",
+  "deterministic_pipeline": {
+    "verdict": "uncertain",
+    "failure_type": null,
+    "earliest_failure": null,
+    "n_physical_events": 0
+  },
+  "physical_events": [],
+  "evidence_catalog": [
+    {
+      "evidence_id": "E0",
+      "source": "pipeline:report",
+      "kind": "derived",
+      "status_context": "uncertain",
+      "frame_start": null,
+      "frame_end": null,
+      "t_start": null,
+      "t_end": null,
+      "summary": "No joint data: releases and grasps cannot be measured; conclusions are video-only.",
+      "claims": [],
+      "track_id": null,
+      "event_index": null,
+      "note": "report-level uncertainty (not a physical event)"
+    },
+    {
+      "evidence_id": "E1",
+      "source": "pipeline:report",
+      "kind": "derived",
+      "status_context": "uncertain",
+      "frame_start": null,
+      "frame_end": null,
+      "t_start": null,
+      "t_end": null,
+      "summary": "Not every expected object has an established final position: screwdriver: 0/? established inside.",
+      "claims": [],
+      "track_id": null,
+      "event_index": null,
+      "note": "report-level uncertainty (not a physical event)"
+    },
+    {
+      "evidence_id": "E2",
+      "source": "pipeline:report",
+      "kind": "derived",
+      "status_context": "uncertain",
+      "frame_start": null,
+      "frame_end": null,
+      "t_start": null,
+      "t_end": null,
+      "summary": "No joint-state data: gripper open/close and proprioceptive release timing cannot be measured.",
+      "claims": [],
+      "track_id": null,
+      "event_index": null,
+      "note": "report-level uncertainty (not a physical event)"
+    },
+    {
+      "evidence_id": "E3",
+      "source": "sam:video",
+      "kind": "detection",
+      "status_context": "observed",
+      "frame_start": 0,
+      "frame_end": 737,
+      "t_start": 0.0,
+      "t_end": 24.533,
+      "summary": "SAM returned 632 2D detections for track screwdriver:0 at frames 0 through 736; this does not establish holding, gripper opening, or task completion.",
+      "claims": [],
+      "track_id": "screwdriver:0",
+      "event_index": null,
+      "note": null
+    }
+  ],
+  "uncertainties": [
+    "No joint data: releases and grasps cannot be measured; conclusions are video-only.",
+    "Not every expected object has an established final position: screwdriver: 0/? established inside.",
+    "No joint-state data: gripper open/close and proprioceptive release timing cannot be measured."
+  ],
+  "tracking_notes": [
+    "For factual_claims, copy a cited evidence summary exactly. Free-form explanation is unverified and is not published as verified fact. Never upgrade the deterministic verdict; context frames are not event measurements.",
+    "Missing SAM detections are never treated as proof of physical absence.",
+    "Pipeline reported zero physical failure events for this window."
+  ],
+  "final_state": null,
+  "frame_catalog": [
+    {
+      "frame_ref": "F0",
+      "frame_index": 0,
+      "timestamp_s": 0.0,
+      "tied_evidence_ids": [
+        "E3"
+      ],
+      "role": "event_start"
+    },
+    {
+      "frame_ref": "F1",
+      "frame_index": 736,
+      "timestamp_s": 24.533,
+      "tied_evidence_ids": [
+        "E3"
+      ],
+      "role": "event_end"
+    },
+    {
+      "frame_ref": "F2",
+      "frame_index": 368,
+      "timestamp_s": 12.266666666666667,
+      "tied_evidence_ids": [],
+      "role": "context"
+    }
+  ],
+  "instructions_for_model": {
+    "cite_only": "Use evidence_id values from evidence_catalog (E…) and frame_ref (F…) only.",
+    "do_not_invent": "Do not invent gripper openings, drops, or placements absent from the catalog.",
+    "status_rules": "Statuses observed/inferred/uncertain come from the pipeline. You may explain them; you must not upgrade uncertain→inferred or inferred→observed.",
+    "hypotheses": "Label speculative causes under hypotheses[], never as factual_claims[].",
+    "empty_events": "If physical_events is empty, say so; do not fabricate events from the images alone as verified pipeline findings."
+  }
+}

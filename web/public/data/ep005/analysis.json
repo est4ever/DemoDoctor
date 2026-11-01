@@ -1,0 +1,412 @@
+{
+  "episode_key": "ep005",
+  "title": "Dish tidy-up \u00b7 held-out orientation / false success",
+  "task": "Store green plates in the dish rack",
+  "split": "held-out",
+  "available_episodes": [
+    {
+      "key": "ep010",
+      "label": "ep010 \u2014 suspected release (dev)",
+      "enabled": true
+    },
+    {
+      "key": "ep005",
+      "label": "ep005 \u2014 Muse-only false success vs evidence uncertainty",
+      "enabled": true
+    },
+    {
+      "key": "ep003",
+      "label": "ep003 \u2014 evidence-supported success",
+      "enabled": true
+    },
+    {
+      "key": "ep013",
+      "label": "ep013 \u2014 evidence-supported failure",
+      "enabled": true
+    },
+    {
+      "key": "ep006",
+      "label": "ep006 \u2014 optional abstention example",
+      "enabled": true
+    }
+  ],
+  "has_joint_animation": true,
+  "pipeline_verdict": "uncertain",
+  "task_outcome": "uncertain",
+  "outcome_label": "Uncertain (evidence) vs Muse-only success @0.68 \u2014 false success on orientation",
+  "diagnosis_headline": "Evidence abstains; Muse-only false success",
+  "diagnosis_summary": "Pipeline and evidence-grounded Muse remain uncertain: 2D containment cannot verify plate orientation. Muse-only incorrectly claims upright success \u2014 a false definitive verdict.",
+  "earliest_failure": null,
+  "physical_events": [],
+  "highlight_interval": {
+    "t_start": 53.567,
+    "t_end": 57.533,
+    "label": "analysis window",
+    "status": "observed_window",
+    "note": "Matched Muse analysis frames \u2014 not a reconstructed physical failure interval."
+  },
+  "release_interval": {
+    "t_start": 53.567,
+    "t_end": 57.533,
+    "label": "analysis window",
+    "status": "observed_window",
+    "note": "Matched Muse analysis frames \u2014 not a reconstructed physical failure interval."
+  },
+  "timeline_markers": [
+    {
+      "id": "F0",
+      "label": "Analysis window starts",
+      "t": 53.567,
+      "kind": "analysis_frame",
+      "evidence_ids": [
+        "E7"
+      ]
+    },
+    {
+      "id": "F1",
+      "label": "Measured gripper open",
+      "t": 54.567,
+      "kind": "observed_measurement",
+      "evidence_ids": [
+        "E5",
+        "E7"
+      ]
+    },
+    {
+      "id": "F2",
+      "label": "Analysis window ends",
+      "t": 57.533,
+      "kind": "analysis_frame",
+      "evidence_ids": [
+        "E7"
+      ]
+    },
+    {
+      "id": "F3",
+      "label": "End-state snapshot",
+      "t": 69.167,
+      "kind": "analysis_frame",
+      "evidence_ids": [
+        "E4"
+      ]
+    }
+  ],
+  "evidence_catalog": [
+    {
+      "evidence_id": "E0",
+      "source": "pipeline:report",
+      "kind": "derived",
+      "status_context": "uncertain",
+      "frame_start": null,
+      "frame_end": null,
+      "t_start": null,
+      "t_end": null,
+      "summary": "Gripper reading cannot show whether an object is held (In ep000 the gripper visibly holds a green plate at ~48 s while observation.state[main_gripper] reads 0.4, the same as an empty closure (0.4-0.6 measured vs commanded ~-0.2); a thin plate does not change the closed reading. Larger measured values mean more open (open_sign=+1). Closed-plateau |frame-diff| p95 on ep000 is ~1.8 on a span of ~86; open_rise_frac=0.15 and noise_mult=5 keep the rise threshold at 0.15*span (noise term does not domin",
+      "claims": []
+    },
+    {
+      "evidence_id": "E1",
+      "source": "pipeline:report",
+      "kind": "derived",
+      "status_context": "uncertain",
+      "frame_start": null,
+      "frame_end": null,
+      "t_start": null,
+      "t_end": null,
+      "summary": "Not every expected object has an established final position: green plate: 0/? established inside.",
+      "claims": []
+    },
+    {
+      "evidence_id": "E2",
+      "source": "pipeline:report",
+      "kind": "derived",
+      "status_context": "uncertain",
+      "frame_start": null,
+      "frame_end": null,
+      "t_start": null,
+      "t_end": null,
+      "summary": "Episode prediction basis=insufficient_inside_or_outside; latest_window_verdict=uncertain; end_state_verdict=uncertain.",
+      "claims": []
+    },
+    {
+      "evidence_id": "E3",
+      "source": "pipeline:report",
+      "kind": "derived",
+      "status_context": "uncertain",
+      "frame_start": null,
+      "frame_end": null,
+      "t_start": null,
+      "t_end": null,
+      "summary": "2D containment \u2260 verified upright orientation; orientation failures may remain uncertain.",
+      "claims": []
+    },
+    {
+      "evidence_id": "E4",
+      "source": "sam:green plate (end keyframe)",
+      "kind": "detection",
+      "status_context": "uncertain",
+      "frame_start": 2075,
+      "frame_end": 2076,
+      "t_start": 69.16666666666667,
+      "t_end": 69.2,
+      "summary": "End-of-episode plate observations: green plate:0: region=unknown conf=0.96875; green plate:1: region=unknown conf=0.9726027250289917; green plate:2: region=unknown conf=0.9649122953414917",
+      "claims": []
+    },
+    {
+      "evidence_id": "E5",
+      "source": "proprio:main_gripper",
+      "kind": "measurement",
+      "status_context": "observed",
+      "frame_start": 1637,
+      "frame_end": 1638,
+      "t_start": 54.567,
+      "t_end": 54.567,
+      "summary": "Measured gripper opening (window anchor) at frame 1637 (54.567s); window score=3.1525. Opening alone is not a drop; holding is not detectable from this joint.",
+      "claims": []
+    },
+    {
+      "evidence_id": "E6",
+      "source": "sam:green plate (window 1392-1512)",
+      "kind": "derived",
+      "status_context": "uncertain",
+      "frame_start": 1392,
+      "frame_end": 1512,
+      "t_start": 46.4,
+      "t_end": 50.4,
+      "summary": "Window track coverage (not a failure event): green plate:0: n_frames=120 span=[1392, 1511]; green plate:1: n_frames=120 span=[1392, 1511]; green plate:2: n_frames=120 span=[1392, 1511]",
+      "claims": []
+    },
+    {
+      "evidence_id": "E7",
+      "source": "sam:green plate (window 1607-1727)",
+      "kind": "derived",
+      "status_context": "uncertain",
+      "frame_start": 1607,
+      "frame_end": 1727,
+      "t_start": 53.567,
+      "t_end": 57.567,
+      "summary": "Window track coverage (not a failure event): green plate:0: n_frames=120 span=[1607, 1726]; green plate:1: n_frames=120 span=[1607, 1726]; green plate:2: n_frames=120 span=[1607, 1726]",
+      "claims": []
+    }
+  ],
+  "frame_catalog": [
+    {
+      "frame_ref": "F0",
+      "frame_index": 1607,
+      "timestamp_s": 53.567,
+      "tied_evidence_ids": [
+        "E7"
+      ],
+      "role": "window_start"
+    },
+    {
+      "frame_ref": "F1",
+      "frame_index": 1637,
+      "timestamp_s": 54.567,
+      "tied_evidence_ids": [
+        "E5",
+        "E7"
+      ],
+      "role": "gripper_open_measured"
+    },
+    {
+      "frame_ref": "F2",
+      "frame_index": 1726,
+      "timestamp_s": 57.533,
+      "tied_evidence_ids": [
+        "E7"
+      ],
+      "role": "window_end_last_obs"
+    },
+    {
+      "frame_ref": "F3",
+      "frame_index": 2075,
+      "timestamp_s": 69.167,
+      "tied_evidence_ids": [
+        "E4"
+      ],
+      "role": "end_state"
+    }
+  ],
+  "observed": [
+    {
+      "text": "Measured gripper opening near 54.567s (frame 1637).",
+      "evidence_ids": [
+        "E5",
+        "E7"
+      ],
+      "t": 54.567
+    },
+    {
+      "text": "End-state 2D plate regions: unknown, unknown, unknown (frame 2075).",
+      "evidence_ids": [
+        "E4"
+      ],
+      "t": 69.16666666666667
+    },
+    {
+      "text": "Pipeline physical-event catalog is empty for this episode (n_physical_events=0).",
+      "evidence_ids": [
+        "E0"
+      ]
+    }
+  ],
+  "inferred": [],
+  "hypotheses": [
+    {
+      "text": "The arm may have attempted to place a plate in the rack between 53.5-57.5s, but without a reconstructed release event this remains speculative",
+      "related_evidence_ids": [
+        "E7",
+        "E5"
+      ],
+      "label": "hypothesis"
+    },
+    {
+      "text": "Final plates appearing in/near rack could be inside but geometry was insufficient to confirm, or could be incorrectly oriented flat",
+      "related_evidence_ids": [
+        "E4",
+        "E3",
+        "E1"
+      ],
+      "label": "hypothesis"
+    }
+  ],
+  "unknowns": [
+    "Orientation failure is the visual ground truth, but is not verified by 2D containment.",
+    "Pipeline abstains: insufficient inside/outside geometry for a definitive verdict.",
+    "No timed physical-event localization in this episode.",
+    "2D containment does not establish plate orientation."
+  ],
+  "muse_explanation": "The deterministic pipeline reports verdict uncertain with zero physical failure events reconstructed [E0, E1, E2]. Gripper joint readings cannot indicate holding for thin plates [E0], and the measured opening at 54.567s [E5] is not a verified drop. Window track coverage for green plates is present [E6, E7] but no rest\u2192move\u2192rest release event was reconstructed. End-of-episode geometry shows three green plate detections with region=unknown and insufficient_geometry_unknown, so inside/outside containment is not established [E4, E1, E2], and 2D containment does not verify upright orientation [E3].",
+  "factual_claims": [
+    {
+      "text": "Pipeline found no supported physical failure events (n_physical_events=0) and verdict is uncertain",
+      "evidence_ids": [
+        "E2",
+        "E0"
+      ]
+    },
+    {
+      "text": "Gripper reading cannot show whether an object is held; thin plate does not change closed reading",
+      "evidence_ids": [
+        "E0"
+      ]
+    },
+    {
+      "text": "Measured gripper opening at frame 1637 (54.567s) is observed but opening alone is not a drop and holding is not detectable",
+      "evidence_ids": [
+        "E5"
+      ]
+    },
+    {
+      "text": "Window track coverage for green plates exists for 1392-1511 and 1607-1726 but no release event was reconstructed",
+      "evidence_ids": [
+        "E6",
+        "E7"
+      ]
+    },
+    {
+      "text": "End-of-episode plate observations have region=unknown with insufficient_geometry_unknown and end_state_verdict=uncertain",
+      "evidence_ids": [
+        "E4",
+        "E1",
+        "E2"
+      ]
+    },
+    {
+      "text": "2D containment does not equal verified upright orientation",
+      "evidence_ids": [
+        "E3"
+      ]
+    }
+  ],
+  "visual_interpretations": [
+    {
+      "text": "F0 appears to show red gripper holding a green plate above the dish rack",
+      "frame_ref": "F0",
+      "not_verified_by_pipeline": true
+    },
+    {
+      "text": "F1 appears to show gripper positioned over rack with a green plate partially in rack",
+      "frame_ref": "F1",
+      "not_verified_by_pipeline": true
+    },
+    {
+      "text": "F2 appears to show gripper contacting a green plate on the table outside the rack",
+      "frame_ref": "F2",
+      "not_verified_by_pipeline": true
+    },
+    {
+      "text": "F3 appears to show three green plates in/around rack at end of episode",
+      "frame_ref": "F3",
+      "not_verified_by_pipeline": true
+    }
+  ],
+  "limitations": [
+    "Gripper joint cannot detect holding for thin plates [E0]",
+    "Final-state geometry is 2D image-plane containment only; orientation not verified [E3, E4]",
+    "Object ids across window video vs end-image are not matched [E4]",
+    "No physical events reconstructed; track coverage alone does not prove placement [E6, E7]"
+  ],
+  "muse_only": {
+    "verdict": "success",
+    "confidence": 0.68,
+    "summary": "Robot successfully stored dishes in dish rack. Initial frames show one plate already in rack and two on table/handled; final frame shows table clear and multiple green plates upright in rack, indicating all dishes were placed in rack.",
+    "failure_mode": null
+  },
+  "evidence_muse_outcome": "uncertain",
+  "comparison_note": "False-success example: Muse-only asserts upright success; evidence-grounded abstains. Do not treat 2D inside/outside as orientation.",
+  "highlight_muse_comparison": true,
+  "video": {
+    "rel": "eval_videos/botfails/botfails_dish_test_ep005.mp4",
+    "primary_evidence": true
+  },
+  "disclaimer": "3D view is joint-driven visualization only. Empty physical-event catalogs are shown honestly \u2014 no fabricated timed releases.",
+  "initial_seek_s": 69.167,
+  "initial_marker_id": "F3",
+  "initial_evidence_id": "E4",
+  "sam_overlay": {
+    "available": true,
+    "source": "data/demo_cache/ep005/sam_window/green_plate.json",
+    "concept": "green plate",
+    "frame_start": 1607,
+    "frame_end": 1726,
+    "t_start": 53.56666666666667,
+    "t_end": 57.53333333333333,
+    "n_observations": 360,
+    "n_frames_with_masks": 120,
+    "painted_frames": 120,
+    "total_frames_written": 2090,
+    "video": "overlay.mp4",
+    "codec": "libx264",
+    "style_version": 2,
+    "legend": [
+      {
+        "object_id": "green plate:0",
+        "color_rgb": [
+          255,
+          0,
+          200
+        ]
+      },
+      {
+        "object_id": "green plate:1",
+        "color_rgb": [
+          255,
+          210,
+          0
+        ]
+      },
+      {
+        "object_id": "green plate:2",
+        "color_rgb": [
+          80,
+          120,
+          255
+        ]
+      }
+    ],
+    "note": "High-contrast masks painted from frozen data/demo_cache SAM window only (cyan/magenta/gold \u2014 not object color). Outside this window there is no segmentation: the overlay matches the original camera.",
+    "skipped_rebuild": true
+  }
+}

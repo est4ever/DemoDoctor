@@ -394,6 +394,7 @@ export default function App() {
           selectMarker={selectMarker}
           liveMode={liveMode}
           liveJobId={liveJobId}
+          originalVideoSrc={videoSrc}
           inspectCriterionFrame={(frame: CriterionContextFrame) => {
             const time = criterionContextTime(frame, analysis.multicamera);
             if (time == null) return;

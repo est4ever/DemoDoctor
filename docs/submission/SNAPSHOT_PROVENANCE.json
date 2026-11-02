@@ -648,5 +648,13 @@
       "Criterion presentation rebound to public catalogs",
       "Optional original research-cache/reference tests disclose missing inputs; synthetic core tests remain enabled"
     ]
+  },
+  "diagnostic_context_update": {
+    "source_checkpoint": "de5009f26818d6d8a6cc0b15ba87fd89004095b6",
+    "public_parent": "c1cebf3f353eb62422cabacce3922bda1b166609",
+    "private_history_imported": false,
+    "original_scientific_results_changed": false,
+    "personal_reviews_or_media_included": false,
+    "runtime_presentation_only": true
   }
 }

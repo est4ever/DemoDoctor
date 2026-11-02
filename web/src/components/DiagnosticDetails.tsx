@@ -1,16 +1,22 @@
 import type { AnalysisBundle, CriterionContextFrame } from "../lib/types";
 import { diagnosticFrameCatalog } from "../lib/diagnosticFrameCatalog";
 import { CriterionCoverage } from "./CriterionCoverage";
+import { TemporalContext } from "./TemporalContext";
+import { criterionContextTime } from "../lib/criterionContext";
 
 type Props = {
   analysis: AnalysisBundle;
   inspectEvidence: (id: string) => void;
   seek: (t: number, options?: { pause?: boolean }) => void;
   inspectFrame?: (frame: CriterionContextFrame) => void;
+  videoSrc?: string;
+  fps?: number;
+  duration?: number;
+  jobId?: string | null;
 };
 
 /** Presentation only: saved model suggestions never enter the verified finding groups. */
-export function DiagnosticDetails({ analysis: a, inspectEvidence, seek, inspectFrame }: Props) {
+export function DiagnosticDetails({ analysis: a, inspectEvidence, seek, inspectFrame, videoSrc, fps=30, duration=0, jobId }: Props) {
   const catalog = a.evidence_catalog;
   const citations = (ids: string[] = []) => ids.length ? (
     <div className="claim-links diagnostic-links">
@@ -34,6 +40,7 @@ export function DiagnosticDetails({ analysis: a, inspectEvidence, seek, inspectF
   return <>
     {a.task_coverage_error && <p role="alert">{a.task_coverage_error}</p>}
     {a.criteria && <CriterionCoverage criteria={a.criteria} citations={citations} inspectFrame={inspectFrame} />}
+    {videoSrc && <TemporalContext analysis={a} videoSrc={videoSrc} fps={fps} duration={duration} jobId={jobId} inspectFrame={inspectFrame} seek={seek}/>}
     <section className="diagnostic-hypotheses" aria-label="Diagnostic hypotheses">
       <h3>Diagnostic hypotheses</h3>
       <p>Saved Muse suggestions and visual interpretations. <strong>Unverified</strong>: citations provide context, not independent confirmation. These do not change the recorded outcome.</p>
@@ -46,14 +53,20 @@ export function DiagnosticDetails({ analysis: a, inspectEvidence, seek, inspectF
       </article>)}
       {interpretations.map((v, i) => {
         const frame = frameCatalog.frames.find(f => f.frame_ref === v.frame_ref);
-        const timed = frame && Number.isFinite(frame.timestamp_s) && frame.timestamp_s >= 0;
+        const context:CriterionContextFrame|null = a.multicamera && frame?.camera_id && frame.source_video_id && frame.original_frame!=null && frame.original_timestamp_s!=null ? {
+          frame_ref:frame.frame_ref,camera_id:frame.camera_id,source_video_id:frame.source_video_id,original_frame:frame.original_frame,
+          original_timestamp_s:frame.original_timestamp_s,shared_timestamp_s:frame.timestamp_s,scope:'Original saved Muse visual interpretation, Unverified',
+        } : null;
+        const timed = frame && Number.isFinite(frame.timestamp_s) && frame.timestamp_s >= 0 &&
+          (!a.multicamera || context && inspectFrame && criterionContextTime(context,a.multicamera)!=null);
         return <article key={`v-${i}`}>
           <span className="provenance uncertain">Unverified · saved visual interpretation</span>
           <p>{v.text}</p>
           {timed ? <div className="claim-links">
-            <button onClick={() => seek(frame.timestamp_s, { pause: true })} aria-label={`View diagnostic frame ${frame.frame_ref}`}>
+            <button onClick={() => context ? inspectFrame?.(context) : seek(frame.timestamp_s, { pause: true })} aria-label={`View diagnostic frame ${frame.frame_ref}`}>
               {frame.frame_ref} · frame {frame.frame_index} · {frame.timestamp_s.toFixed(3)}s ↗
             </button>
+            {context && <small>{context.camera_id}/{context.source_video_id} · native frame {context.original_frame} · source {context.original_timestamp_s.toFixed(3)}s</small>}
           </div> : <p>Frame reference unavailable{v.frame_ref ? `: ${v.frame_ref}` : " (none supplied)"}. No camera seek.</p>}
           {timed && <small>Frame source: {frameCatalog.source}</small>}
           <small>Provenance: visual_interpretations in this saved analysis; a frame reference is not verification.</small>

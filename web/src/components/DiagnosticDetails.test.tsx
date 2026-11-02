@@ -22,6 +22,15 @@ async function render(a: AnalysisBundle) {
   return { inspect, seek };
 }
 describe("Saved diagnostics preserve epistemic status and provenance", () => {
+  it('selects the original camera for a camera-labelled Muse visual interpretation',async()=>{
+    const a=saved('ep005'),inspect=vi.fn(),seek=vi.fn();
+    a.multicamera={duration_s:2,cameras:[{camera_id:'cam2',source_video_id:'source2',fps:10,frame_start:0,frame_end:20,playback_offset_s:.1}]} as AnalysisBundle['multicamera'];
+    a.frame_catalog=[{frame_ref:'F1',frame_index:19,timestamp_s:1.8,camera_id:'cam2',source_video_id:'source2',original_frame:19,original_timestamp_s:1.9}] as AnalysisBundle['frame_catalog'];
+    a.visual_interpretations=[{text:'Original view-specific suggestion',frame_ref:'F1',not_verified_by_pipeline:true}];
+    await act(async()=>root.render(<DiagnosticDetails analysis={a} inspectEvidence={vi.fn()} seek={seek} inspectFrame={inspect}/>));
+    await act(async()=>host.querySelector<HTMLButtonElement>('[aria-label="View diagnostic frame F1"]')!.click());
+    expect(inspect).toHaveBeenCalledWith(expect.objectContaining({camera_id:'cam2',original_frame:19,shared_timestamp_s:1.8}));expect(seek).not.toHaveBeenCalled();
+  });
   it.each(["ep005", "ep003", "ep010", "ep006", "ep013"])("restores %s verbatim, without changing recorded facts or outcome", async ep => {
     const a = saved(ep), before = JSON.stringify(a);
     await render(a);

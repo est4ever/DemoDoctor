@@ -43,6 +43,7 @@ type Props = {
   liveMode: boolean;
   liveJobId?: string | null;
   inspectCriterionFrame?: (frame: CriterionContextFrame) => void;
+  originalVideoSrc?: string;
   tracks?: TracksBundle | null;
   joints?: JointsBundle | null;
 };
@@ -716,7 +717,7 @@ export function InvestigationDesk(p: Props) {
                     </>
                   ) : tab === "Findings" ? (
                     <div className="inspector-content">
-                      <DiagnosticDetails analysis={a} inspectEvidence={(id) => { inspectEvidence(id); setTab("Evidence"); }} seek={p.seek} inspectFrame={p.inspectCriterionFrame} />
+                      <DiagnosticDetails analysis={a} inspectEvidence={(id) => { inspectEvidence(id); setTab("Evidence"); }} seek={p.seek} inspectFrame={p.inspectCriterionFrame} videoSrc={p.originalVideoSrc} fps={p.fps} duration={p.duration} jobId={p.liveMode?p.liveJobId:null}/>
                       {findingGroups(a).map((group) => (
                         <div key={group.label}>
                           <h3

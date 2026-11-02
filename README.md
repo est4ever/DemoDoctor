@@ -13,7 +13,7 @@ observed geometry, measured signals, inferred events and unknown outcomes.
 This repository has its own public Git history, separate from private development.
 The initial snapshot derived from `05b175db352ae306c8607e6e08f06036f330b55b`;
 this incremental update transfers validated changes through
-`cc5c3ab3e68f27bb4427aef5a23c3e7c794ca622` without importing private commits.
+`de5009f26818d6d8a6cc0b15ba87fd89004095b6` without importing private commits.
 The October 24 prototype predates the October 26 event start. See
 [build history](docs/submission/BUILD_HISTORY.md) and
 [snapshot provenance](docs/submission/SNAPSHOT.md). Public release commits
@@ -316,3 +316,21 @@ accuracy, causal proof or a robot safety certification.
 ## Final local incremental candidate
 
 Current verification and remaining decisions: [final update report](docs/submission/FINAL_UPDATE_20261101.md). Earlier counts and proposed milestones in historical documents do not describe this final candidate. Publication remains approval-gated.
+
+## Original temporal evidence and diagnostic context
+
+Findings keeps task-criterion coverage expanded and displays a small chronological
+set of original video frames. Each retains its native time and camera/source ID.
+Saved Muse catalog inputs are distinguished from locally selected context, and
+missing SAM observations are identified without inventing motion or measurements.
+Original hypotheses remain Unverified. Camera-labelled interpretation links select
+their own validated view and timestamp.
+
+Optional local analyst interpretations are separate, hash/frame-bound and always
+Unverified. They do not change original results or certify mechanical closure.
+Private review notes, DROID jobs and media are excluded from this repository.
+See [diagnostic context and provenance](docs/integration/DIAGNOSTIC_CONTEXT.md).
+
+## Frozen submission candidate
+
+Current acceptance results, exact file inventory, real-versus-mocked scope, video review and unresolved publication decisions are in [release readiness](docs/submission/RELEASE_READINESS_20261101.md). The application is frozen; publication requires owner approval.

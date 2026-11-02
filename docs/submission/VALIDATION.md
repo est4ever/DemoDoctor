@@ -111,3 +111,7 @@ The fresh npm install reported an unapproved optional esbuild postinstall notice
 the installed native package still completed tests and production build. No global
 npm settings, dependency declarations, lockfile, application code or safeguards
 were changed in response. This notice is separate from the disclosed advisories.
+
+## Frozen application acceptance
+
+The current freeze is documented in [RELEASE_READINESS_20261101.md](RELEASE_READINESS_20261101.md): 448 integrated Python passes; public/fresh Python 403 passes and 45 explicit data-dependent skips; frontend 131 passes and production build passed. Historic counts above describe earlier checkpoints.

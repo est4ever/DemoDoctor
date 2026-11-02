@@ -129,3 +129,11 @@ The October 24 foundation and earlier third-party work remain disclosed above. T
 | Source checkpoint | Author time | Commit time | Final presentation refinement |
 |---|---|---|---|
 | cc5c3ab | 2026-11-01T18:49:00-05:00 | 2026-11-01T18:49:00-05:00 | ui: prioritize criterion states over expandable scope details |
+
+## Original-frame context presentation — November 1
+
+| Source | Author time | Commit time | Contribution |
+|---|---|---|---|
+| de5009f | 2026-11-01T19:17:38-05:00 | 2026-11-01T19:17:38-05:00 | Show provenance-bound original frame context and unverified analyst review |
+
+Documentary source reference only; no private history imported. The October 24 foundation remains disclosed above.

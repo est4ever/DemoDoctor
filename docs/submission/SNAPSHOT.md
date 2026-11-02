@@ -66,3 +66,7 @@ the public catalogs. Missing raw research-cache/reference inputs produce explici
 test skips; synthetic/core checks run normally. Only evaluation tooling/test
 packaging was adjusted to disclose these intentional exclusions; no inference
 algorithm or scientific result was changed. Current results are in FINAL_UPDATE_20261101.md.
+
+## Frozen diagnostic-context update
+
+Current source freeze: `de5009f26818d6d8a6cc0b15ba87fd89004095b6`. The incremental parent is `c1cebf3f353eb62422cabacce3922bda1b166609`. Only reviewed source/tests/docs were transferred; personal analyst reviews and all private job/video data remain excluded. Existing public history, licenses and original result hashes are preserved. See RELEASE_READINESS_20261101.md for current checks and limitations.

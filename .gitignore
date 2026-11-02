@@ -30,3 +30,5 @@ web/public/data/**/*.mp4
 /docs/submission/FINAL_VIDEO_PLAN.md
 /docs/submission/video-production/
 
+
+/web/public/local-reviews/

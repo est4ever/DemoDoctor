@@ -133,6 +133,10 @@ export type AnalysisBundle = {
   timeline_markers: TimelineMarker[];
   evidence_catalog: EvidenceItem[];
   frame_catalog: Array<{
+    camera_id?: string;
+    source_video_id?: string;
+    original_frame?: number;
+    original_timestamp_s?: number;
     frame_ref: string;
     frame_index: number;
     timestamp_s: number;

@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1100" height="410" viewBox="0 0 1100 410" role="img" aria-labelledby="title desc">
+<title id="title">DemoDoctor evidence pipeline</title><desc id="desc">Robot footage feeds SAM and selected source images feed Muse. Source-backed checks support task criteria. Validated cited explanations and scoped criteria reach the investigation UI. Optional recorded robot joints supply measured signals, not invented measurements.</desc>
+<defs><marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0 0L8 4L0 8Z" fill="#b6d875"/></marker></defs>
+<rect width="1100" height="410" rx="18" fill="#111614"/>
+<g font-family="Arial,Helvetica,sans-serif"><text x="34" y="38" fill="#c7ef62" font-size="13" letter-spacing="2">FROM FOOTAGE TO INSPECTABLE EVIDENCE</text>
+<g stroke="#374139" fill="#1b231e" stroke-width="1.4">
+<rect x="28" y="108" width="170" height="100" rx="9"/><rect x="240" y="108" width="180" height="100" rx="9"/><rect x="462" y="108" width="190" height="100" rx="9"/><rect x="694" y="108" width="178" height="100" rx="9"/><rect x="914" y="108" width="158" height="100" rx="9"/>
+<rect x="28" y="274" width="200" height="76" rx="9"/><rect x="462" y="270" width="260" height="86" rx="9"/>
+</g>
+<g stroke="#b6d875" stroke-width="1.6" fill="none" marker-end="url(#arrow)">
+<path d="M198 158H235"/><path d="M420 158H457"/><path d="M652 158H689"/><path d="M872 158H909"/>
+<path d="M113 108V67H782V103"/><path d="M228 312H375V194H457"/><path d="M557 208V265"/><path d="M722 313H993V213"/>
+</g>
+<g fill="#f0f5e9" font-size="19" font-weight="700" text-anchor="middle">
+<text x="113" y="142">Robot video</text><text x="330" y="142">Meta SAM 3.1</text><text x="557" y="142">Evidence + checks</text><text x="783" y="140">Muse Spark Open</text><text x="993" y="142">Investigation</text>
+<text x="128" y="302" font-size="17">Optional robot joints</text><text x="592" y="301" font-size="18">Task-criterion assessment</text>
+</g>
+<g fill="#b5c3b8" font-size="14" text-anchor="middle">
+<text x="113" y="169">1–3 confirmed views</text><text x="113" y="190">native frames + times</text>
+<text x="330" y="169">masks · boxes · tracks</text><text x="330" y="190">camera-local coordinates</text>
+<text x="557" y="169">reconstruction + verifier</text><text x="557" y="190">source-bound claims</text>
+<text x="783" y="168">via Fireworks</text><text x="783" y="189">cited explanations</text>
+<text x="993" y="169">React + FastAPI</text><text x="993" y="190">video ↔ sources</text>
+<text x="128" y="328">measured signals when supplied</text><text x="592" y="325">Supported · Contradicted</text><text x="592" y="345">Unverified · Not assessed</text>
+<text x="480" y="60" fill="#c7d6c0">selected original frames</text><text x="966" y="260">citation validation</text>
+</g>
+<text x="34" y="389" fill="#9eada0" font-size="13">Hypotheses remain unverified. Image-space evidence does not certify physical completion or calibrated 3D.</text>
+</g></svg>

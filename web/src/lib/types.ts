@@ -15,6 +15,10 @@ export type JointsBundle = {
 };
 
 export type EvidenceItem = {
+  camera_id?: string;
+  camera_name?: string;
+  original_evidence_id?: string;
+  source_video_id?: string;
   evidence_id: string;
   source?: string;
   kind?: string;
@@ -45,7 +49,39 @@ export type HighlightInterval = {
   note: string;
 };
 
+export type CriterionContextFrame = {
+  frame_ref: string; camera_id: string; source_video_id: string; original_frame: number;
+  original_timestamp_s: number; shared_timestamp_s: number; scope: string;
+};
+
+export type CriteriaBundle = {
+  schema: "demodoctor.criteria/v2";
+  investigation_id: string;
+  completion: "supported" | "contradicted" | "unverified" | "not_assessed";
+  scope: string;
+  notes: string[];
+  abstention_explanation: string | null;
+  task_text?: string;
+  context_frames?: CriterionContextFrame[];
+  coverage?: Array<{camera_id: string; source_video_id: string; crop: number[] | null; sha256: string; source_sha256: string; fps: number; n_frames: number;
+    frame_start: number; frame_end: number; returned_observations: number; observed_ranges: number[][]; missing_ranges: number[][]; outside_analysis: number[][]}>;
+  catalog_binding?: Array<Pick<EvidenceItem, "evidence_id" | "source" | "frame_start" | "frame_end" | "summary">>;
+  assessments: Array<{
+    criterion_id: string; kind: string; name: string; state: CriteriaBundle["completion"];
+    required: boolean; basis: string; evidence_ids: string[];
+    sources: Array<{ evidence_id: string; kind: string; object_id: string; frame: number; view: string; source_ref: string; package_id: string; value: string; measurement?: Record<string, string | number> }>;
+    requirements: Array<{ kind: string; reason: string }>;
+  }>;
+  mechanisms: Array<{
+    mechanism: string; status: string; verifier: string; evidence_ids: string[];
+    alternatives: string[]; resolving_evidence: Array<{ kind: string; reason: string }>;
+  }>;
+};
+
 export type AnalysisBundle = {
+  task_coverage_error?: string;
+  criteria?: CriteriaBundle;
+  multicamera?: MultiCameraManifest;
   recorded_evidence?: {
     verification: { claims_checked: number; claims_failed: number; ok: boolean };
     provenance: {
@@ -154,6 +190,18 @@ export type AnalysisBundle = {
   initial_seek_s?: number;
   initial_marker_id?: string | null;
   initial_evidence_id?: string | null;
+};
+
+export type MultiCameraManifest = {
+  source_mode?: "composite"|"separate";
+  sources?: Array<{source_video_id:string;width:number;height:number;fps:number;sha256:string}>;
+  investigation_questions?: string;
+  duration_s: number;
+  alignment: {kind: string; basis: string; convention: string};
+  limitations: string[];
+  cameras: Array<{camera_id: string; name: string; motion: string; source_video_id: string;
+    playback_offset_s: number; offset_s: number; fps: number; width: number; height: number;
+    frame_start: number; frame_end: number; sha256: string; crop: number[] | null}>;
 };
 
 export type MappingBundle = {

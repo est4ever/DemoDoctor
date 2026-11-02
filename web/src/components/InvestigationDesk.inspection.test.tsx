@@ -28,13 +28,15 @@ afterEach(async () => {
   vi.unstubAllGlobals();
 });
 
-async function load(episode = "pilot", missingTracks = false) {
+async function load(episode = "pilot", missingTracks = false, computedCriteria = false) {
   window.history.replaceState({}, "", `/#${episode}`);
   vi.stubGlobal("fetch", vi.fn(async (url: string) => {
     const requestedEpisode = /\/data\/(ep\d+)\//.exec(url)?.[1] ?? (url.includes("recorded-pilot") ? "pilot" : episode);
     const suffix = url.split("/").pop();
     let data;
-    if (requestedEpisode === "pilot") {
+    if (computedCriteria && url === `/criteria/${episode}.json`) {
+      data = JSON.parse(readFileSync(resolve('public/criteria', `${episode}.json`), 'utf8'));
+    } else if (requestedEpisode === "pilot") {
       if (suffix === "analysis.json") data = pilot;
       if (suffix === "tracks.json" && !missingTracks) data = pilotTracks;
     } else if (["analysis.json", "tracks.json", "joints.json"].includes(suffix!)) {
@@ -48,8 +50,18 @@ async function load(episode = "pilot", missingTracks = false) {
     });
   }));
   await act(async () => { root.render(<App />); });
-  expect(host.querySelector(".evidence-list"), host.textContent ?? "").not.toBeNull();
+  if (!computedCriteria) expect(host.querySelector(".evidence-list"), host.textContent ?? "").not.toBeNull();
 }
+it('opens completed criterion assessments by default and retains expandable sources and Evidence navigation', async()=>{
+  await load('ep003', false, true);
+  expect(host.querySelector('#inspector-tab-Findings')?.getAttribute('aria-selected')).toBe('true');
+  expect(host.querySelector<HTMLDetailsElement>('.criterion-coverage')!.open).toBe(true);
+  const row=host.querySelector('[data-criterion=containment]')!;
+  expect(row.textContent).toContain('Supported');
+  expect(row.querySelector<HTMLDetailsElement>('details')!.open).toBe(false);
+  await act(async()=>host.querySelector<HTMLButtonElement>('#inspector-tab-Evidence')!.click());
+  expect(host.querySelector('.evidence-list')).not.toBeNull();
+});
 async function inspect(id: string) {
   const button = [...host.querySelectorAll<HTMLButtonElement>(".evidence-list button")]
     .find(b => b.querySelector(".evidence-id")?.textContent === id)!;
@@ -59,6 +71,32 @@ const source = () => host.querySelector<HTMLDetailsElement>(".technical-evidence
 const time = () => Number(host.querySelector('[data-testid="camera-time"]')!.textContent);
 
 describe("Inspect source interaction", () => {
+  it("seeks EP010 visual references using the original package, retaining unverified interpretation status", async () => {
+    await load("ep010");
+    await act(async () => host.querySelector<HTMLButtonElement>("#inspector-tab-Findings")!.click());
+    expect(host.querySelector(".diagnostic-hypotheses")!.textContent).toContain("pilot_report.json#package.frame_refs");
+    await act(async () => host.querySelector<HTMLButtonElement>('[aria-label="View diagnostic frame F1"]')!.click());
+    expect(time()).toBe(44.5);
+    expect(host.querySelector(".diagnostic-hypotheses article .provenance")!.textContent).toContain("Unverified");
+  });
+  it.each(["ep003", "ep013"])("keeps %s end-state support distinct from uncertain physical orientation", async ep => {
+    await load(ep);
+    expect(host.querySelector(".outcome-scope")!.textContent).toContain("physical orientation remains unverified");
+    await act(async () => host.querySelector<HTMLButtonElement>("#inspector-tab-Findings")!.click());
+    expect([...host.querySelectorAll(".inspector-content h3")].some(h => h.textContent === "End-state supported")).toBe(true);
+    const link = [...host.querySelectorAll<HTMLButtonElement>(".claim-links button")].filter(b => b.textContent?.startsWith("E4")).at(-1)!;
+    await act(async () => link.click());
+    expect(source().open).toBe(true); expect(time()).toBeCloseTo(2075 / 30, 2);
+    expect(source().textContent).toContain("End-of-episode plate observations");
+  });
+  it("identifies saved reference context without turning EP005's reference into a finding", async () => {
+    await load("ep005");
+    await act(async () => host.querySelector<HTMLButtonElement>("#inspector-tab-Unknowns")!.click());
+    expect(host.querySelector(".saved-note-context")!.textContent).toContain("curator/reference context");
+    expect(host.querySelector('[data-testid="task-outcome"]')!.textContent?.toLowerCase()).toContain("uncertain");
+    await act(async () => host.querySelector<HTMLButtonElement>("#inspector-tab-Findings")!.click());
+    expect(host.querySelector(".inspector-content")!.textContent).not.toContain("Orientation failure is the visual ground truth");
+  });
   it.each(["E0", "E1", "E2", "E3", "E4", "E5"])("opens the real PILOT %s source and preserves untimed playback", async id => {
     await load();
     expect(time()).toBe(12);

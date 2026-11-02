@@ -54,17 +54,20 @@ export function findingGroups(
 ) {
   const observed = [...analysis.observed];
   const inferred: typeof analysis.inferred = [];
+  const endState: typeof analysis.inferred = [];
   const uncertain: typeof analysis.inferred = [];
   for (const item of analysis.inferred) {
     // An explicit record status wins over the historical array name.
     if (item.status === "observed") observed.push(item);
+    else if (item.status === "supported_by_end_state") endState.push(item);
     else if (item.status == null || item.status === "inferred")
       inferred.push(item);
     else uncertain.push(item);
   }
   return [
-    { label: "Observed", items: observed },
-    { label: "Inferred", items: inferred },
-    { label: "Uncertain", items: uncertain },
+    { label: "Observed", tone: "observed", items: observed },
+    { label: "Inferred", tone: "inferred", items: inferred },
+    { label: "End-state supported", tone: "inferred", items: endState },
+    { label: "Uncertain", tone: "uncertain", items: uncertain },
   ].filter((group) => group.items.length > 0);
 }

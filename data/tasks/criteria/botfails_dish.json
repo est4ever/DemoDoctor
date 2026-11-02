@@ -1,0 +1,25 @@
+{
+  "task_id": "botfails_dish",
+  "description": "store dishes in a dish rack (BotFails domotic_dishTidyUp)",
+  "target": "dish rack",
+  "objects": [{"concept": "green plate", "count": null}],
+  "criteria_basis": "Task text only. Expected plate count and required physical pose are undeclared. Anomaly vocabulary and episode labels do not supply success criteria. Cups/whisk are outside the tracked scope.",
+  "criteria": [
+    {"criterion_id": "containment", "kind": "containment", "required": true,
+     "description": "Observed plate containment at the recorded late keyframe (2D only)",
+     "basis": "Task text: store dishes in a dish rack; assessment limited to the sampled late keyframe",
+     "params": {"final_tail_s": 1.0, "observation_scope": "sampled_keyframe_2d"}},
+    {"criterion_id": "orientation", "kind": "orientation", "required": false,
+     "description": "Physical orientation remains an unresolved task-specification question.",
+     "basis": "No approved orientation predicate in the task input",
+     "params": {}},
+    {"criterion_id": "inventory", "kind": "inventory", "required": true,
+     "description": "All required plates are accounted for at the end.", "basis": "task text: store dishes",
+     "params": {"final_tail_s": 1.0}},
+    {"criterion_id": "grasp_release", "kind": "grasp_release", "required": false,
+     "description": "Each plate is released over/in the rack (diagnostic; not required when the end state is decisive).",
+     "basis": "mechanism criterion for failure explanation"},
+    {"criterion_id": "completion", "kind": "completion", "required": true,
+     "description": "All required criteria hold.", "basis": "conjunction of required criteria"}
+  ]
+}

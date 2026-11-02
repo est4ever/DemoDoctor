@@ -1,0 +1,225 @@
+{
+  "schema": "demodoctor.criteria/v2",
+  "investigation_id": "pilot",
+  "task_id": "live_custom",
+  "assessments": [
+    {
+      "criterion_id": "containment",
+      "kind": "containment",
+      "required": true,
+      "state": "unverified",
+      "basis": "Destination 'white tray' segmentation is unavailable; containment cannot be measured. This does not mean the destination was absent.",
+      "evidence_ids": [
+        "E4"
+      ],
+      "objects": {},
+      "requirements": [
+        {
+          "kind": "destination_mask",
+          "criterion_id": "containment",
+          "reason": "A usable 'white tray' mask (or calibrated interior) at the final-state frame.",
+          "objects": [],
+          "frames": null
+        }
+      ],
+      "blocking": [],
+      "name": "Object location / containment",
+      "sources": []
+    },
+    {
+      "criterion_id": "inventory",
+      "kind": "inventory",
+      "required": true,
+      "state": "unverified",
+      "basis": "0 'screwdriver' detected at the final frame 736, but the expected count is not declared.",
+      "evidence_ids": [
+        "E5"
+      ],
+      "objects": {},
+      "requirements": [
+        {
+          "kind": "task_specification",
+          "criterion_id": "inventory",
+          "reason": "Declare the expected number of 'screwdriver' so detections can be checked for completeness.",
+          "objects": [
+            "screwdriver"
+          ],
+          "frames": null
+        }
+      ],
+      "blocking": [],
+      "name": "Required objects accounted for",
+      "sources": []
+    },
+    {
+      "criterion_id": "grasp_release",
+      "kind": "grasp_release",
+      "required": false,
+      "state": "unverified",
+      "basis": "No gripper measurement: grasp and release cannot be measured; video-only position changes do not establish them.",
+      "evidence_ids": [],
+      "objects": {},
+      "requirements": [
+        {
+          "kind": "gripper_measurement",
+          "criterion_id": "grasp_release",
+          "reason": "Recorded gripper joint (and ideally width/current) synchronized with the video.",
+          "objects": [],
+          "frames": null
+        },
+        {
+          "kind": "continuous_tracking",
+          "criterion_id": "grasp_release",
+          "reason": "Object observations are missing for frames 433-537; recover tracking there (e.g. another viewpoint around the occluder) to see where the object is put down.",
+          "objects": [],
+          "frames": [
+            433,
+            538
+          ]
+        }
+      ],
+      "blocking": [],
+      "name": "Grasp or release",
+      "sources": []
+    },
+    {
+      "criterion_id": "orientation",
+      "kind": "orientation",
+      "required": false,
+      "state": "not_assessed",
+      "basis": "The task specification does not declare this criterion.",
+      "evidence_ids": [],
+      "objects": {},
+      "requirements": [],
+      "blocking": [],
+      "name": "Object orientation",
+      "sources": []
+    },
+    {
+      "criterion_id": "completion",
+      "kind": "completion",
+      "required": true,
+      "state": "unverified",
+      "basis": "Physical completion remains unverified: containment, inventory. Any contradicted 2D sample is scoped to that frame; missing or later evidence is not treated as a final task outcome.",
+      "evidence_ids": [],
+      "objects": {},
+      "requirements": [
+        {
+          "kind": "destination_mask",
+          "criterion_id": "completion",
+          "reason": "A usable 'white tray' mask (or calibrated interior) at the final-state frame.",
+          "objects": [],
+          "frames": null
+        },
+        {
+          "kind": "task_specification",
+          "criterion_id": "completion",
+          "reason": "Declare the expected number of 'screwdriver' so detections can be checked for completeness.",
+          "objects": [
+            "screwdriver"
+          ],
+          "frames": null
+        },
+        {
+          "kind": "task_specification",
+          "criterion_id": "completion",
+          "reason": "An operator-approved complete task checklist, followed by independent evidence for its stated conditions; unstated conditions are not assumed.",
+          "objects": [],
+          "frames": null
+        }
+      ],
+      "blocking": [
+        "containment",
+        "inventory"
+      ],
+      "name": "Physical task-completion conditions",
+      "sources": []
+    }
+  ],
+  "mechanisms": [],
+  "completion": "unverified",
+  "abstention_explanation": "Abstains on physical completion: unresolved criteria containment, inventory. Evidence that could resolve them: continuous_tracking, destination_mask, gripper_measurement, task_specification. Scoped 2D findings are preserved separately.",
+  "evidence_requirements": [
+    {
+      "kind": "destination_mask",
+      "criterion_id": "containment",
+      "reason": "A usable 'white tray' mask (or calibrated interior) at the final-state frame.",
+      "objects": [],
+      "frames": null
+    },
+    {
+      "kind": "task_specification",
+      "criterion_id": "inventory",
+      "reason": "Declare the expected number of 'screwdriver' so detections can be checked for completeness.",
+      "objects": [
+        "screwdriver"
+      ],
+      "frames": null
+    },
+    {
+      "kind": "gripper_measurement",
+      "criterion_id": "grasp_release",
+      "reason": "Recorded gripper joint (and ideally width/current) synchronized with the video.",
+      "objects": [],
+      "frames": null
+    },
+    {
+      "kind": "continuous_tracking",
+      "criterion_id": "grasp_release",
+      "reason": "Object observations are missing for frames 433-537; recover tracking there (e.g. another viewpoint around the occluder) to see where the object is put down.",
+      "objects": [],
+      "frames": [
+        433,
+        538
+      ]
+    },
+    {
+      "kind": "destination_mask",
+      "criterion_id": "completion",
+      "reason": "A usable 'white tray' mask (or calibrated interior) at the final-state frame.",
+      "objects": [],
+      "frames": null
+    },
+    {
+      "kind": "task_specification",
+      "criterion_id": "completion",
+      "reason": "Declare the expected number of 'screwdriver' so detections can be checked for completeness.",
+      "objects": [
+        "screwdriver"
+      ],
+      "frames": null
+    },
+    {
+      "kind": "task_specification",
+      "criterion_id": "completion",
+      "reason": "An operator-approved complete task checklist, followed by independent evidence for its stated conditions; unstated conditions are not assumed.",
+      "objects": [],
+      "frames": null
+    }
+  ],
+  "scope": "Independent criterion assessment; recorded verdicts and model citations are unchanged.",
+  "notes": [],
+  "catalog_binding": [
+    {
+      "evidence_id": "E4",
+      "source": "pipeline:report",
+      "frame_start": null,
+      "frame_end": null,
+      "summary": "Target 'white tray' segmentation unavailable (empty_result); containment, placement and target-relative failure cannot be established."
+    },
+    {
+      "evidence_id": "E5",
+      "source": "sam:video",
+      "frame_start": 0,
+      "frame_end": 737,
+      "summary": "SAM returned 632 2D detections for track screwdriver:0 at frames 0 through 736; this does not establish holding, gripper opening, or task completion."
+    }
+  ],
+  "source_artifacts": [
+    "data/submission_demo/pilot/audit/after/analysis.json",
+    "data/submission_demo/pilot/audit/after/evidence_package.json",
+    "data/submission_demo/pilot/audit/after/verification.json",
+    "data/submission_demo/pilot/audit/before/muse_result.json",
+    "data/submission_demo/pilot/audit/before/evidence_package.json"
+  ]
+}

@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import type { AnalysisBundle, EvidenceItem, JointsBundle, TracksBundle } from "../lib/types";
 
 type Props = {
@@ -11,16 +12,33 @@ type Props = {
 };
 
 /** Read-only presentation of the current catalog and its loaded source artifacts. */
-export function EvidenceSource({ item, analysis, tracks, joints, fps, seek, jobId }: Props) {
+export function EvidenceSource(props: Props) {
+  const {item,jobId,analysis}=props;
+  const [cameraTracks,setCameraTracks]=useState<{cameraId:string;jobId:string;tracks:TracksBundle}|null>(null);
+  const [cameraError,setCameraError]=useState("");
+  useEffect(()=>{setCameraTracks(null);setCameraError("");if(!item.camera_id||!jobId)return;let cancelled=false;
+    fetch(`/api/jobs/${jobId}/cameras/${item.camera_id}/tracks.json`).then(r=>{if(!r.ok)throw Error("Camera-specific source observations unavailable");return r.json();})
+      .then(tracks=>{if(!cancelled)setCameraTracks({cameraId:item.camera_id!,jobId,tracks});}).catch(e=>{if(!cancelled)setCameraError(String(e));});return()=>{cancelled=true;};
+  },[item.camera_id,jobId]);
+  const c=analysis.multicamera?.cameras.find(c=>c.camera_id===item.camera_id);
+  const bound=item.camera_id&&jobId&&cameraTracks?.cameraId===item.camera_id&&cameraTracks.jobId===jobId?cameraTracks.tracks:null;
+  return <>{item.camera_id&&<div className="source-limitation"><strong>{item.camera_name} · {item.camera_id}</strong><p>Original {item.original_evidence_id} · {item.source_video_id} · camera-local pixels. Cross-view identity is unverified.</p>{cameraError&&<p role="alert">{cameraError}</p>}</div>}
+    <EvidenceSourceDetails {...props} tracks={item.camera_id?bound:props.tracks} fps={c?.fps??props.fps}
+      seek={item.camera_id?(s,options)=>props.seek(s-(c?.playback_offset_s??0),options):props.seek}/>
+  </>;
+}
+
+function EvidenceSourceDetails({ item, analysis, tracks, joints, fps, seek, jobId }: Props) {
   const claims = (item.claims ?? []).filter((c): c is Record<string, unknown> => !!c && typeof c === "object");
   const displacement = claims.find(c => c.type === "displacement");
   const trackId = item.track_id ?? claims.find(c => typeof c.track_id === "string")?.track_id;
   const track = typeof trackId === "string" ? tracks?.tracks[trackId] : undefined;
   const from = displacement?.from_frame ?? item.frame_start;
   const to = displacement?.to_frame;
-  const points = track ? (displacement
+  const rawPoints = track ? (displacement
     ? [track.points.find(p => p.frame_index === from), track.points.find(p => p.frame_index === to)].filter(p => p != null)
     : [track.points[0], track.points[track.points.length - 1]].filter(p => p != null)) : [];
+  const points = rawPoints.filter((p,i,all)=>all.findIndex(other=>other.frame_index===p.frame_index)===i);
   const center = (box: number[]) => [(box[0] + box[2]) / 2, (box[1] + box[3]) / 2];
   const gripperClaim = claims.find(c => c.type === "gripper_open");
   const frame = typeof gripperClaim?.frame === "number" ? gripperClaim.frame : item.frame_start;
@@ -72,7 +90,10 @@ export function EvidenceSource({ item, analysis, tracks, joints, fps, seek, jobI
     {item.note && <p>{item.note}</p>}
     {jobId && <div className="claim-links" aria-label="Original job source artifacts">
       {[['failure_report.json','Failure report'],['verification.json','Independent verification'],['evidence_package.json','Original evidence package'],['muse_result.json','Original Muse response']].map(([file,label]) =>
-        <a key={file} href={`/api/jobs/${encodeURIComponent(jobId)}/files/${file}`} target="_blank" rel="noreferrer">{label} ↗</a>)}
+        file === 'muse_result.json' && item.camera_id ? <a key={file} href={`/api/jobs/${encodeURIComponent(jobId)}/files/${file}`} target="_blank" rel="noreferrer">Combined Muse response ↗</a> :
+        <a key={file} href={item.camera_id?`/api/jobs/${encodeURIComponent(jobId)}/cameras/${item.camera_id}/${file}`:`/api/jobs/${encodeURIComponent(jobId)}/files/${file}`} target="_blank" rel="noreferrer">{label} ↗</a>)}
+      {item.camera_id&&<a href={`/api/jobs/${encodeURIComponent(jobId)}/cameras/${item.camera_id}/provenance.json`} target="_blank" rel="noreferrer">Crop, original timestamps & frame mapping ↗</a>}
+      {item.camera_id&&<a href={`/api/jobs/${encodeURIComponent(jobId)}/cameras/${item.camera_id}/provider_observations.json`} target="_blank" rel="noreferrer">Original camera/provider observations ↗</a>}
     </div>}
     <details><summary>Raw evidence record · {item.evidence_id}</summary><pre aria-label="Raw evidence record">{JSON.stringify(item, null, 2)}</pre></details>
   </>;

@@ -54,3 +54,15 @@ Documentation now distinguishes implemented self-service Real Analysis from
 credential-free replay and mocked validation. SOURCE_MANIFEST.json describes
 the updated source tree; original export metadata remains in
 SNAPSHOT_PROVENANCE.json with an appended incremental-update record.
+
+## Final incremental candidate — November 1
+
+This candidate descends from public commits 26a8a9f and 35b0050. It transfers
+approved changes through private source checkpoint `cc5c3ab3e68f27bb4427aef5a23c3e7c794ca622` as files only.
+No private history, personal job, DROID video, credentials or video-production
+asset is imported. Existing sanitized fixtures, all 19 replay hashes and notices
+remain byte-identical. Six optional criterion presentations are generated against
+the public catalogs. Missing raw research-cache/reference inputs produce explicit
+test skips; synthetic/core checks run normally. Only evaluation tooling/test
+packaging was adjusted to disclose these intentional exclusions; no inference
+algorithm or scientific result was changed. Current results are in FINAL_UPDATE_20261101.md.

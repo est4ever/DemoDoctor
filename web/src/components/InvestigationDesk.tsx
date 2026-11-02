@@ -11,6 +11,7 @@ import type {
   TimelineMarker,
   TracksBundle,
   JointsBundle,
+  CriterionContextFrame,
 } from "../lib/types";
 import { formatTime } from "../lib/playback";
 import { getHighlight } from "../lib/types";
@@ -41,6 +42,7 @@ type Props = {
   selectMarker: (marker: TimelineMarker) => void;
   liveMode: boolean;
   liveJobId?: string | null;
+  inspectCriterionFrame?: (frame: CriterionContextFrame) => void;
   tracks?: TracksBundle | null;
   joints?: JointsBundle | null;
 };
@@ -97,7 +99,10 @@ export function InvestigationDesk(p: Props) {
     window.addEventListener("hashchange", sync);
     return () => window.removeEventListener("hashchange", sync);
   }, []);
-  const [tab, setTab] = useState("Evidence");
+  const [tab, setTab] = useState(() => p.analysis.criteria ? "Findings" : "Evidence");
+  useEffect(() => {
+    setTab(p.analysis.criteria ? "Findings" : "Evidence");
+  }, [p.analysis]);
   const [query, setQuery] = useState("");
   const [filter, setFilter] = useState("All");
   const a = p.analysis;
@@ -412,6 +417,7 @@ export function InvestigationDesk(p: Props) {
                 >
                   Outcome: {a.task_outcome}
                 </span>
+                {a.inferred.some(item => item.status === "supported_by_end_state") && <p className="outcome-scope">Recorded 2D end-state criterion; physical orientation remains unverified.</p>}
               </div>
             </div>
             <div className="investigation-grid">
@@ -419,8 +425,8 @@ export function InvestigationDesk(p: Props) {
                 <section className="camera-stage">
                   <div className="stage-heading">
                     <span>
-                      <span className="status-dot" /> CAMERA 01{" "}
-                      <span className="muted">/ PRIMARY EVIDENCE</span>
+                      <span className="status-dot" /> {a.multicamera ? `${a.multicamera.cameras.length} CAMERA VIEW${a.multicamera.cameras.length===1?"":"S"}` : "CAMERA 01"}{" "}
+                      <span className="muted">/ {a.multicamera?"CAMERA-LOCAL EVIDENCE":"PRIMARY EVIDENCE"}</span>
                     </span>
                     <span className="mono">{p.fps} FPS</span>
                   </div>
@@ -710,14 +716,15 @@ export function InvestigationDesk(p: Props) {
                     </>
                   ) : tab === "Findings" ? (
                     <div className="inspector-content">
-                      <DiagnosticDetails analysis={a} inspectEvidence={(id) => { inspectEvidence(id); setTab("Evidence"); }} seek={p.seek} />
+                      <DiagnosticDetails analysis={a} inspectEvidence={(id) => { inspectEvidence(id); setTab("Evidence"); }} seek={p.seek} inspectFrame={p.inspectCriterionFrame} />
                       {findingGroups(a).map((group) => (
                         <div key={group.label}>
                           <h3
-                            className={`provenance ${group.label.toLowerCase()}`}
+                            className={`provenance ${group.tone}`}
                           >
                             {group.label}
                           </h3>
+                          {group.label === "End-state supported" && <p>Recorded 2D geometry supports this assessment. Physical orientation, release and unstated task conditions are not independently verified.</p>}
                           {group.items.map((item, i) => (
                             <article key={i}>
                               <p>{item.text}</p>
@@ -786,6 +793,7 @@ export function InvestigationDesk(p: Props) {
                       <span className="provenance uncertain">
                         Uncertain / not established
                       </span>
+                      <p className="saved-note-context">Saved analysis notes may include curator/reference context. They are not independently verified physical findings or additional pipeline predictions.</p>
                       {a.unknowns.map((u, i) => (
                         <article key={i}>
                           <p>{u}</p>

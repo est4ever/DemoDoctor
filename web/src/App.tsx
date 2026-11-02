@@ -9,8 +9,13 @@ import {
   useRef,
   useState,
 } from "react";
-import { LiveAnalyzePanel } from "./components/LiveAnalyzePanel";
+import { ImportFootage } from "./components/ImportFootage";
+import { MultiCameraWorkspace } from "./components/MultiCameraWorkspace";
 import { loadOptionalJson } from "./lib/loadOptionalJson";
+import { bindCriteria } from "./lib/criteria";
+import { criterionContextTime } from "./lib/criterionContext";
+import { loadSavedInvestigation } from "./lib/savedInvestigations";
+import type { CriteriaBundle, CriterionContextFrame } from "./lib/types";
 import { VideoPane, type VideoViewMode } from "./components/VideoPane";
 import { Button } from "./components/ui";
 import { InvestigationDesk } from "./components/InvestigationDesk";
@@ -73,6 +78,9 @@ export default function App() {
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   const [activeEvidenceId, setActiveEvidenceId] = useState<string | null>(null);
+  const [criterionCamera, setCriterionCamera] = useState<string>();
+  const [criterionFocus, setCriterionFocus] = useState(0);
+  useEffect(() => {setCriterionCamera(undefined);setCriterionFocus(0);}, [analysis]);
   const [videoMode, setVideoMode] = useState<VideoViewMode>("original");
   const [liveJobId, setLiveJobId] = useState<string | null>(null);
   const [liveMode, setLiveMode] = useState(false);
@@ -115,6 +123,12 @@ export default function App() {
       setRerunEp010(false);
       const job = jobFromHash();
       if (job) { setRequestedJobId(job); return; }
+      if (!hash || hash === 'home' || hash === 'upload') {
+        setRequestedJobId(null);
+        if (liveModeRef.current) setDataEpoch(epoch => epoch+1);
+        liveModeRef.current=false;setLiveMode(false);setLiveJobId(null);
+        return;
+      }
       if (!isEpisodeKey(hash)) {
         return;
       }
@@ -147,7 +161,8 @@ export default function App() {
     const base = requestedJobId ? `/api/jobs/${requestedJobId}`
       : episodeKey === "pilot" ? "/api/recorded-pilot" : `/data/${episodeKey}`;
     const suffix = requestedJobId ? "" : ".json";
-    Promise.all([
+    const source = requestedJobId ? loadSavedInvestigation(requestedJobId).then(result =>
+      [null,result.analysis,result.tracks,null] as const) : Promise.all([
       requestedJobId || episodeKey === "pilot" ? Promise.resolve(null) : loadOptionalJson<JointsBundle>(`${base}/joints.json`),
       fetch(`${base}/analysis${suffix}`).then((r) => {
         if (!r.ok)
@@ -160,11 +175,13 @@ export default function App() {
         return r.json() as Promise<AnalysisBundle>;
       }),
       loadOptionalJson<TracksBundle>(`${base}/tracks${suffix}`),
-    ])
-      .then(([j, a, tr]) => {
+      requestedJobId ? Promise.resolve(null) : loadOptionalJson<CriteriaBundle>(`/criteria/${episodeKey}.json`).catch(() => null),
+    ]);
+    source
+      .then(([j, a, tr, criteria]) => {
         if (cancelled) return;
         setJoints(j);
-        setAnalysis(a);
+        setAnalysis(requestedJobId ? a : bindCriteria(a, criteria));
         if (requestedJobId) {
           liveModeRef.current = true;
           setLiveMode(true);
@@ -192,7 +209,7 @@ export default function App() {
     };
   }, [episodeKey, dataEpoch, requestedJobId]);
 
-  const fps = joints?.fps ?? tracks?.fps ?? 30;
+  const fps = joints?.fps ?? tracks?.fps ?? analysis?.multicamera?.cameras[0]?.fps ?? 30;
   const playback = useSharedPlayback(duration, fps);
   const onLiveResult = useCallback(
     (args: {
@@ -283,6 +300,7 @@ export default function App() {
 
   const selectEvidence = useCallback(
     (id: string) => {
+      setCriterionCamera(undefined);
       setActiveEvidenceId(id);
       const item = analysis?.evidence_catalog.find((e) => e.evidence_id === id);
       let seekT: number | null = null;
@@ -328,7 +346,8 @@ export default function App() {
     return (
       <div className="app-shell">
         <h1 className="brand text-3xl">DemoDoctor</h1>
-        <p className="mt-3 text-[var(--warn)]">{error}</p>
+        <p role="alert" className="mt-3 text-[var(--warn)]">{error}</p>
+        <Button onClick={() => {window.location.hash='upload';}}>Recent investigations / Import footage</Button>{" "}
         <Button onClick={() => switchEpisode(DEFAULT_EPISODE)}>Open cached EP010 demonstration</Button>
       </div>
     );
@@ -375,8 +394,15 @@ export default function App() {
           selectMarker={selectMarker}
           liveMode={liveMode}
           liveJobId={liveJobId}
+          inspectCriterionFrame={(frame: CriterionContextFrame) => {
+            const time = criterionContextTime(frame, analysis.multicamera);
+            if (time == null) return;
+            setCriterionCamera(frame.camera_id);
+            setCriterionFocus(n => n+1);
+            playback.setT(time, { pause: true });
+          }}
           video={
-            <VideoPane
+            analysis.multicamera && liveJobId ? <MultiCameraWorkspace manifest={analysis.multicamera} jobId={liveJobId} t={playback.t} playing={playback.playing} activeCamera={criterionCamera ?? activeEvidence?.camera_id} cameraFocus={criterionFocus}/> : <VideoPane
               key={liveMode ? "live-" + liveJobId : episodeKey}
               src={videoSrc}
               overlaySrc={overlaySrc}
@@ -394,7 +420,7 @@ export default function App() {
               }}
             />
           }
-          upload={<LiveAnalyzePanel onLiveResult={onLiveResult} />}
+          upload={<ImportFootage onLiveResult={onLiveResult} />}
           advanced={
             episodeKey === "ep010" && !liveMode ? (
               <Button

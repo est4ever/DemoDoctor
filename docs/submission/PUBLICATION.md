@@ -11,7 +11,7 @@ After approval of the exact local update commit, use only this separate checkout
 ```powershell
 Set-Location '<path-to-the-separate-public-release-checkout>'
 $approvedSha = '<OWNER-APPROVED-UPDATE-SHA>'
-if ((git branch --show-current).Trim() -ne 'release/validated-update-20261101') { throw 'Wrong branch' }
+if ((git branch --show-current).Trim() -ne 'release/validated-update-final') { throw 'Wrong branch' }
 if ((git rev-parse HEAD).Trim() -ne $approvedSha) { throw 'Unapproved commit' }
 if (git status --porcelain) { throw 'Working tree not clean' }
 if ((git remote get-url origin).Trim() -ne 'https://github.com/est4ever/DemoDoctor.git') { throw 'Wrong repository' }
@@ -19,9 +19,9 @@ git fetch origin
 if ($LASTEXITCODE -ne 0) { throw 'Fetch failed' }
 git merge-base --is-ancestor origin/main HEAD
 if ($LASTEXITCODE -ne 0) { throw 'Remote main changed; review integration first' }
-git push origin release/validated-update-20261101
+git push origin release/validated-update-final
 if ($LASTEXITCODE -ne 0) { throw 'Push failed; do not force' }
-gh pr create --repo est4ever/DemoDoctor --base main --head release/validated-update-20261101 --title 'Update local analysis workflow and saved diagnostic presentation' --body-file '<reviewed-PR-description-file>'
+gh pr create --repo est4ever/DemoDoctor --base main --head release/validated-update-final --title 'Update validated camera analysis, task criteria and saved investigations' --body-file '<reviewed-PR-description-file>'
 ```
 
 Review the public PR file list, history, checks, docs and demo assets. Merge only

@@ -102,3 +102,29 @@ an adequate per-run limit. See the README Real Analysis section and the built-in
 `/real-analysis-setup.html` guide for approval, budgeting and limitations.
 No personal environment file is needed for offline replay. Do not register this
 checkout globally if another working checkout is already registered.
+
+## Current local investigation workflow
+
+Use Import Footage → Recent Investigations to reopen completed local jobs after a
+restart without credentials or new inference. Personal jobs are Git-ignored and
+are not included in a fresh checkout. Findings opens task criteria by default;
+technical sources remain expandable. Dry Run produces no physical conclusions.
+
+Register the PowerShell commands with `scripts/register-demodoctor.ps1` and open
+a new Windows PowerShell 5.1 terminal. Normal `DemoDoctor` remains offline.
+`DemoDoctor-RealAnalysis -CredentialsFile C:\private\providers.env -PerRunBudgetUsd 2.10`
+is an explicit local opt-in; it never automatically starts provider work. Stop
+managed servers before switching modes. Review the actual quote in the UI and
+approve Analyze personally. Estimates are not provider billing guarantees.
+
+For composite crops or separate 2/3-camera MP4s, install FFmpeg explicitly and
+make it available on PATH or through `DEMODOCTOR_FFMPEG`. No automatic installation.
+Confirm crop regions and time alignment before preparing a camera set. Limits,
+camera-local coordinates and uncertainty are documented in
+[CAMERA_WORKFLOW.md](../CAMERA_WORKFLOW.md). Do not deploy the inference API.
+
+Public tests use mocks and do not require credentials. Original full research
+videos, raw SAM coverage caches and the original reference-audit file are optional
+development inputs; tests requiring those exact inputs report skips. The six
+replay investigations, criterion presentation and synthetic inference/history
+regressions do not require those excluded inputs.

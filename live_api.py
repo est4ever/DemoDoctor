@@ -162,23 +162,40 @@ def get_budget() -> dict[str, Any]:
 
 @app.get("/api/jobs")
 def list_jobs() -> dict[str, Any]:
+    import saved_jobs
     jobs = []
     if JOBS_ROOT.is_dir():
         for p in sorted(JOBS_ROOT.iterdir(), reverse=True):
             if not p.is_dir() or p.name.startswith("_"):
                 continue
             try:
-                st = _job_file(p.name, "status.json")
+                directory = _job_directory(p.name)
             except HTTPException:
                 continue
-            if not st.is_file():
+            if not any((directory/name).is_file() for name in ('status.json','analysis.json','request.json','multicamera.json')):
                 continue
             try:
                 with JOB_IO_LOCK:
-                    jobs.append(json.loads(st.read_text(encoding="utf-8")))
+                    jobs.append(saved_jobs.describe(directory))
             except Exception:
-                jobs.append({"job_id": p.name, "status": "unknown"})
+                jobs.append({"job_id": p.name, "status": "unknown", "can_open": False,
+                             "availability_error": "Saved metadata is unreadable. No analysis was started."})
+            if len(jobs)==50:break
     return {"jobs": jobs[:50]}
+
+
+@app.get('/api/jobs/{job_id}/reopen')
+def reopen_job(job_id: str) -> dict[str, Any]:
+    """Restore saved artifacts only. Never starts, resumes or retries inference."""
+    import saved_jobs
+    directory=_job_directory(job_id)
+    if not directory.is_dir():raise HTTPException(404,'Saved investigation not found. No analysis was started.')
+    problem=saved_jobs.availability_error(directory)
+    if problem:raise HTTPException(409,problem)
+    analysis=get_analysis(job_id)
+    if analysis.get('task_coverage_error'):
+        raise HTTPException(409,analysis['task_coverage_error'])
+    return {'job_id':job_id,'analysis':analysis,'tracks':saved_jobs.read(directory,'tracks.json')}
 
 
 @app.get("/api/jobs/{job_id}")
@@ -203,7 +220,18 @@ def get_analysis(job_id: str) -> dict[str, Any]:
     path = _job_file(job_id, "analysis.json")
     if not path.is_file():
         raise HTTPException(404, "analysis not ready")
-    return json.loads(path.read_text(encoding="utf-8"))
+    analysis = json.loads(path.read_text(encoding="utf-8"))
+    # Older camera jobs gain explicit task coverage on read, not by mutating
+    # their recorded analysis, provider output, verdict or citation package.
+    if analysis.get('multicamera') and analysis.get('dry_run') is False and not (analysis.get('criteria') or {}).get('task_text'):
+        try:
+            from task_coverage import build_assessment
+            criteria, _ = build_assessment(path.parent)
+            analysis = {**analysis, 'criteria': criteria}
+        except (OSError, ValueError, KeyError, TypeError, IndexError):
+            analysis.pop('criteria', None)
+            analysis['task_coverage_error'] = 'Task reassessment unavailable: approved camera/source provenance could not be verified. Original results remain available; no new inference was run.'
+    return analysis
 
 
 @app.get("/api/jobs/{job_id}/tracks")
@@ -266,6 +294,7 @@ async def analyze(
     force_sam_refresh: bool = Form(False),
     complete_demonstration: bool = Form(False),
     prepare_only: bool = Form(False),
+    investigation_questions: str = Form("", max_length=2000),
 ) -> dict[str, Any]:
     """Explicit analyze request. Does not run on GET/page load."""
     _require_run_allowed(dry_run)
@@ -316,6 +345,7 @@ async def analyze(
         "dry_run": dry_run,
         "force_sam_refresh": force_sam_refresh,
         "complete_demonstration": complete_demonstration,
+        "investigation_questions": investigation_questions,
     }
     (job_dir / "request.json").write_text(
         json.dumps(meta, indent=2) + "\n", encoding="utf-8"
@@ -334,6 +364,7 @@ async def analyze(
         force_sam_refresh=force_sam_refresh,
         dry_run=dry_run,
         complete_demonstration=complete_demonstration,
+        investigation_questions=investigation_questions,
     )
     if not dry_run:
         # Probe the actual bytes before a cost confirmation. No provider calls here.
@@ -464,6 +495,11 @@ def analyze_local(payload: LocalRequest, request: Request) -> dict[str, Any]:
     )
     _spawn_analyze(req)
     return {"job_id": job_id, "status": "queued", "budget": budget.status()}
+
+
+import multicamera_api
+import sys as _sys
+multicamera_api.register(app, _sys.modules[__name__])
 
 
 def main() -> None:

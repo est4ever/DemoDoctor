@@ -45,3 +45,23 @@ setup and is not required for the judge's primary React path.
 
 No model weights or robotics simulator are needed for replay. PyAV wheels provide
 media codecs; an external FFmpeg executable is not required by the primary path.
+
+## Incremental local analysis and task coverage
+
+One import controller supports 1/2/3 views. Camera sets reuse independent existing
+SAM calls, retain source/crop/frame provenance and make one combined camera-labelled
+Muse request. Explicit quote approval, origin/Host restrictions, budget reservations,
+zero paid retries and offline defaults remain. There is no cross-camera identity
+or geometry fusion. The established ordinary single-camera path is preserved.
+
+`task_actions.py` parses a limited set of explicit instructions. `task_criteria.py`
+assesses only bound source predicates; `criteria_presentation.py` adds four-state
+assessments without overwriting outcomes. `saved_investigations.py` reads frozen
+inference outputs, never evaluation references. `task_coverage.py` exposes original
+context and analyzed intervals without creating measured action events.
+
+`saved_jobs.py` validates local saved results and provides whitelisted history
+metadata. GET reopening dispatches no providers. New and historical camera jobs
+can display a read-only assessment; original provider outputs/verdicts/citations
+remain unchanged. Completed criteria open first in Findings, while detailed
+records and citations remain expandable. Evaluation tools are outside runtime.

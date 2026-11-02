@@ -1,13 +1,16 @@
-import type { AnalysisBundle } from "../lib/types";
+import type { AnalysisBundle, CriterionContextFrame } from "../lib/types";
+import { diagnosticFrameCatalog } from "../lib/diagnosticFrameCatalog";
+import { CriterionCoverage } from "./CriterionCoverage";
 
 type Props = {
   analysis: AnalysisBundle;
   inspectEvidence: (id: string) => void;
   seek: (t: number, options?: { pause?: boolean }) => void;
+  inspectFrame?: (frame: CriterionContextFrame) => void;
 };
 
 /** Presentation only: saved model suggestions never enter the verified finding groups. */
-export function DiagnosticDetails({ analysis: a, inspectEvidence, seek }: Props) {
+export function DiagnosticDetails({ analysis: a, inspectEvidence, seek, inspectFrame }: Props) {
   const catalog = a.evidence_catalog;
   const citations = (ids: string[] = []) => ids.length ? (
     <div className="claim-links diagnostic-links">
@@ -26,8 +29,11 @@ export function DiagnosticDetails({ analysis: a, inspectEvidence, seek }: Props)
   const gripper = catalog.filter(e => e.kind === "measurement" && e.source?.startsWith("proprio:"));
   const hypotheses = a.hypotheses ?? [];
   const interpretations = a.visual_interpretations ?? [];
+  const frameCatalog = diagnosticFrameCatalog(a);
 
   return <>
+    {a.task_coverage_error && <p role="alert">{a.task_coverage_error}</p>}
+    {a.criteria && <CriterionCoverage criteria={a.criteria} citations={citations} inspectFrame={inspectFrame} />}
     <section className="diagnostic-hypotheses" aria-label="Diagnostic hypotheses">
       <h3>Diagnostic hypotheses</h3>
       <p>Saved Muse suggestions and visual interpretations. <strong>Unverified</strong>: citations provide context, not independent confirmation. These do not change the recorded outcome.</p>
@@ -39,7 +45,7 @@ export function DiagnosticDetails({ analysis: a, inspectEvidence, seek }: Props)
         <small>No direct frame reference supplied for this hypothesis. Cited evidence may be timed or untimed.</small>
       </article>)}
       {interpretations.map((v, i) => {
-        const frame = a.frame_catalog.find(f => f.frame_ref === v.frame_ref);
+        const frame = frameCatalog.frames.find(f => f.frame_ref === v.frame_ref);
         const timed = frame && Number.isFinite(frame.timestamp_s) && frame.timestamp_s >= 0;
         return <article key={`v-${i}`}>
           <span className="provenance uncertain">Unverified · saved visual interpretation</span>
@@ -49,11 +55,12 @@ export function DiagnosticDetails({ analysis: a, inspectEvidence, seek }: Props)
               {frame.frame_ref} · frame {frame.frame_index} · {frame.timestamp_s.toFixed(3)}s ↗
             </button>
           </div> : <p>Frame reference unavailable{v.frame_ref ? `: ${v.frame_ref}` : " (none supplied)"}. No camera seek.</p>}
+          {timed && <small>Frame source: {frameCatalog.source}</small>}
           <small>Provenance: visual_interpretations in this saved analysis; a frame reference is not verification.</small>
         </article>;
       })}
     </section>
-    <details className="model-explanation criterion-coverage">
+    {!a.criteria && !a.task_coverage_error && <details open className="model-explanation criterion-coverage">
       <summary>Task-criterion coverage</summary>
       <p>Coverage of the saved assessment, not additional success requirements. Supported means an assessment source is present, not that a criterion was met. Missing evidence never implies success or failure.</p>
       <article>
@@ -76,6 +83,6 @@ export function DiagnosticDetails({ analysis: a, inspectEvidence, seek }: Props)
         <p>{gripper.length ? "A recorded gripper measurement is available below. Opening does not establish holding, release, intent or placement; inferred events keep their original status." : "No measured gripper source is supplied in this catalog. Video-only observations do not invent joint measurements or verify physical release."}</p>
         {gripper.length > 0 && citations(gripper.map(e => e.evidence_id))}
       </article>
-    </details>
+    </details>}
   </>;
 }

@@ -107,3 +107,25 @@ of when every line was authored. The owner must disclose any other earlier or
 external work known to them and confirm eligibility under the accepted rules.
 Dataset creation, Meta models, public robot assets and dependencies are
 third-party/pre-existing work, never hackathon-created contributions.
+
+## Later validated development — November 1
+
+Private commit identifiers below are documentary provenance only, not imported Git objects.
+
+| Source checkpoint | Author time | Commit time | Contribution |
+|---|---|---|---|
+| cb1aedc | 2026-11-01T01:11:05-05:00 | 2026-11-01T01:11:05-05:00 | Audit all recorded diagnostics and preserve source classifications |
+| bd148db | 2026-11-01T14:01:41-05:00 | 2026-11-01T14:01:41-05:00 | Add guarded unified camera analysis and local real-analysis launcher |
+| 43190d2 | 2026-11-01T13:17:44-05:00 | 2026-11-01T14:05:39-05:00 | Add task-criterion assessment, evidence requirements and diagnostic evaluation |
+| fbb7a4a | 2026-11-01T14:43:20-05:00 | 2026-11-01T14:43:20-05:00 | Integrate provenance-bound task-criterion assessments |
+| 0e64573 | 2026-11-01T15:11:54-05:00 | 2026-11-01T15:11:54-05:00 | Clarify resolving evidence and separate held-out diagnostic evaluation |
+| 2708d87 | 2026-11-01T17:11:30-05:00 | 2026-11-01T17:11:30-05:00 | Assess explicit task subgoals and preserve camera evidence coverage |
+| 94c6a83 | 2026-11-01T18:28:42-05:00 | 2026-11-01T18:28:42-05:00 | feat: reopen saved investigations from persistent local history |
+| a73bda7 | 2026-11-01T18:33:07-05:00 | 2026-11-01T18:33:07-05:00 | ui: show task criteria and resolving evidence by default |
+| 2e799dd | 2026-11-01T18:37:06-05:00 | 2026-11-01T18:37:06-05:00 | test: disclose optional research inputs in clean release checks |
+
+The October 24 foundation and earlier third-party work remain disclosed above. These timestamps are not independent authorship evidence or organizer eligibility approval.
+
+| Source checkpoint | Author time | Commit time | Final presentation refinement |
+|---|---|---|---|
+| cc5c3ab | 2026-11-01T18:49:00-05:00 | 2026-11-01T18:49:00-05:00 | ui: prioritize criterion states over expandable scope details |

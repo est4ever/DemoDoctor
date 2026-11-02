@@ -12,7 +12,7 @@ import time
 import threading
 import traceback
 import uuid
-from dataclasses import dataclass
+from dataclasses import asdict, dataclass, is_dataclass
 from pathlib import Path
 from typing import Any, Callable
 
@@ -55,6 +55,10 @@ class AnalyzeRequest:
     dry_run: bool = True
     cache_only: bool = False
     complete_demonstration: bool = False
+    # Optional multi-camera orchestration; defaults retain single-camera behavior.
+    image_observations_only: bool = False
+    budget_job_id: str | None = None
+    investigation_questions: str = ""
 
     def __post_init__(self) -> None:
         if not all(s.strip() for s in (self.task_description, self.object_concept, self.destination_concept)):
@@ -135,8 +139,8 @@ def _apply_analysis_scope(report: F.FailureReport, *, complete: bool,
     if not whole_task:
         report.object_outcomes = []
         report.recoveries = []
-        report.uncertainties.append("Partial observation window: its final frame is not "
-                                    "the task's final state; whole-task outcome is uncertain.")
+        report.uncertainties.append("Task-final state is not independently established: the window is partial "
+                                    "or complete-demonstration scope was not declared; whole-task outcome remains uncertain.")
     return scope
 
 
@@ -495,7 +499,7 @@ def run_analyze(req: AnalyzeRequest, progress: ProgressCb | None = None) -> dict
         rid = None
         if not skip_providers:
             rid = budget.reserve(
-                req.job_id, sam_est, note=f"sam_window {req.object_concept}"
+                req.budget_job_id or req.job_id, sam_est, note=f"sam_window {req.object_concept}"
             )
         stage("sam_window_start", estimated_usd=sam_est, dry_run=req.dry_run)
         if skip_providers:
@@ -559,7 +563,7 @@ def run_analyze(req: AnalyzeRequest, progress: ProgressCb | None = None) -> dict
         rack_obs: list[Any] = []
         if not skip_providers:
             rid_img = budget.reserve(
-                req.job_id, img_est, note=f"sam_image {req.destination_concept}"
+                req.budget_job_id or req.job_id, img_est, note=f"sam_image {req.destination_concept}"
             )
             jpeg = T.extract_frame_jpeg(
                 video_bytes, timestamp_s=start_f / fps, quality=95
@@ -650,6 +654,10 @@ def run_analyze(req: AnalyzeRequest, progress: ProgressCb | None = None) -> dict
                 "legend": [],
                 "tracks": {},
                 "frames": {},
+                "fps": fps,
+                "image_size": [w, h],
+                "frame_start": start_f,
+                "frame_end": end_f,
                 "t_start": start_f / fps,
                 "t_end": end_f / fps,
             }
@@ -663,6 +671,9 @@ def run_analyze(req: AnalyzeRequest, progress: ProgressCb | None = None) -> dict
             analysis.update(dry_run=True,
                 diagnosis_headline="Dry run ? no paid inference",
                 diagnosis_summary="Upload and replay verified. SAM and Muse were skipped; no physical findings were produced.")
+            from criteria_presentation import for_analysis
+            analysis["criteria"] = for_analysis(analysis, n_frames=n_frames, fps=fps,
+                object_concept=req.object_concept, destination=req.destination_concept, dry_run=True)
             _write_job(job_dir, "analysis.json", analysis)
             _write_job(job_dir, "tracks.json", tracks_meta)
             _write_job(job_dir, "sam_overlay.json", overlay_meta)
@@ -689,7 +700,17 @@ def run_analyze(req: AnalyzeRequest, progress: ProgressCb | None = None) -> dict
                     "Gripper signal unavailable for this job — release inferred "
                     "from tracks alone is weaker."
                 )
-            report = FI.localize_window(inputs, task, include_observation_events=True)
+            if req.image_observations_only:
+                report = F.FailureReport(task_id=task.task_id, verdict="uncertain",
+                    failure_type=None, earliest_failure=None, physical_events=[],
+                    recoveries=[], object_outcomes=[], uncertainties=[
+                        "Multi-camera MVP: camera-local image observations only; no static-camera physical-event assumptions.",
+                        f"Destination segmentation: {inputs.container_source.get('status', 'unknown')}; a returned footprint does not verify placement."],
+                    inputs={"fps": fps, "n_frames": n_frames, "sources": inputs.sources})
+                if not inputs.observations:
+                    report.uncertainties.append("No object detections returned in this camera window; physical absence is not established.")
+            else:
+                report = FI.localize_window(inputs, task, include_observation_events=True)
             scope = _apply_analysis_scope(report, complete=req.complete_demonstration,
                                           start=start_f, end=end_f, n_frames=n_frames)
             for u in joint_limitations:
@@ -725,6 +746,18 @@ def run_analyze(req: AnalyzeRequest, progress: ProgressCb | None = None) -> dict
                 t_end=end_f / fps,
                 source=f"live_job/{req.job_id}",
             )
+            if req.image_observations_only:
+                for frame_index, detections in tracks_meta["frames"].items():
+                    for detection in detections:
+                        original = next((o for o in inputs.observations if o.object_id == detection["object_id"] and o.frame_index == int(frame_index)), None)
+                        if original is not None:
+                            detection["confidence"] = original.confidence
+                _write_job(job_dir, "provider_observations.json", {
+                    "observations": [asdict(o) for o in inputs.observations],
+                    "destination_observations": [asdict(o) for o in rack_obs],
+                    "provider_calls": [asdict(c) if is_dataclass(c) else vars(c) for c in calls],
+                    "usage_events": usage_events,
+                    "coordinate_space": "native camera image pixels; no cross-camera object association"})
             _write_job(job_dir, "tracks.json", tracks_meta)
 
             overlay_meta = {"available": False, "note":
@@ -742,6 +775,9 @@ def run_analyze(req: AnalyzeRequest, progress: ProgressCb | None = None) -> dict
                 context_frames=[start_f, (start_f + end_f - 1) // 2, end_f - 1],
                 observations=inputs.observations,
             )
+            if req.investigation_questions:
+                pkg.provenance["investigation_questions"] = req.investigation_questions
+                pkg.tracking_notes.append("Investigation questions are not evidence or success criteria. Address unsupported orientation, placement, completion or grasp/release suggestions only as unverified hypotheses or limitations.")
             _write_job(job_dir, "evidence_package.json", pkg.to_muse_text_dict())
 
             muse_out = None
@@ -761,7 +797,7 @@ def run_analyze(req: AnalyzeRequest, progress: ProgressCb | None = None) -> dict
                     else:
                         muse_est = MUSE_RESERVATION_USD
                         rid_m = budget.reserve(
-                            req.job_id, muse_est, note="muse_evidence"
+                            req.budget_job_id or req.job_id, muse_est, note="muse_evidence"
                         )
                         stage(
                             "muse_start",
@@ -853,6 +889,9 @@ def run_analyze(req: AnalyzeRequest, progress: ProgressCb | None = None) -> dict
             analysis["frame_catalog"] = text_dict.get("frame_catalog") or []
             if skip_providers:
                 analysis["limitations"].append("Cache-only regression: Muse was not called.")
+            from criteria_presentation import for_analysis
+            analysis["criteria"] = for_analysis(analysis, n_frames=n_frames, fps=fps,
+                object_concept=req.object_concept, destination=req.destination_concept)
             _write_job(job_dir, "failure_report.json", report.to_dict())
             _write_job(job_dir, "verification.json", vdict)
             _write_job(job_dir, "analysis.json", analysis)

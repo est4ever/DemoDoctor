@@ -23,6 +23,7 @@ beforeEach(() => {
   vi.stubGlobal("fetch", vi.fn(async (url: string) => {
     const body = url === "/api/budget" ? {spent_usd: 0, total_budget_usd: 10, remaining_usd: 10, per_run_budget_usd: 1}
       : url === "/api/jobs/audit-job" ? {job_id: "audit-job", status: "completed", has_analysis: true}
+      : url === "/api/jobs/audit-job/reopen" ? {job_id: "audit-job", analysis: jobAnalysis, tracks: data("tracks")}
       : url === "/api/jobs/audit-job/analysis" ? jobAnalysis
       : url === "/api/jobs/audit-job/tracks" ? null
       : url.endsWith("analysis.json") ? replay
@@ -52,6 +53,20 @@ it("restores a completed uploaded investigation from its URL", async () => {
   expect(host.textContent).toContain("Uploaded dry run");
   expect(host.textContent).toContain("Dry run · SAM/Muse not executed");
   expect(host.querySelector('[data-testid="video-src"]')?.textContent).toBe("/live-data/audit-job/video.mp4");
+});
+
+it("returns from an unavailable saved job to history and switches between saved and bundled investigations", async () => {
+  await load("#job/missing-job");
+  expect(host.querySelector('[role=alert]')?.textContent).toContain('incomplete');
+  await click('Recent investigations / Import footage');
+  await act(async()=>window.dispatchEvent(new HashChangeEvent('hashchange')));
+  expect(location.hash).toBe('#upload');expect(host.textContent).toContain('Recent Investigations');
+  await act(async()=>{location.hash='#job/audit-job';window.dispatchEvent(new HashChangeEvent('hashchange'));});
+  expect(host.textContent).toContain('Uploaded dry run');
+  await click('EP010');await act(async()=>window.dispatchEvent(new HashChangeEvent('hashchange')));
+  expect(location.hash).toBe('#ep010');expect(host.textContent).not.toContain('Uploaded dry run');
+  await act(async()=>{location.hash='#job/audit-job';window.dispatchEvent(new HashChangeEvent('hashchange'));});
+  expect(host.textContent).toContain('Uploaded dry run');
 });
 
 it("resumes a saved upload job after the panel remounts", async () => {

@@ -1,0 +1,439 @@
+{
+  "schema": "demodoctor.criteria/v2",
+  "investigation_id": "ep010",
+  "task_id": "botfails_dish",
+  "assessments": [
+    {
+      "criterion_id": "containment",
+      "kind": "containment",
+      "required": true,
+      "state": "unverified",
+      "basis": "Latest object-region observation is frame 1380 of 2090; the final position after that is unobserved, so intermediate regions are not treated as the final state.",
+      "evidence_ids": [
+        "E1"
+      ],
+      "objects": {},
+      "requirements": [
+        {
+          "kind": "final_state_observation",
+          "criterion_id": "containment",
+          "reason": "Object detections and destination geometry at the last frame 2089; earlier observations do not establish the final state.",
+          "objects": [
+            "green plate"
+          ],
+          "frames": [
+            2089,
+            2090
+          ]
+        },
+        {
+          "kind": "continuous_tracking",
+          "criterion_id": "containment",
+          "reason": "Track each object from its last observation to the end to establish where it ends up.",
+          "objects": [],
+          "frames": [
+            1381,
+            2090
+          ]
+        }
+      ],
+      "blocking": [],
+      "name": "Object location / containment",
+      "sources": []
+    },
+    {
+      "criterion_id": "orientation",
+      "kind": "orientation",
+      "required": false,
+      "state": "unverified",
+      "basis": "No approved orientation success predicate is specified. Model suggestions and dataset anomaly wording do not define it.",
+      "evidence_ids": [],
+      "objects": {},
+      "requirements": [
+        {
+          "kind": "task_specification",
+          "criterion_id": "orientation",
+          "reason": "Specify the required physical pose independently of episode outcomes.",
+          "objects": [],
+          "frames": null
+        },
+        {
+          "kind": "orientation_measurement",
+          "criterion_id": "orientation",
+          "reason": "An independently validated final-frame orientation measurement is also needed.",
+          "objects": [],
+          "frames": null
+        }
+      ],
+      "blocking": [],
+      "name": "Object orientation",
+      "sources": []
+    },
+    {
+      "criterion_id": "inventory",
+      "kind": "inventory",
+      "required": true,
+      "state": "unverified",
+      "basis": "0 'green plate' detected at the latest observation (frame 1380, not final), but the expected count is not declared.",
+      "evidence_ids": [
+        "E1"
+      ],
+      "objects": {},
+      "requirements": [
+        {
+          "kind": "task_specification",
+          "criterion_id": "inventory",
+          "reason": "Declare the expected number of 'green plate' so detections can be checked for completeness.",
+          "objects": [
+            "green plate"
+          ],
+          "frames": null
+        },
+        {
+          "kind": "final_state_observation",
+          "criterion_id": "inventory",
+          "reason": "Object detections and destination geometry at the last frame 2089; earlier observations do not establish the final state.",
+          "objects": [
+            "green plate"
+          ],
+          "frames": [
+            2089,
+            2090
+          ]
+        }
+      ],
+      "blocking": [],
+      "name": "Required objects accounted for",
+      "sources": []
+    },
+    {
+      "criterion_id": "grasp_release",
+      "kind": "grasp_release",
+      "required": false,
+      "state": "unverified",
+      "basis": "Gripper openings measured (frames 1335), but this gripper signal cannot show whether an object is held, so release is not established. 1 release(s) outside the target are inferred (status inferred), not observed.",
+      "evidence_ids": [
+        "E2",
+        "E0",
+        "E1"
+      ],
+      "objects": {},
+      "requirements": [
+        {
+          "kind": "gripper_measurement",
+          "criterion_id": "grasp_release",
+          "reason": "A holding-sensitive signal (motor current, force, or jaw width with object) around each opening.",
+          "objects": [],
+          "frames": [
+            1335,
+            1336
+          ]
+        },
+        {
+          "kind": "continuous_tracking",
+          "criterion_id": "grasp_release",
+          "reason": "Continuous object tracking through each gripper opening to associate the object with the release.",
+          "objects": [],
+          "frames": [
+            1335,
+            1336
+          ]
+        }
+      ],
+      "blocking": [],
+      "name": "Grasp or release",
+      "sources": [
+        {
+          "evidence_id": "E0",
+          "kind": "event_inference",
+          "object_id": "green plate:1",
+          "frame": 1293,
+          "value": "released_outside_target",
+          "view": "primary",
+          "source_ref": "data/experiments/botfails_ep010_w1260_v2/failure_report.json#/physical_events/0",
+          "package_id": "data/experiments/botfails_ep010_w1260_v2/failure_report.json",
+          "measurement": {}
+        },
+        {
+          "evidence_id": "E1",
+          "kind": "event_inference",
+          "object_id": "green plate:1",
+          "frame": 1293,
+          "value": "released_outside_target",
+          "view": "primary",
+          "source_ref": "data/experiments/botfails_ep010_w1260_v2/failure_report.json#/physical_events/0",
+          "package_id": "data/experiments/botfails_ep010_w1260_v2/failure_report.json",
+          "measurement": {}
+        },
+        {
+          "evidence_id": "E2",
+          "kind": "event_inference",
+          "object_id": "green plate:1",
+          "frame": 1293,
+          "value": "released_outside_target",
+          "view": "primary",
+          "source_ref": "data/experiments/botfails_ep010_w1260_v2/failure_report.json#/physical_events/0",
+          "package_id": "data/experiments/botfails_ep010_w1260_v2/failure_report.json",
+          "measurement": {}
+        }
+      ]
+    },
+    {
+      "criterion_id": "completion",
+      "kind": "completion",
+      "required": true,
+      "state": "unverified",
+      "basis": "Physical completion remains unverified: containment, inventory. Any contradicted 2D sample is scoped to that frame; missing or later evidence is not treated as a final task outcome.",
+      "evidence_ids": [],
+      "objects": {},
+      "requirements": [
+        {
+          "kind": "final_state_observation",
+          "criterion_id": "completion",
+          "reason": "Object detections and destination geometry at the last frame 2089; earlier observations do not establish the final state.",
+          "objects": [
+            "green plate"
+          ],
+          "frames": [
+            2089,
+            2090
+          ]
+        },
+        {
+          "kind": "continuous_tracking",
+          "criterion_id": "completion",
+          "reason": "Track each object from its last observation to the end to establish where it ends up.",
+          "objects": [],
+          "frames": [
+            1381,
+            2090
+          ]
+        },
+        {
+          "kind": "task_specification",
+          "criterion_id": "completion",
+          "reason": "Declare the expected number of 'green plate' so detections can be checked for completeness.",
+          "objects": [
+            "green plate"
+          ],
+          "frames": null
+        },
+        {
+          "kind": "task_specification",
+          "criterion_id": "completion",
+          "reason": "An operator-approved complete task checklist, followed by independent evidence for its stated conditions; unstated conditions are not assumed.",
+          "objects": [],
+          "frames": null
+        }
+      ],
+      "blocking": [
+        "containment",
+        "inventory"
+      ],
+      "name": "Physical task-completion conditions",
+      "sources": []
+    }
+  ],
+  "mechanisms": [
+    {
+      "mechanism": "released_outside_target",
+      "category": "placement_outside_target",
+      "status": "inferred",
+      "verifier": "supported",
+      "objects": [
+        "green plate:1"
+      ],
+      "frames": [
+        1293,
+        1351
+      ],
+      "evidence_ids": [
+        "E0",
+        "E1",
+        "E2"
+      ],
+      "alternatives": [
+        "intended placement that missed the target",
+        "unintended drop during transport"
+      ],
+      "criterion_id": "grasp_release",
+      "resolving_evidence": [
+        {
+          "kind": "gripper_measurement",
+          "criterion_id": "grasp_release",
+          "reason": "A holding-sensitive gripper signal to show whether the object was held until the opening.",
+          "objects": [
+            "green plate:1"
+          ],
+          "frames": [
+            1293,
+            1351
+          ]
+        },
+        {
+          "kind": "final_state_observation",
+          "criterion_id": "containment",
+          "reason": "The object's region at the episode end, to show whether the misplacement was recovered.",
+          "objects": [
+            "green plate:1"
+          ],
+          "frames": [
+            2089,
+            2090
+          ]
+        }
+      ]
+    }
+  ],
+  "completion": "unverified",
+  "abstention_explanation": "Abstains on physical completion: unresolved criteria containment, inventory. Evidence that could resolve them: continuous_tracking, final_state_observation, gripper_measurement, orientation_measurement, task_specification. Scoped 2D findings are preserved separately.",
+  "evidence_requirements": [
+    {
+      "kind": "final_state_observation",
+      "criterion_id": "containment",
+      "reason": "Object detections and destination geometry at the last frame 2089; earlier observations do not establish the final state.",
+      "objects": [
+        "green plate"
+      ],
+      "frames": [
+        2089,
+        2090
+      ]
+    },
+    {
+      "kind": "continuous_tracking",
+      "criterion_id": "containment",
+      "reason": "Track each object from its last observation to the end to establish where it ends up.",
+      "objects": [],
+      "frames": [
+        1381,
+        2090
+      ]
+    },
+    {
+      "kind": "task_specification",
+      "criterion_id": "orientation",
+      "reason": "Specify the required physical pose independently of episode outcomes.",
+      "objects": [],
+      "frames": null
+    },
+    {
+      "kind": "orientation_measurement",
+      "criterion_id": "orientation",
+      "reason": "An independently validated final-frame orientation measurement is also needed.",
+      "objects": [],
+      "frames": null
+    },
+    {
+      "kind": "task_specification",
+      "criterion_id": "inventory",
+      "reason": "Declare the expected number of 'green plate' so detections can be checked for completeness.",
+      "objects": [
+        "green plate"
+      ],
+      "frames": null
+    },
+    {
+      "kind": "final_state_observation",
+      "criterion_id": "inventory",
+      "reason": "Object detections and destination geometry at the last frame 2089; earlier observations do not establish the final state.",
+      "objects": [
+        "green plate"
+      ],
+      "frames": [
+        2089,
+        2090
+      ]
+    },
+    {
+      "kind": "gripper_measurement",
+      "criterion_id": "grasp_release",
+      "reason": "A holding-sensitive signal (motor current, force, or jaw width with object) around each opening.",
+      "objects": [],
+      "frames": [
+        1335,
+        1336
+      ]
+    },
+    {
+      "kind": "continuous_tracking",
+      "criterion_id": "grasp_release",
+      "reason": "Continuous object tracking through each gripper opening to associate the object with the release.",
+      "objects": [],
+      "frames": [
+        1335,
+        1336
+      ]
+    },
+    {
+      "kind": "final_state_observation",
+      "criterion_id": "completion",
+      "reason": "Object detections and destination geometry at the last frame 2089; earlier observations do not establish the final state.",
+      "objects": [
+        "green plate"
+      ],
+      "frames": [
+        2089,
+        2090
+      ]
+    },
+    {
+      "kind": "continuous_tracking",
+      "criterion_id": "completion",
+      "reason": "Track each object from its last observation to the end to establish where it ends up.",
+      "objects": [],
+      "frames": [
+        1381,
+        2090
+      ]
+    },
+    {
+      "kind": "task_specification",
+      "criterion_id": "completion",
+      "reason": "Declare the expected number of 'green plate' so detections can be checked for completeness.",
+      "objects": [
+        "green plate"
+      ],
+      "frames": null
+    },
+    {
+      "kind": "task_specification",
+      "criterion_id": "completion",
+      "reason": "An operator-approved complete task checklist, followed by independent evidence for its stated conditions; unstated conditions are not assumed.",
+      "objects": [],
+      "frames": null
+    }
+  ],
+  "scope": "Independent criterion assessment; recorded verdicts and model citations are unchanged.",
+  "notes": [],
+  "catalog_binding": [
+    {
+      "evidence_id": "E0",
+      "source": "sam:green plate",
+      "frame_start": 1293,
+      "frame_end": 1351,
+      "summary": "track green plate:1 moved 86px (0.5x its size) from rest at frame 1293 to rest at frame 1350"
+    },
+    {
+      "evidence_id": "E1",
+      "source": "sam:green plate+target",
+      "frame_start": 1350,
+      "frame_end": 1381,
+      "summary": "came to rest outside the target (31 of 31 rest observations)"
+    },
+    {
+      "evidence_id": "E2",
+      "source": "proprio:observation.state[gripper]",
+      "frame_start": 1335,
+      "frame_end": 1336,
+      "summary": "measured gripper opened at frame 1335 (44.5s), during or just after the move"
+    }
+  ],
+  "source_artifacts": [
+    "data/experiments/botfails_ep010_w1260_v2/failure_report.json",
+    "data/experiments/botfails_ep010_w1260_v2/verification.json",
+    "data/experiments/botfails_ep010_w1260_v2_muse_pilot/pilot_report.json",
+    "data/experiments/botfails_ep010_w1260_v2_muse_pilot/validated_explanation.json",
+    "data/experiments/botfails_ep010_muse_only_matched_frames/structured_prediction.json"
+  ]
+}

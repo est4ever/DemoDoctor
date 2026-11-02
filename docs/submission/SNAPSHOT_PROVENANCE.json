@@ -635,5 +635,18 @@
     ],
     "private_history_imported": false,
     "scientific_results_or_replay_assets_changed": false
+  },
+  "final_incremental_update": {
+    "source_checkpoint": "cc5c3ab3e68f27bb4427aef5a23c3e7c794ca622",
+    "source_baseline": "097f8e1e6509b512886fc8eebe564007758bb759",
+    "public_parent": "35b00505608db9f975a13414dc8e4998238bb82d",
+    "private_history_imported": false,
+    "scientific_results_or_replay_assets_changed": false,
+    "personal_jobs_or_new_video_included": false,
+    "adaptations": [
+      "Documentation uses portable paths and anonymized private job identifiers",
+      "Criterion presentation rebound to public catalogs",
+      "Optional original research-cache/reference tests disclose missing inputs; synthetic core tests remain enabled"
+    ]
   }
 }

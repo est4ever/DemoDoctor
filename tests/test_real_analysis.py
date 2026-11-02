@@ -123,6 +123,34 @@ def test_restart_marks_unfinished_job_without_restarting_it(setup):
     assert s['calls']==[]
 
 
+def test_single_camera_dry_replay_retains_native_fps_without_evidence(setup):
+    c,v,s,_=setup
+    r=c.post('/api/analyze',files={'video':('new.mp4',v.read_bytes(),'video/mp4')},data={
+        'task_description':'Put item in box','object_concept':'item','destination_concept':'box',
+        'dry_run':'true','run_muse':'false'})
+    assert r.status_code==200
+    status=wait(c,r.json()['job_id']);assert status['status']=='completed',status
+    tracks=c.get(f'/api/jobs/{r.json()["job_id"]}/tracks').json()
+    assert tracks['fps']==10 and tracks['image_size']==[64,48]
+    assert tracks['frame_start']==0 and tracks['frame_end']==20 and not tracks['frames']
+    analysis=c.get(f'/api/jobs/{r.json()["job_id"]}/analysis').json()
+    assert analysis['dry_run'] and not analysis['observed'] and analysis['task_outcome']=='uncertain'
+    assert s['calls']==[]
+
+
+def test_optional_questions_reach_single_camera_muse_without_changing_task_criteria(setup,monkeypatch):
+    c,v,s,_=setup;question='Could orientation or occlusion explain incomplete placement?'
+    original=lp.AI.analyze_with_evidence
+    def inspect(pkg,frames,**kw):
+        assert pkg.provenance['investigation_questions']==question
+        assert pkg.task_description=='Put item in box'
+        return original(pkg,frames,**kw)
+    monkeypatch.setattr(lp.AI,'analyze_with_evidence',inspect)
+    q=prepare(c,v,investigation_questions=question).json()['quote'];start(c,q)
+    status=wait(c,q['job_id']);assert status['status']=='completed',status
+    assert c.get(f'/api/jobs/{q["job_id"]}/analysis').json()['task_outcome']=='uncertain'
+
+
 @pytest.mark.skipif(os.name != 'nt', reason='Windows sharing violations')
 def test_temporary_windows_artifact_lock_does_not_repeat_inference(tmp_path,monkeypatch):
     original=Path.replace;attempts=[]

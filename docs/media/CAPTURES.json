@@ -1,0 +1,57 @@
+{
+  "application_public_commit": "96caf60efeff214ab4550bba6be6f0cf96480bb9",
+  "no_application_changes": true,
+  "no_private_job_media": true,
+  "assets": [
+    {
+      "file": "workstation.webp",
+      "kind": "application screenshot",
+      "episode": "EP010",
+      "mock": false,
+      "dimensions": [
+        1440,
+        810
+      ],
+      "processing": "lossless WebP; original pixels",
+      "sha256": "d084784903d0f647eb8b1c43ddf3f4ffde0593e413b14950601775bed8c7f183"
+    },
+    {
+      "file": "task-criteria.webp",
+      "kind": "application screenshot",
+      "episode": "EP003",
+      "mock": false,
+      "dimensions": [
+        543,
+        548
+      ],
+      "processing": "lossless WebP; original pixels; cropped inspector panel",
+      "sha256": "51fc32cf403d2a510905a029869854bb6d51841ab2d771007a00333551097f8c"
+    },
+    {
+      "file": "multicamera-mock.webp",
+      "kind": "application screenshot",
+      "episode": null,
+      "mock": true,
+      "dimensions": [
+        1440,
+        810
+      ],
+      "processing": "lossless WebP; original pixels",
+      "sha256": "e29fcb95bbfbc34486d6f078770fdb9e5e00a9b4f1e4484a71a84f134c208948"
+    },
+    {
+      "file": "evidence-workflow.gif",
+      "kind": "application screen recording",
+      "episode": "EP010",
+      "mock": false,
+      "dimensions": [
+        1200,
+        676
+      ],
+      "duration_seconds": 11.4,
+      "encoded_frames": 57,
+      "processing": "real screen captures; scaled to 1200 px wide, 5 fps, 128-color palette; intentional UI seeks",
+      "sha256": "b41244fc87eee30ec65a53d75df3cf359136aef1f7ee82729b7e803d7d9bb034"
+    }
+  ]
+}

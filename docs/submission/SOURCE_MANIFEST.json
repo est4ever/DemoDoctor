@@ -37,8 +37,8 @@
     },
     {
       "file": "README.md",
-      "bytes": 19949,
-      "sha256": "b071f579df4d401ea2729d3f2a4a91943587419a6ea2b3af53d702593bf3fa8d"
+      "bytes": 12487,
+      "sha256": "be89f875ef27d23ce9348daaf621f1d019d6d14cc895835af6b8e8bda08588ec"
     },
     {
       "file": "ai_analysis.py",
@@ -631,6 +631,11 @@
       "sha256": "f8847c8ede5dd293a387a3aebdf2155a11b02eda8f2d33422968de7e14fb21c6"
     },
     {
+      "file": "docs/REFERENCE.md",
+      "bytes": 20031,
+      "sha256": "bbe9a24cd3630e8e52b64cc05b26a85b41c9bd70ecc61c9d4480fe0fe0973241"
+    },
+    {
       "file": "docs/integration/CRITERIA_INTEGRATED.md",
       "bytes": 6095,
       "sha256": "0968e42f686e14799f801227b8386652115488884c3535a35b91fa62275ac0e4"
@@ -679,6 +684,41 @@
       "file": "docs/launcher/VERIFICATION.md",
       "bytes": 8434,
       "sha256": "982e84dc5b8b64d37e6d34f9b9902bc710eb5bb763df304a65b78949b6e74073"
+    },
+    {
+      "file": "docs/media/CAPTURES.json",
+      "bytes": 1634,
+      "sha256": "97755b45ccaa5ac2332aeb46210addad3a34f90a5d2cfac12adf29df948e540e"
+    },
+    {
+      "file": "docs/media/README.md",
+      "bytes": 3049,
+      "sha256": "079a979a6bc09de791a8ef44bdab33eb4915ddb3dbaa19221aa1a04675805c4b"
+    },
+    {
+      "file": "docs/media/architecture.svg",
+      "bytes": 3011,
+      "sha256": "831a07cb881da7de1f6eae03a0d65c5785362493992e1127325fc223abece55d"
+    },
+    {
+      "file": "docs/media/evidence-workflow.gif",
+      "bytes": 430567,
+      "sha256": "b41244fc87eee30ec65a53d75df3cf359136aef1f7ee82729b7e803d7d9bb034"
+    },
+    {
+      "file": "docs/media/multicamera-mock.webp",
+      "bytes": 48468,
+      "sha256": "e29fcb95bbfbc34486d6f078770fdb9e5e00a9b4f1e4484a71a84f134c208948"
+    },
+    {
+      "file": "docs/media/task-criteria.webp",
+      "bytes": 11634,
+      "sha256": "51fc32cf403d2a510905a029869854bb6d51841ab2d771007a00333551097f8c"
+    },
+    {
+      "file": "docs/media/workstation.webp",
+      "bytes": 217656,
+      "sha256": "d084784903d0f647eb8b1c43ddf3f4ffde0593e413b14950601775bed8c7f183"
     },
     {
       "file": "docs/submission/ARCHITECTURE.md",
@@ -1960,5 +2000,12 @@
       "bytes": 18046,
       "sha256": "2089ea028afae10b7e8acba9bc866a2732988df4b34538a1b45a4f963f313929"
     }
-  ]
+  ],
+  "readme_presentation": {
+    "application_public_commit": "96caf60efeff214ab4550bba6be6f0cf96480bb9",
+    "documentation_only": true,
+    "application_and_scientific_assets_unchanged": true,
+    "media_manifest": "docs/media/CAPTURES.json",
+    "private_history_imported": false
+  }
 }

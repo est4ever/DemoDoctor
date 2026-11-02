@@ -161,12 +161,13 @@ export function VideoPane({
               {windowMeta?.t_end?.toFixed(1)}s
             </Badge>
           ) : (
-            <Badge tone="warn">
-              Outside SAM window — no cached segmentation
+            <span className="sam-window-notice" role="note">
+              Outside SAM analysis window
               {windowMeta?.t_start != null && windowMeta?.t_end != null
                 ? ` (${windowMeta.t_start.toFixed(1)}–${windowMeta.t_end.toFixed(1)}s)`
                 : ""}
-            </Badge>
+              . Showing original footage; no detections invented.
+            </span>
           )
         ) : null}
       </div>
@@ -208,18 +209,9 @@ export function VideoPane({
             videoMode={mode}
           />
         ) : null}
-        <div className="pointer-events-none absolute bottom-3 right-3 rounded bg-black/65 px-3 py-1.5 text-[0.65rem] font-medium uppercase tracking-wide text-white/95">
+        {(mode==='original'||inSamWindow) && <div className="pointer-events-none absolute bottom-3 right-3 rounded bg-black/65 px-3 py-1.5 text-[0.65rem] font-medium uppercase tracking-wide text-white/95">
           {badgeLabel}
-        </div>
-        {(mode === "sam" || mode === "annotated") && !inSamWindow ? (
-          <div className="pointer-events-none absolute inset-x-0 bottom-0 bg-black/70 px-4 py-3 text-center text-[0.9rem] text-white">
-            Outside the frozen SAM analysis window
-            {windowMeta?.t_start != null && windowMeta?.t_end != null
-              ? ` (${windowMeta.t_start.toFixed(1)}–${windowMeta.t_end.toFixed(1)}s)`
-              : ""}
-            . Showing original camera — no detections invented.
-          </div>
-        ) : null}
+        </div>}
       </div>
 
       {mode === "annotated" && tracks ? (

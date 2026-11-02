@@ -92,20 +92,8 @@ export function AnnotatedVideoOverlay({
       const m = containMapping(w, h, imgW, imgH);
 
       if (!inWindow) {
-        ctx.fillStyle = "rgba(0,0,0,0.45)";
-        ctx.fillRect(0, h - 44, w, 44);
-        ctx.fillStyle = "#fff";
-        ctx.font = "600 13px IBM Plex Sans, sans-serif";
-        ctx.textAlign = "center";
-        const win =
-          tracks.t_start != null && tracks.t_end != null
-            ? ` (available ${tracks.t_start.toFixed(1)}–${tracks.t_end.toFixed(1)}s)`
-            : "";
-        ctx.fillText(
-          `No cached SAM observations at this time${win} — nothing invented`,
-          w / 2,
-          h - 18,
-        );
+        // VideoPane owns the accessible DOM notice. Do not paint a second,
+        // unwrappable warning over the footage, especially in narrow views.
         return;
       }
 

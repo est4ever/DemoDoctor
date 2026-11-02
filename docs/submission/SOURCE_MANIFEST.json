@@ -1,7 +1,7 @@
 {
   "source_checkpoint": "bb5c509ac2dff14b3c1c0dcc2afdbe5d9407cebf",
   "initial_source_checkpoint": "05b175db352ae306c8607e6e08f06036f330b55b",
-  "public_parent": "27375223d2740e4a3570c5212632a8be15bf008c",
+  "public_parent": "d9b9bb4ffff86349c23f8fba688516f7e22bfd21",
   "original_history_imported": false,
   "self_excluded": true,
   "entries": [
@@ -37,8 +37,8 @@
     },
     {
       "file": "README.md",
-      "bytes": 12828,
-      "sha256": "991ea0ac08083746287256d9ad10dd189b8750b74a3e8d495533abdd6885e92e"
+      "bytes": 14536,
+      "sha256": "0fba346ab96d372ac2f699e8010f1360eabde39fec376dab016b5a399594a781"
     },
     {
       "file": "ai_analysis.py",
@@ -671,6 +671,11 @@
       "sha256": "e749c31dce6d3959d97b18ee6eebbf614f87b436106059f5cecf69c04e92d8d9"
     },
     {
+      "file": "docs/integration/LOCAL_PROTOTYPE_RELEASE_PREPARATION.md",
+      "bytes": 9233,
+      "sha256": "cf0d51d759b8c8df97f9b972f8576ba7965486902329323401049d011da78544"
+    },
+    {
       "file": "docs/integration/MULTICAMERA_REAL_EXPERIMENT.md",
       "bytes": 5918,
       "sha256": "94846083f4692ebe205bdb41689bcfea89a9448cb0ef6fee3921c1890b0c35e2"
@@ -761,6 +766,11 @@
       "sha256": "2d7f4f6022efa4b592035fd966b9489f52c525aeb7a8e8325533769a5f68459f"
     },
     {
+      "file": "docs/submission/LOCAL_PROTOTYPE.md",
+      "bytes": 7812,
+      "sha256": "1d1568a04c9fac0b13e3c1b647a8a626c848364b4393c6ee5bb168b7ea434f1f"
+    },
+    {
       "file": "docs/submission/PORTAL.md",
       "bytes": 3970,
       "sha256": "9b1ab678835b58dc6f122dfff3485a268ff97e5d5862488305afdcc70ea73948"
@@ -802,8 +812,8 @@
     },
     {
       "file": "docs/submission/SNAPSHOT.md",
-      "bytes": 6607,
-      "sha256": "f2477cd43e02a10bef7afbaba2977e44e32753f1e6cf3b037d0a8ca7856d6a72"
+      "bytes": 7293,
+      "sha256": "22d925f637517a9b9863175ad37008d015921362aac816e0a32d1f9a0dc74764"
     },
     {
       "file": "docs/submission/SNAPSHOT_PROVENANCE.json",
@@ -932,8 +942,8 @@
     },
     {
       "file": "live_api.py",
-      "bytes": 28148,
-      "sha256": "ba638176756c132f91d4e2bf4077b51d4eb59554f173c892fb94e064a2d630ac"
+      "bytes": 28230,
+      "sha256": "b055e1867a45e6b0c63e33578c3d2778fca9072dc0eb800563eedda6af64f63f"
     },
     {
       "file": "live_budget.py",
@@ -987,8 +997,8 @@
     },
     {
       "file": "saved_jobs.py",
-      "bytes": 7064,
-      "sha256": "d39a90c24b759f18d1763f7192b168cabf3160a579ee5f7ee159ccdaf474af87"
+      "bytes": 9627,
+      "sha256": "f655e85972eed284b7a5a2c8674f4df7c4afe0b5def0b81f8960e5baf5191b2a"
     },
     {
       "file": "saved_provenance.py",
@@ -1169,6 +1179,11 @@
       "file": "tests/test_evidence_fusion.py",
       "bytes": 5120,
       "sha256": "694481adc372fec9d9165a54608d632d6725bd8105ff07e989615e0e1ce80018"
+    },
+    {
+      "file": "tests/test_execution_presentation.py",
+      "bytes": 2564,
+      "sha256": "91a2cc50a6f3893fdd1aba1885dbc34f80c175f1cafc99569381125baf716bcc"
     },
     {
       "file": "tests/test_failure_verification.py",
@@ -1682,8 +1697,8 @@
     },
     {
       "file": "web/src/App.regression-1.test.tsx",
-      "bytes": 7427,
-      "sha256": "5c99524128d447b3f06e5db9578cad2592839c9d9c4edd855bc779a5e64f8c37"
+      "bytes": 7418,
+      "sha256": "16de247e9c370263154fa23a6a6159f17f25eb721d1f9ce52d8575735566f0b6"
     },
     {
       "file": "web/src/App.tsx",
@@ -1697,13 +1712,13 @@
     },
     {
       "file": "web/src/components/AnnotatedVideoOverlay.tsx",
-      "bytes": 8239,
-      "sha256": "277ff6a24f0fcf9aef92169ad2dc06d857ad23d18312f0aae5b52890fa357b53"
+      "bytes": 7842,
+      "sha256": "7d8fd25bf3ad053c08ef7e8abefbe7f5450c8346509acf1f80ab965760dc6195"
     },
     {
       "file": "web/src/components/CameraInputs.tsx",
-      "bytes": 17672,
-      "sha256": "0c5875999de316630e5b24ab3023b1df10514343a1af018f6d3e5ae5e8dd8bf4"
+      "bytes": 17829,
+      "sha256": "0e53d7361e55fd687e5e8e5a5d909a9f6efc21b28646e99ac896e5675580f868"
     },
     {
       "file": "web/src/components/CriterionCoverage.test.tsx",
@@ -1727,8 +1742,8 @@
     },
     {
       "file": "web/src/components/DiagnosticDetails.tsx",
-      "bytes": 8089,
-      "sha256": "05fce92f5f80f5a1525f741dd0de1f911ad33277f87b04dbd4825b5ce578b2c3"
+      "bytes": 8173,
+      "sha256": "8d88252fdba6095b9b7ddc7564922054792f6203287e58bf90024d1e1ae56fa1"
     },
     {
       "file": "web/src/components/EventTimeline.regression-1.test.ts",
@@ -1772,8 +1787,8 @@
     },
     {
       "file": "web/src/components/InvestigationDesk.tsx",
-      "bytes": 44650,
-      "sha256": "295ba4f06df920c78ba8e416b657ad63f30e6b24f8cdd29543d09af3ce71ef71"
+      "bytes": 45379,
+      "sha256": "944d6acf5a2057c8347654d39a531748e770e13ad3f537e3612fb096bbdcbe02"
     },
     {
       "file": "web/src/components/InvestigationOverview.test.tsx",
@@ -1794,6 +1809,11 @@
       "file": "web/src/components/LiveAnalyzePanel.tsx",
       "bytes": 25506,
       "sha256": "25a93287211bb0335eac3da09cf8d662deeb8530159c97d254907d4be60bdaa1"
+    },
+    {
+      "file": "web/src/components/LocalPrototypeUsability.test.tsx",
+      "bytes": 3390,
+      "sha256": "ca4e46030a92cb5f4074a11b77c921466bdaccb97008b91492190490049d41da"
     },
     {
       "file": "web/src/components/MultiCameraImport.test.tsx",
@@ -1822,13 +1842,13 @@
     },
     {
       "file": "web/src/components/RecentInvestigations.test.tsx",
-      "bytes": 2916,
-      "sha256": "d5e55dc724303e78720ba49a40f08cf41cd3fff9dbd119428a87a6e54ca79bb1"
+      "bytes": 3458,
+      "sha256": "b99771200cc2d1ac5502a6ea7d6e9942595eb8e3d1f8a08b8f669ece8f25e76d"
     },
     {
       "file": "web/src/components/RecentInvestigations.tsx",
-      "bytes": 4625,
-      "sha256": "7b1ea9fece7aad6bca202946c9f1124ef4bb402ce9b3ff3dcdf1c2d7850797ce"
+      "bytes": 5066,
+      "sha256": "aa30e51ede56203ea443c60d06216bf41c0552e4551b64c8b3d2de31a12d3b98"
     },
     {
       "file": "web/src/components/RecordedEvidence.tsx",
@@ -1857,13 +1877,13 @@
     },
     {
       "file": "web/src/components/TemporalContext.test.tsx",
-      "bytes": 4772,
-      "sha256": "4fe94a942c21182bee087b689351291c0e6793fe573e0de8f72b8fec49e665f3"
+      "bytes": 5669,
+      "sha256": "57f69520668c13579da8627278222326564eb82957f132b654aac858895a5039"
     },
     {
       "file": "web/src/components/TemporalContext.tsx",
-      "bytes": 5571,
-      "sha256": "d78e71981521bcb51f777f5e3c6f4008ea4cf9ce5a803114fb9d3edb92a1e4e3"
+      "bytes": 5707,
+      "sha256": "dbb990b1b1e241aa84578bcd3652b2d796fa308d3900a06bcf678ccbf1864d18"
     },
     {
       "file": "web/src/components/Timeline.tsx",
@@ -1882,8 +1902,8 @@
     },
     {
       "file": "web/src/components/VideoPane.tsx",
-      "bytes": 9778,
-      "sha256": "672af97d12813422e098bbaf2c482a89eb175cdc28492282b8803318a18797bc"
+      "bytes": 9349,
+      "sha256": "335a43106b9f03014d2dddba847787393e91b2bcabc98679ab56a0588616a769"
     },
     {
       "file": "web/src/components/Workstation.accessibility.test.tsx",
@@ -1966,6 +1986,16 @@
       "sha256": "a2ab24bcd4ba7241a1d78a5e8fa05ca4443958283232227ff84ca53ba16999d3"
     },
     {
+      "file": "web/src/lib/investigationMode.test.ts",
+      "bytes": 1185,
+      "sha256": "f8e0e72f5ffba6f1921d1c6d105911990c2d98128fa56bd59730341a03fe74eb"
+    },
+    {
+      "file": "web/src/lib/investigationMode.ts",
+      "bytes": 1047,
+      "sha256": "7715df13769e5a6f09aee23d79ed5168dfa1c583103c3d21f25c31ab6fe075f6"
+    },
+    {
       "file": "web/src/lib/loadOptionalJson.regression-1.test.ts",
       "bytes": 1192,
       "sha256": "7004362796865e6d8b2ba83e455437503e0982502babef451f55c672195f98e5"
@@ -2042,8 +2072,8 @@
     },
     {
       "file": "web/src/lib/types.ts",
-      "bytes": 9337,
-      "sha256": "1f54bd05a1f26b1a0cc8cbe11be6da5fba4fb396247cfdba780d79d98f5215d2"
+      "bytes": 9436,
+      "sha256": "b830b6b09faf7f6fc6a016ea8d2b65cc0c068f1ab7f92fde057a11f7768fdc5b"
     },
     {
       "file": "web/src/lib/uploadDraft.ts",
@@ -2087,8 +2117,8 @@
     },
     {
       "file": "web/src/workstation.css",
-      "bytes": 53030,
-      "sha256": "501514dd51e70f4deae39737f01c0a8e7ed85719505f6b12dc530e1e006a9f9c"
+      "bytes": 53426,
+      "sha256": "53e266d90cc74278ff94ec3f1195596d607c806c1bad38283ba7e4387fb85576"
     },
     {
       "file": "web/tsconfig.app.json",
@@ -2128,5 +2158,6 @@
     "media_manifest": "docs/media/CAPTURES.json",
     "private_history_imported": false
   },
-  "source_scope": "Reviewed defensive integrity and usability subset; experimental detectors excluded"
+  "source_scope": "Reviewed defensive integrity and usability subset; experimental detectors excluded",
+  "local_prototype_followup": "Focused mode clarity, narrow access, warning readability and on-demand previews; no scientific result changes"
 }

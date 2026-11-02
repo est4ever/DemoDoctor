@@ -95,3 +95,14 @@ metadata checks are included; experimental physical-action detectors remain excl
 No original media, citations, outcomes, notices or private jobs are changed or added.
 See [combined review](../integration/COMBINED_RELEASE_REVIEW.md) for exact tests,
 file scope, remaining P2 issues and independent-review status. Publication is pending.
+
+## Local-prototype preparation follow-up — November 2
+
+Parent: `d9b9bb4ffff86349c23f8fba688516f7e22bfd21`, after independent acceptance.
+This small follow-up improves execution-mode descriptions, narrow navigation
+focus, out-of-window warning readability and on-demand temporal previews. It
+adds user instructions and focused tests, not inference algorithms or new model
+results. Local provider-record labels are not remote authentication or physical
+verification. Original media, provider outputs, citations, task assessments,
+licenses, notices and build-history disclosure are preserved. See
+[release preparation](../integration/LOCAL_PROTOTYPE_RELEASE_PREPARATION.md).

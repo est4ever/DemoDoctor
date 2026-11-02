@@ -8,6 +8,16 @@ let root:Root,host:HTMLDivElement;
 beforeEach(()=>{vi.stubGlobal('IS_REACT_ACT_ENVIRONMENT',true);vi.spyOn(HTMLMediaElement.prototype,'load').mockImplementation(()=>{});vi.spyOn(HTMLMediaElement.prototype,'pause').mockImplementation(()=>{});host=document.createElement('div');document.body.append(host);root=createRoot(host);});
 afterEach(async()=>{await act(async()=>root.unmount());host.remove();vi.restoreAllMocks();vi.unstubAllGlobals();});
 const a=()=>JSON.parse(readFileSync('public/data/ep005/analysis.json','utf8')) as AnalysisBundle;
+it('defers video initialization until previews are explicitly enabled without removing original frame references',async()=>{
+ const analysis=a(),seek=vi.fn();
+ await act(async()=>root.render(<TemporalContext analysis={analysis} videoSrc="/video" fps={30} duration={100} seek={seek} previewsEnabled={false}/>));
+ expect(HTMLMediaElement.prototype.load).not.toHaveBeenCalled();
+ expect(host.querySelector('[aria-label="Inspect original primary frame 1607"]')).not.toBeNull();
+ await act(async()=>root.render(<TemporalContext analysis={analysis} videoSrc="/video" fps={30} duration={100} seek={seek} previewsEnabled/>));
+ expect(HTMLMediaElement.prototype.load).toHaveBeenCalled();
+ await act(async()=>root.render(<TemporalContext analysis={analysis} videoSrc="/video" fps={30} duration={100} seek={seek} previewsEnabled={false}/>));
+ expect(HTMLMediaElement.prototype.pause).toHaveBeenCalled();
+});
 it('shows saved native frames, seeks original time and keeps original analysis unchanged',async()=>{
  const analysis=a(),before=JSON.stringify(analysis),seek=vi.fn();
  await act(async()=>root.render(<TemporalContext analysis={analysis} videoSrc="/replays/ep005/video.mp4" fps={30} duration={100} seek={seek}/>));

@@ -103,6 +103,7 @@ export type AnalysisBundle = {
     };
   };
   dry_run?: boolean;
+  execution?: {mode:'real'|'dry_run'|'recorded_replay'|'experimental'|'unconfirmed';note:string};
   episode_key: string;
   title: string;
   task: string;

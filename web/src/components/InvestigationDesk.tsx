@@ -4,6 +4,7 @@ import { citationTime } from '../lib/citationIntegrity';
 import {markerTarget} from '../lib/timelineNavigation';
 import {routeIntent} from '../lib/playbackIntent';
 import {readableEvidence} from '../lib/readableEvidence';
+import {investigationMode} from '../lib/investigationMode';
 import {InvestigationOverview} from './InvestigationOverview';
 import {CriterionCoverage} from './CriterionCoverage';
 import { RecordedEvidence } from "./RecordedEvidence";
@@ -89,8 +90,8 @@ export function InvestigationDesk(p: Props) {
         panels.setNavDrawer(false); panels.setInspectorDrawer(false);
       }
       if (e.key === "Tab" && root) {
-        const items = [...root.querySelectorAll<HTMLElement>('button:not(:disabled),input,summary,[tabindex="0"]')]
-          .filter(el => el.getClientRects().length && getComputedStyle(el).visibility !== "hidden");
+        const items = [...root.querySelectorAll<HTMLElement>('button:not(:disabled),a[href],input:not(:disabled),select:not(:disabled),textarea:not(:disabled),summary,[tabindex="0"]')]
+          .filter(el => el.tabIndex>=0 && !el.closest('[inert]') && el.getClientRects().length && getComputedStyle(el).visibility !== "hidden");
         const index = items.indexOf(document.activeElement as HTMLElement);
         if (items.length && ((e.shiftKey && index <= 0) || (!e.shiftKey && (index < 0 || index === items.length - 1)))) {
           e.preventDefault(); items[e.shiftKey ? items.length - 1 : 0].focus({preventScroll: true});
@@ -109,12 +110,15 @@ export function InvestigationDesk(p: Props) {
     return () => window.removeEventListener("hashchange", sync);
   }, []);
   const [tab, setTab] = useState("Findings");
+  const [technicalOpen,setTechnicalOpen]=useState(false);
   useEffect(() => {
     setTab("Findings");
+    setTechnicalOpen(false);
   }, [p.analysis]);
   const [query, setQuery] = useState("");
   const [filter, setFilter] = useState("All");
   const a = p.analysis;
+  const mode=investigationMode(a,p.liveMode);
   const originalRecord=useMemo(()=>JSON.stringify(a,null,2),[a]);
   const displayKey = p.liveMode ? a.episode_key : p.episodeKey;
   useEffect(()=>{document.title=`${page==='home'?'Overview':page==='upload'?'Import footage':p.liveMode?'Saved investigation':displayKey.toUpperCase()+' investigation'} · DemoDoctor`;},[page,displayKey,p.liveMode]);
@@ -271,7 +275,7 @@ export function InvestigationDesk(p: Props) {
           <span className="status-dot" /> Local workspace
           <small>Cached demos replay offline · Uploads require confirmation</small>
           <div className="rail-version">
-            UI EXPERIMENT <span>v0.1</span>
+            LOCAL PROTOTYPE <span>v0.1</span>
           </div>
         </div>
       </aside>
@@ -298,7 +302,7 @@ export function InvestigationDesk(p: Props) {
           </div>
           <div className="topbar-panel-actions"><button className="panel-button" onClick={panels.reset} aria-label="Reset panel layout" title="Restore default widths and expanded desktop panels">Reset layout</button><span className="local-tag">
             <span className="status-dot" />{" "}
-            {page === "upload" ? "Import · explicit approval" : a.dry_run ? "Dry run · SAM/Muse not executed" : p.liveMode ? "Uploaded footage" : "Offline replay"}
+            {page === "upload" ? "Import · explicit approval" : mode.label}
           </span>
           </div>
         </header>
@@ -634,6 +638,10 @@ export function InvestigationDesk(p: Props) {
                   aria-labelledby={`inspector-tab-${tab}`}
                   tabIndex={0}
                 >
+                  <section className="execution-context" aria-label="Analysis mode">
+                    <strong>{mode.label}</strong><p>{mode.note}</p>
+                    {(a.multicamera?.cameras.length??0)>1 && <p>Multi-camera workflow · Experimental. Software integration is mock-tested; genuine multi-camera action verification is not established.</p>}
+                  </section>
                   {active && tab==='Evidence' && (
                     <div className="technical-evidence">
                       <details id="evidence-source-details" open={sourceOpen} onToggle={e => setSourceOpen(e.currentTarget.open)}>
@@ -738,8 +746,8 @@ export function InvestigationDesk(p: Props) {
                       <InvestigationOverview analysis={a} tracks={p.tracks} joints={p.joints} savedJob={p.liveMode} inspectEvidence={id=>{inspectEvidence(id);setTab('Evidence');}}>
                       {a.criteria && <CriterionCoverage criteria={a.criteria} citations={ids=><div className="claim-links">{ids.map(id=><button key={id} aria-label={`Inspect diagnostic citation ${id}`} onClick={()=>{inspectEvidence(id);setTab('Evidence');}}>{readableEvidence(a.evidence_catalog.find(e=>e.evidence_id===id)??{evidence_id:id})} ↗</button>)}</div>} inspectFrame={p.inspectCriterionFrame} manifest={a.multicamera}/>}
                       </InvestigationOverview>
-                      <details className="findings-technical"><summary>Technical Details · original statements, frames and provenance</summary>
-                      <DiagnosticDetails analysis={a} showCriteria={false} inspectEvidence={(id) => { inspectEvidence(id); setTab("Evidence"); }} seek={p.seek} inspectFrame={p.inspectCriterionFrame} videoSrc={p.originalVideoSrc} fps={p.fps} duration={p.duration} jobId={p.liveMode?p.liveJobId:null}/>
+                      <details className="findings-technical" open={technicalOpen} onToggle={event=>setTechnicalOpen(event.currentTarget.open)}><summary>Technical Details · original statements, frames and provenance</summary>
+                      <DiagnosticDetails analysis={a} showCriteria={false} previewsEnabled={technicalOpen} inspectEvidence={(id) => { inspectEvidence(id); setTab("Evidence"); }} seek={p.seek} inspectFrame={p.inspectCriterionFrame} videoSrc={p.originalVideoSrc} fps={p.fps} duration={p.duration} jobId={p.liveMode?p.liveJobId:null}/>
                       {findingGroups(a).map((group) => (
                         <div key={group.label}>
                           <h3

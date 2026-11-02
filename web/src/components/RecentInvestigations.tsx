@@ -1,13 +1,16 @@
 import { useEffect, useState } from "react";
 import { Button, Panel } from "./ui";
 import { isSavedJobId, savedJobHref } from "../lib/savedInvestigations";
+import type {AnalysisBundle} from '../lib/types';
 
 type SavedJob = {
   job_id: string; task_description?: string; video_filename?: string; created_at?: string | null; date_basis?: string;
   camera_count?: number; analysis_type?: string; status: string; outcome?: string | null;
+  execution?:AnalysisBundle['execution'];
   outcome_note?: string; can_open?: boolean; availability_error?: string | null;
 };
-const modes: Record<string,string> = {real: "Real analysis · saved outputs", dry_run: "Dry Run · providers skipped", recorded_replay: "Recorded replay", unknown: "Analysis type not recorded"};
+const modes: Record<string,string> = {real: "Saved analysis · execution unconfirmed", dry_run: "Dry Run · providers skipped", recorded_replay: "Recorded replay", unknown: "Analysis type not recorded"};
+const executionLabels:Record<string,string>={real:'Real Analysis · saved outputs',dry_run:'Dry Run · providers skipped',recorded_replay:'Saved analysis replay',experimental:'Experimental · execution unconfirmed',unconfirmed:'Saved analysis · execution unconfirmed'};
 
 export function RecentInvestigations() {
   const [jobs,setJobs] = useState<SavedJob[]>([]), [error,setError] = useState<string|null>(null);
@@ -35,7 +38,7 @@ export function RecentInvestigations() {
           <h3 className="font-semibold">{job.task_description ?? 'Task not recorded'}</h3>
           <p>{job.video_filename ?? 'Original filename not recorded'} · {job.camera_count ? `${job.camera_count} camera view${job.camera_count===1?'':'s'}` : 'Camera count not recorded'}</p>
           <p><time dateTime={job.created_at ?? undefined} title={job.date_basis}>{date && Number.isFinite(date.getTime()) ? date.toLocaleString(undefined,{timeZoneName:'short'}) : 'Analysis date not recorded'}</time></p>
-          <p>{modes[job.analysis_type ?? 'unknown'] ?? modes.unknown} · Status: {job.status}</p>
+          <p>{job.execution ? executionLabels[job.execution.mode]??modes.unknown : modes[job.analysis_type ?? 'unknown'] ?? modes.unknown} · Status: {job.status}</p>
           <p>{job.analysis_type==='dry_run' ? 'No physical conclusions · Dry Run' : job.outcome ? `${job.outcome[0].toUpperCase()+job.outcome.slice(1)} · saved verdict` : 'Outcome unavailable'}</p>
           {job.outcome_note && <p className="text-sm text-[var(--muted)]">{job.outcome_note}</p>}
           <p className="text-xs break-all">Job {job.job_id}</p>

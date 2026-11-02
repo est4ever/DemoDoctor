@@ -96,6 +96,10 @@ Pop-Location
 
 The launcher opens the browser after FastAPI (`127.0.0.1:8765`) and React (`127.0.0.1:5173`) are ready. It defaults to offline replay and Dry Run uploads, reuses verified services and returns control to PowerShell.
 
+For your first visit, open **EP005 → Findings** to inspect an Unverified orientation hypothesis, then **EP010 → Evidence → Inspect source** to examine a measured gripper sample. Use Play/Pause, Previous/Next frame and the numbered timeline markers; untimed evidence opens its source without moving the video. On a narrow window, expand the navigation or Evidence drawer; Escape closes it. Arrow keys resize the desktop dividers.
+
+**Saved analysis replay** makes no new provider calls. **Dry Run** prepares footage and generates no physical findings. **Real Analysis · saved outputs** describes local SAM/Muse execution records, not independently verified actions. **Experimental / unconfirmed** results must not be treated as genuine provider validation. Two-/three-camera integration remains experimental and mock-tested. [Short user guide, mode labels and release checklist](docs/submission/LOCAL_PROTOTYPE.md).
+
 | Open | Inspect |
 |---|---|
 | **EP010** | Measured gripper opening, SAM tracks and qualified release inference |
@@ -109,6 +113,12 @@ The launcher opens the browser after FastAPI (`127.0.0.1:8765`) and React (`127.
 .\scripts\status-demodoctor.ps1
 .\scripts\stop-demodoctor.ps1
 ```
+
+Run start/status/stop from the repository root. Stop closes only servers managed by that checkout's launcher; it keeps saved jobs. It leaves unrelated or manually started processes alone. If a port is occupied, read the status message and close only the service you own; the launcher will not kill it for you.
+
+If PowerShell blocks an unsigned script, inspect the trusted checkout, then use `powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\scripts\start-demodoctor.ps1` (similarly for status/stop). This is a process-only exception, not a global policy change; no administrator permission is required.
+
+**Localhost prototype:** the local API is unauthenticated. Keep it on `127.0.0.1`; do not port-forward it, tunnel it publicly or treat it as a production Internet service.
 
 Optional profile registration adds `DemoDoctor`, `DemoDoctor-Status`, `DemoDoctor-Stop` and `DemoDoctor-RealAnalysis` for new PowerShell sessions. [Setup, registration, macOS/Linux and troubleshooting →](docs/submission/SETUP.md)
 

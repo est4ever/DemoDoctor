@@ -51,7 +51,7 @@ it("writes visible page routes and restores Overview and Import on a fresh mount
 it("restores a completed uploaded investigation from its URL", async () => {
   await load("#job/audit-job");
   expect(host.textContent).toContain("Uploaded dry run");
-  expect(host.textContent).toContain("Dry run · SAM/Muse not executed");
+  expect(host.textContent).toContain("Dry Run · no inference");
   expect(host.querySelector('[data-testid="video-src"]')?.textContent).toBe("/live-data/audit-job/video.mp4");
 });
 

@@ -276,7 +276,8 @@ def get_analysis(job_id: str) -> dict[str, Any]:
         except (OSError, ValueError, KeyError, TypeError, IndexError):
             criteria={k:v for k,v in analysis['criteria'].items() if k not in ('temporal_evidence','context_frames','coverage')}
             analysis = {**analysis, 'criteria':criteria,'temporal_evidence_error': 'Local temporal evidence unavailable: original camera/observation provenance could not be validated. Cached context was withheld; saved results remain unchanged.'}
-    return analysis
+    import saved_jobs
+    return {**analysis, 'execution':saved_jobs.execution_summary(path.parent)}
 
 
 @app.get("/api/jobs/{job_id}/tracks")

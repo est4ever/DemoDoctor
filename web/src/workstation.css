@@ -2174,6 +2174,9 @@ button:not(.panel-backdrop), summary, .claim-links a { min-height: 24px; }
 .right-divider { left: -12px; }
 .panel-divider:active { user-select: none; }
 .inspector-scroll { scroll-padding-block: 12px; }
+.execution-context { padding: 12px; margin-bottom: 16px; border: 1px solid var(--border); border-radius: 8px; font-size: 13px; line-height: 1.5; }
+.execution-context p { margin: 6px 0 0; color: var(--muted); }
+.camera-stage .video-pane > div:first-child > .sam-window-notice { display: block; flex-basis: 100%; color: var(--warn); font-size: 12px; line-height: 1.5; overflow-wrap: anywhere; }
 html { scroll-padding-top: 64px; }
 @media (max-width: 620px), (pointer: coarse) {
   button:not(.panel-backdrop), .rail a, .claim-links a, summary, input:not([type=checkbox]):not([type=radio]), select { min-height: 44px; }

@@ -83,6 +83,39 @@ def _basename(name):
     return str(name).replace('\\','/').rsplit('/',1)[-1] if name else None
 
 
+def execution_summary(directory: Path) -> dict:
+    """Read local execution records, never infer provider use from a verdict.
+
+    This is a local-record description, not remote provider authentication.
+    Missing legacy metadata remains unconfirmed; saved files are never rewritten.
+    """
+    analysis=read(directory,'analysis.json') or {}
+    status=read(directory,'status.json') or {}
+    request=read(directory,'request.json') or {}
+    if analysis.get('dry_run') is True or status.get('dry_run') is True:
+        return {'mode':'dry_run','note':'SAM and Muse were skipped. No physical findings were generated.'}
+    if request.get('cache_only') is True:
+        return {'mode':'recorded_replay','note':'Saved analysis replay. No new provider calls are made when opening it.'}
+    muse=read(directory,'muse_result.json') or {}
+    if muse.get('paid_call') is False:
+        return {'mode':'experimental','note':'The saved Muse record reports no paid call. Treat this as experimental or provider-skipped, not confirmed real inference.'}
+    cameras=(analysis.get('multicamera') or {}).get('cameras')
+    folders=[file(directory,c['camera_id']) for c in cameras] if cameras and all(isinstance(c,dict) and c.get('camera_id') in {'cam1','cam2','cam3'} for c in cameras) else [directory]
+    sam_records=[]
+    for folder in folders:
+        observations=read(folder,'provider_observations.json') or {}
+        calls=observations.get('provider_calls') or []
+        usage=observations.get('usage_events') or []
+        sam_records.append(isinstance(calls,list) and bool(calls) and
+            all(isinstance(c,dict) and c.get('status')=='completed' and c.get('from_cache') is False for c in calls) and
+            isinstance(usage,list) and any(isinstance(u,dict) and u.get('provider')=='meta_sam' and u.get('kind')=='video_window' and u.get('status')=='completed' for u in usage))
+    if (analysis.get('dry_run') is False and status.get('status')=='completed' and
+        muse.get('paid_call') is True and muse.get('dry_run') is False and
+        muse.get('model')=='accounts/fireworks/models/muse-spark-open' and all(sam_records)):
+        return {'mode':'real','note':'Local records report completed SAM and Muse provider execution. You are replaying saved outputs; reopening makes no provider calls. Physical actions are not thereby verified.'}
+    return {'mode':'unconfirmed','note':'Saved analysis replay; provider execution metadata is incomplete or unconfirmed. Do not treat it as confirmed real inference.'}
+
+
 def describe(directory: Path) -> dict:
     status=read(directory,'status.json') or {}
     analysis=read(directory,'analysis.json') or {}
@@ -109,6 +142,6 @@ def describe(directory: Path) -> dict:
     return {'job_id':directory.name,'task_description':manifest.get('task_description') or request.get('task_description') or analysis.get('task') or 'Task not recorded',
         'video_filename':name or 'Original filename not recorded','created_at':created,'date_basis':date_basis,
         'camera_count':len(manifest['cameras']) if isinstance(manifest.get('cameras'),list) else 1,
-        'analysis_type':kind,'status':status.get('status','unknown'),'outcome':outcome,
+        'analysis_type':kind,'execution':execution_summary(directory),'status':status.get('status','unknown'),'outcome':outcome,
         'outcome_note':'Provider-skipped preparation; no physical conclusions' if kind=='dry_run' else 'Saved verdict; inspect its evidence scope and limitations',
         'can_open':problem is None,'availability_error':problem}

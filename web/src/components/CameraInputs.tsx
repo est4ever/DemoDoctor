@@ -130,6 +130,7 @@ export function CameraInputs({setup:s,disabled,error,onEdit,announcementKey}:{se
     <label>Camera count <select {...attributes('camera-count')} aria-label="Camera count" value={s.count} onChange={e=>s.setCount(Number(e.target.value))}>{[1,2,3].map(n=><option key={n} value={n}>{n}</option>)}</select>{inline('camera-count')}</label>{" "}
     <label>Source layout <select {...attributes('camera-layout')} aria-label="Source layout" value={s.sourceMode} onChange={e=>s.setSourceMode(e.target.value)}><option value="separate">{s.count===1?"One camera recording":"Separate synchronized camera MP4s"}</option><option value="composite">Fixed-panel composite MP4</option></select>{inline('camera-layout')}</label>
     {s.cameraSet&&<>
+      {s.count>1&&<p>Experimental multi-camera workflow: integration is mock-tested. Genuine multi-camera action verification has not been established.</p>}
       <p>Camera-local image-space evidence only. No cross-view identity or calibrated 3D; the combined task outcome remains uncertain.</p>
       {s.sourceMode==="composite"&&<>
         <label>Composite MP4 <input {...attributes('camera-composite')} type="file" accept="video/mp4,.mp4" aria-label="Composite MP4" onChange={e=>s.chooseFile(0,e.target.files?.[0])}/>{s.files[0]&&<small>Selected: {s.files[0].name}</small>}{inline('camera-composite')}</label>

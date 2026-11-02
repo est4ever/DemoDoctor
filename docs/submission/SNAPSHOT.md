@@ -43,3 +43,30 @@ Original LICENSE, NOTICE and dataset/robot copyright notices are retained.
 This source snapshot does not grant new rights in upstream datasets, model outputs
 or final-video audio. Publisher-declared dataset licenses, parser SAM License and
 provider/audio permissions remain distinct; see THIRD_PARTY.md.
+
+## Incremental update — November 1, 2026
+
+The public root commit 26a8a9f remains the parent history of this update. Approved
+source/test/required setup-asset changes from f60965f and 097f8e1 were transferred
+as files, without copying Git metadata or private commit objects. Sanitized
+fixtures, all 19 replay asset hashes, licenses and notices remain unchanged.
+Documentation now distinguishes implemented self-service Real Analysis from
+credential-free replay and mocked validation. SOURCE_MANIFEST.json describes
+the updated source tree; original export metadata remains in
+SNAPSHOT_PROVENANCE.json with an appended incremental-update record.
+
+## Final incremental candidate — November 1
+
+This candidate descends from public commits 26a8a9f and 35b0050. It transfers
+approved changes through private source checkpoint `cc5c3ab3e68f27bb4427aef5a23c3e7c794ca622` as files only.
+No private history, personal job, DROID video, credentials or video-production
+asset is imported. Existing sanitized fixtures, all 19 replay hashes and notices
+remain byte-identical. Six optional criterion presentations are generated against
+the public catalogs. Missing raw research-cache/reference inputs produce explicit
+test skips; synthetic/core checks run normally. Only evaluation tooling/test
+packaging was adjusted to disclose these intentional exclusions; no inference
+algorithm or scientific result was changed. Current results are in FINAL_UPDATE_20261101.md.
+
+## Frozen diagnostic-context update
+
+Current source freeze: `de5009f26818d6d8a6cc0b15ba87fd89004095b6`. The incremental parent is `c1cebf3f353eb62422cabacce3922bda1b166609`. Only reviewed source/tests/docs were transferred; personal analyst reviews and all private job/video data remain excluded. Existing public history, licenses and original result hashes are preserved. See RELEASE_READINESS_20261101.md for current checks and limitations.

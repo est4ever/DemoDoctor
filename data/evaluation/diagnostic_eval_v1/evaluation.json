@@ -1,0 +1,1787 @@
+{
+ "evaluation": "diagnostic_eval_v1",
+ "scope": "Six saved investigations from DIAGNOSTIC_COVERAGE_AUDIT.md; no inference re-run.",
+ "references": "data/evaluation/reference_mechanisms.json",
+ "predictions": [
+  {
+   "investigation_id": "ep003",
+   "example_id": "botfails_dish_test_ep003",
+   "split": "held-out",
+   "sources": [
+    "data/experiments/heldout_four_v2/botfails_dish_test_ep003/run_report.json",
+    "data/experiments/heldout_four_muse_comparison/ep003/evidence_grounded/package_snapshot.json",
+    "data/experiments/heldout_four_muse_comparison/ep003/evidence_grounded/validated_explanation.json",
+    "data/experiments/heldout_four_muse_comparison/ep003/muse_only/structured_prediction.json"
+   ],
+   "criteria": {
+    "investigation_id": "ep003",
+    "task_id": "botfails_dish",
+    "assessments": [
+     {
+      "criterion_id": "containment",
+      "kind": "containment",
+      "required": true,
+      "state": "supported",
+      "basis": "At final frame 2075, all 3 observed object(s) are inside the 'dish rack' in 2D image space (not 3D placement or orientation).",
+      "evidence_ids": [
+       "E4"
+      ],
+      "objects": {
+       "green plate:0": "inside",
+       "green plate:1": "inside",
+       "green plate:2": "inside"
+      },
+      "requirements": [],
+      "blocking": []
+     },
+     {
+      "criterion_id": "orientation",
+      "kind": "orientation",
+      "required": true,
+      "state": "unverified",
+      "basis": "Required pose 'upright_in_slot' is not measured by this investigation. 2D containment and model visual impressions do not establish physical orientation.",
+      "evidence_ids": [],
+      "objects": {},
+      "requirements": [
+       {
+        "kind": "orientation_measurement",
+        "criterion_id": "orientation",
+        "reason": "An independent orientation predicate for 'upright_in_slot' (e.g. slot-aligned mask axis calibrated on the destination, or object pose estimation) at the final frame.",
+        "objects": [],
+        "frames": null
+       },
+       {
+        "kind": "additional_viewpoint",
+        "criterion_id": "orientation",
+        "reason": "A side or top view of the destination in which slot engagement / upright pose is visible.",
+        "objects": [],
+        "frames": null
+       }
+      ],
+      "blocking": []
+     },
+     {
+      "criterion_id": "inventory",
+      "kind": "inventory",
+      "required": true,
+      "state": "unverified",
+      "basis": "3 'green plate' detected at the final frame 2075, but the expected count is not declared.",
+      "evidence_ids": [
+       "E4"
+      ],
+      "objects": {},
+      "requirements": [
+       {
+        "kind": "task_specification",
+        "criterion_id": "inventory",
+        "reason": "Declare the expected number of 'green plate' so detections can be checked for completeness.",
+        "objects": [
+         "green plate"
+        ],
+        "frames": null
+       }
+      ],
+      "blocking": []
+     },
+     {
+      "criterion_id": "grasp_release",
+      "kind": "grasp_release",
+      "required": false,
+      "state": "unverified",
+      "basis": "Gripper openings measured (frames 1875), but this gripper signal cannot show whether an object is held, so release is not established.",
+      "evidence_ids": [
+       "E5"
+      ],
+      "objects": {},
+      "requirements": [
+       {
+        "kind": "gripper_measurement",
+        "criterion_id": "grasp_release",
+        "reason": "A holding-sensitive signal (motor current, force, or jaw width with object) around each opening.",
+        "objects": [],
+        "frames": [
+         1875,
+         1876
+        ]
+       },
+       {
+        "kind": "continuous_tracking",
+        "criterion_id": "grasp_release",
+        "reason": "Continuous object tracking through each gripper opening to associate the object with the release.",
+        "objects": [],
+        "frames": [
+         1875,
+         1876
+        ]
+       }
+      ],
+      "blocking": []
+     },
+     {
+      "criterion_id": "completion",
+      "kind": "completion",
+      "required": true,
+      "state": "unverified",
+      "basis": "No required criterion is contradicted; unverified: orientation, inventory. Missing evidence is not treated as failure.",
+      "evidence_ids": [],
+      "objects": {},
+      "requirements": [],
+      "blocking": [
+       "orientation",
+       "inventory"
+      ]
+     }
+    ],
+    "mechanisms": [],
+    "completion": "unverified",
+    "abstention_explanation": "Abstains: required criteria orientation, inventory are unverified (none contradicted). Evidence that could resolve them: additional_viewpoint, orientation_measurement, task_specification.",
+    "evidence_requirements": [
+     {
+      "kind": "orientation_measurement",
+      "criterion_id": "orientation",
+      "reason": "An independent orientation predicate for 'upright_in_slot' (e.g. slot-aligned mask axis calibrated on the destination, or object pose estimation) at the final frame.",
+      "objects": [],
+      "frames": null
+     },
+     {
+      "kind": "additional_viewpoint",
+      "criterion_id": "orientation",
+      "reason": "A side or top view of the destination in which slot engagement / upright pose is visible.",
+      "objects": [],
+      "frames": null
+     },
+     {
+      "kind": "task_specification",
+      "criterion_id": "inventory",
+      "reason": "Declare the expected number of 'green plate' so detections can be checked for completeness.",
+      "objects": [
+       "green plate"
+      ],
+      "frames": null
+     }
+    ]
+   },
+   "outcomes": {
+    "pipeline": "success",
+    "criteria_completion": "uncertain",
+    "evidence_grounded_muse": "success",
+    "muse_only": "success"
+   },
+   "grounded_historical": false,
+   "mechanisms": {
+    "pipeline": [],
+    "grounded_hypothesis_categories": {
+     "incorrect_orientation": [
+      "Plates appearing inside in 2D could still be incorrectly oriented (e.g., lying flat) which the pipeline explicitly does not verify."
+     ]
+    },
+    "muse_only_categories": []
+   },
+   "missing_evidence": {
+    "unverified_criteria": 3,
+    "with_requirement": 3,
+    "requirement_kinds": {
+     "additional_viewpoint": 1,
+     "continuous_tracking": 1,
+     "gripper_measurement": 1,
+     "orientation_measurement": 1,
+     "task_specification": 1
+    },
+    "abstention_explained": true
+   },
+   "criteria_citations": {
+    "citations": 3,
+    "invalid": 0,
+    "decisive_without_citation": []
+   },
+   "model_citations": {
+    "evidence_grounded": {
+     "evidence_citations": 17,
+     "frame_citations": 3,
+     "invalid": 0,
+     "invalid_ids": [],
+     "historical_package": false
+    }
+   },
+   "claims": {
+    "evidence_grounded": {
+     "statements": 13,
+     "labeled_unverified": 5,
+     "unsupported": []
+    },
+    "muse_only": {
+     "statements": 7,
+     "labeled_unverified": 0,
+     "unsupported": [
+      {
+       "text": "robot arm holds green plate above dish rack",
+       "reason": "uncited physical assertion (no evidence package)"
+      },
+      {
+       "text": "robot inserts plate into rack slot alongside other plates",
+       "reason": "uncited physical assertion (no evidence package)"
+      },
+      {
+       "text": "robot retracts leaving plate upright in rack",
+       "reason": "uncited physical assertion (no evidence package)"
+      },
+      {
+       "text": "Red robot gripper holds green plate directly above metal dish rack which already contains two green plates",
+       "reason": "uncited physical assertion (no evidence package)"
+      },
+      {
+       "text": "Robot arm retracted away from rack, three green plates remain upright in rack",
+       "reason": "uncited physical assertion (no evidence package)"
+      }
+     ]
+    }
+   }
+  },
+  {
+   "investigation_id": "ep005",
+   "example_id": "botfails_dish_test_ep005",
+   "split": "held-out",
+   "sources": [
+    "data/experiments/heldout_four_v2/botfails_dish_test_ep005/run_report.json",
+    "data/experiments/heldout_four_muse_comparison/ep005/evidence_grounded/package_snapshot.json",
+    "data/experiments/heldout_four_muse_comparison/ep005/evidence_grounded/validated_explanation.json",
+    "data/experiments/heldout_four_muse_comparison/ep005/muse_only/structured_prediction.json"
+   ],
+   "criteria": {
+    "investigation_id": "ep005",
+    "task_id": "botfails_dish",
+    "assessments": [
+     {
+      "criterion_id": "containment",
+      "kind": "containment",
+      "required": true,
+      "state": "unverified",
+      "basis": "At final frame 2075, 3 of 3 region(s) are unknown (insufficient single-view geometry or view disagreement); none are outside.",
+      "evidence_ids": [
+       "E4"
+      ],
+      "objects": {
+       "green plate:0": "unknown",
+       "green plate:1": "unknown",
+       "green plate:2": "unknown"
+      },
+      "requirements": [
+       {
+        "kind": "additional_viewpoint",
+        "criterion_id": "containment",
+        "reason": "A second camera viewpoint of the destination at the final frame to separate inside from overlap/occlusion.",
+        "objects": [
+         "green plate:0",
+         "green plate:1",
+         "green plate:2"
+        ],
+        "frames": [
+         2075,
+         2076
+        ]
+       }
+      ],
+      "blocking": []
+     },
+     {
+      "criterion_id": "orientation",
+      "kind": "orientation",
+      "required": true,
+      "state": "unverified",
+      "basis": "Required pose 'upright_in_slot' is not measured by this investigation. 2D containment and model visual impressions do not establish physical orientation.",
+      "evidence_ids": [],
+      "objects": {},
+      "requirements": [
+       {
+        "kind": "orientation_measurement",
+        "criterion_id": "orientation",
+        "reason": "An independent orientation predicate for 'upright_in_slot' (e.g. slot-aligned mask axis calibrated on the destination, or object pose estimation) at the final frame.",
+        "objects": [],
+        "frames": null
+       },
+       {
+        "kind": "additional_viewpoint",
+        "criterion_id": "orientation",
+        "reason": "A side or top view of the destination in which slot engagement / upright pose is visible.",
+        "objects": [],
+        "frames": null
+       }
+      ],
+      "blocking": []
+     },
+     {
+      "criterion_id": "inventory",
+      "kind": "inventory",
+      "required": true,
+      "state": "unverified",
+      "basis": "3 'green plate' detected at the final frame 2075, but the expected count is not declared.",
+      "evidence_ids": [
+       "E4"
+      ],
+      "objects": {},
+      "requirements": [
+       {
+        "kind": "task_specification",
+        "criterion_id": "inventory",
+        "reason": "Declare the expected number of 'green plate' so detections can be checked for completeness.",
+        "objects": [
+         "green plate"
+        ],
+        "frames": null
+       }
+      ],
+      "blocking": []
+     },
+     {
+      "criterion_id": "grasp_release",
+      "kind": "grasp_release",
+      "required": false,
+      "state": "unverified",
+      "basis": "Gripper openings measured (frames 1637), but this gripper signal cannot show whether an object is held, so release is not established.",
+      "evidence_ids": [
+       "E5"
+      ],
+      "objects": {},
+      "requirements": [
+       {
+        "kind": "gripper_measurement",
+        "criterion_id": "grasp_release",
+        "reason": "A holding-sensitive signal (motor current, force, or jaw width with object) around each opening.",
+        "objects": [],
+        "frames": [
+         1637,
+         1638
+        ]
+       },
+       {
+        "kind": "continuous_tracking",
+        "criterion_id": "grasp_release",
+        "reason": "Continuous object tracking through each gripper opening to associate the object with the release.",
+        "objects": [],
+        "frames": [
+         1637,
+         1638
+        ]
+       }
+      ],
+      "blocking": []
+     },
+     {
+      "criterion_id": "completion",
+      "kind": "completion",
+      "required": true,
+      "state": "unverified",
+      "basis": "No required criterion is contradicted; unverified: containment, orientation, inventory. Missing evidence is not treated as failure.",
+      "evidence_ids": [],
+      "objects": {},
+      "requirements": [],
+      "blocking": [
+       "containment",
+       "orientation",
+       "inventory"
+      ]
+     }
+    ],
+    "mechanisms": [],
+    "completion": "unverified",
+    "abstention_explanation": "Abstains: required criteria containment, orientation, inventory are unverified (none contradicted). Evidence that could resolve them: additional_viewpoint, orientation_measurement, task_specification.",
+    "evidence_requirements": [
+     {
+      "kind": "additional_viewpoint",
+      "criterion_id": "containment",
+      "reason": "A second camera viewpoint of the destination at the final frame to separate inside from overlap/occlusion.",
+      "objects": [
+       "green plate:0",
+       "green plate:1",
+       "green plate:2"
+      ],
+      "frames": [
+       2075,
+       2076
+      ]
+     },
+     {
+      "kind": "orientation_measurement",
+      "criterion_id": "orientation",
+      "reason": "An independent orientation predicate for 'upright_in_slot' (e.g. slot-aligned mask axis calibrated on the destination, or object pose estimation) at the final frame.",
+      "objects": [],
+      "frames": null
+     },
+     {
+      "kind": "additional_viewpoint",
+      "criterion_id": "orientation",
+      "reason": "A side or top view of the destination in which slot engagement / upright pose is visible.",
+      "objects": [],
+      "frames": null
+     },
+     {
+      "kind": "task_specification",
+      "criterion_id": "inventory",
+      "reason": "Declare the expected number of 'green plate' so detections can be checked for completeness.",
+      "objects": [
+       "green plate"
+      ],
+      "frames": null
+     }
+    ]
+   },
+   "outcomes": {
+    "pipeline": "uncertain",
+    "criteria_completion": "uncertain",
+    "evidence_grounded_muse": "uncertain",
+    "muse_only": "success"
+   },
+   "grounded_historical": false,
+   "mechanisms": {
+    "pipeline": [],
+    "grounded_hypothesis_categories": {
+     "incorrect_orientation": [
+      "Final plates appearing in/near rack could be inside but geometry was insufficient to confirm, or could be incorrectly oriented flat"
+     ]
+    },
+    "muse_only_categories": []
+   },
+   "missing_evidence": {
+    "unverified_criteria": 4,
+    "with_requirement": 4,
+    "requirement_kinds": {
+     "additional_viewpoint": 2,
+     "continuous_tracking": 1,
+     "gripper_measurement": 1,
+     "orientation_measurement": 1,
+     "task_specification": 1
+    },
+    "abstention_explained": true
+   },
+   "criteria_citations": {
+    "citations": 3,
+    "invalid": 0,
+    "decisive_without_citation": []
+   },
+   "model_citations": {
+    "evidence_grounded": {
+     "evidence_citations": 19,
+     "frame_citations": 4,
+     "invalid": 0,
+     "invalid_ids": [],
+     "historical_package": false
+    }
+   },
+   "claims": {
+    "evidence_grounded": {
+     "statements": 12,
+     "labeled_unverified": 6,
+     "unsupported": []
+    },
+    "muse_only": {
+     "statements": 8,
+     "labeled_unverified": 0,
+     "unsupported": [
+      {
+       "text": "Robot gripper holds green plate above dish rack (frame 0)",
+       "reason": "uncited physical assertion (no evidence package)"
+      },
+      {
+       "text": "Robot reaches to grasp second green plate remaining on table (frame 2)",
+       "reason": "uncited physical assertion (no evidence package)"
+      },
+      {
+       "text": "Red robot arm holding green plate over metal dish rack; one green plate already in rack left side, one green plate on table to right",
+       "reason": "uncited physical assertion (no evidence package)"
+      },
+      {
+       "text": "Robot gripper contacting second green plate on table; rack now contains at least two plates",
+       "reason": "uncited physical assertion (no evidence package)"
+      },
+      {
+       "text": "Table surface clear of plates; dish rack contains two green plates upright in slots (and third plate visible in rack), robot retracted",
+       "reason": "uncited physical assertion (no evidence package)"
+      }
+     ]
+    }
+   }
+  },
+  {
+   "investigation_id": "ep006",
+   "example_id": "botfails_dish_test_ep006",
+   "split": "held-out",
+   "sources": [
+    "data/experiments/heldout_four_v2/botfails_dish_test_ep006/run_report.json",
+    "data/experiments/heldout_four_muse_comparison/ep006/evidence_grounded/package_snapshot.json",
+    "data/experiments/heldout_four_muse_comparison/ep006/evidence_grounded/validated_explanation.json",
+    "data/experiments/heldout_four_muse_comparison/ep006/muse_only/structured_prediction.json"
+   ],
+   "criteria": {
+    "investigation_id": "ep006",
+    "task_id": "botfails_dish",
+    "assessments": [
+     {
+      "criterion_id": "containment",
+      "kind": "containment",
+      "required": true,
+      "state": "unverified",
+      "basis": "At final frame 2075, 2 of 3 region(s) are unknown (insufficient single-view geometry or view disagreement); none are outside.",
+      "evidence_ids": [
+       "E4"
+      ],
+      "objects": {
+       "green plate:0": "unknown",
+       "green plate:1": "unknown",
+       "green plate:2": "inside"
+      },
+      "requirements": [
+       {
+        "kind": "additional_viewpoint",
+        "criterion_id": "containment",
+        "reason": "A second camera viewpoint of the destination at the final frame to separate inside from overlap/occlusion.",
+        "objects": [
+         "green plate:0",
+         "green plate:1"
+        ],
+        "frames": [
+         2075,
+         2076
+        ]
+       }
+      ],
+      "blocking": []
+     },
+     {
+      "criterion_id": "orientation",
+      "kind": "orientation",
+      "required": true,
+      "state": "unverified",
+      "basis": "Required pose 'upright_in_slot' is not measured by this investigation. 2D containment and model visual impressions do not establish physical orientation.",
+      "evidence_ids": [],
+      "objects": {},
+      "requirements": [
+       {
+        "kind": "orientation_measurement",
+        "criterion_id": "orientation",
+        "reason": "An independent orientation predicate for 'upright_in_slot' (e.g. slot-aligned mask axis calibrated on the destination, or object pose estimation) at the final frame.",
+        "objects": [],
+        "frames": null
+       },
+       {
+        "kind": "additional_viewpoint",
+        "criterion_id": "orientation",
+        "reason": "A side or top view of the destination in which slot engagement / upright pose is visible.",
+        "objects": [],
+        "frames": null
+       }
+      ],
+      "blocking": []
+     },
+     {
+      "criterion_id": "inventory",
+      "kind": "inventory",
+      "required": true,
+      "state": "unverified",
+      "basis": "3 'green plate' detected at the final frame 2075, but the expected count is not declared.",
+      "evidence_ids": [
+       "E4"
+      ],
+      "objects": {},
+      "requirements": [
+       {
+        "kind": "task_specification",
+        "criterion_id": "inventory",
+        "reason": "Declare the expected number of 'green plate' so detections can be checked for completeness.",
+        "objects": [
+         "green plate"
+        ],
+        "frames": null
+       }
+      ],
+      "blocking": []
+     },
+     {
+      "criterion_id": "grasp_release",
+      "kind": "grasp_release",
+      "required": false,
+      "state": "unverified",
+      "basis": "Gripper openings measured (frames 1530), but this gripper signal cannot show whether an object is held, so release is not established.",
+      "evidence_ids": [
+       "E5"
+      ],
+      "objects": {},
+      "requirements": [
+       {
+        "kind": "gripper_measurement",
+        "criterion_id": "grasp_release",
+        "reason": "A holding-sensitive signal (motor current, force, or jaw width with object) around each opening.",
+        "objects": [],
+        "frames": [
+         1530,
+         1531
+        ]
+       },
+       {
+        "kind": "continuous_tracking",
+        "criterion_id": "grasp_release",
+        "reason": "Continuous object tracking through each gripper opening to associate the object with the release.",
+        "objects": [],
+        "frames": [
+         1530,
+         1531
+        ]
+       }
+      ],
+      "blocking": []
+     },
+     {
+      "criterion_id": "completion",
+      "kind": "completion",
+      "required": true,
+      "state": "unverified",
+      "basis": "No required criterion is contradicted; unverified: containment, orientation, inventory. Missing evidence is not treated as failure.",
+      "evidence_ids": [],
+      "objects": {},
+      "requirements": [],
+      "blocking": [
+       "containment",
+       "orientation",
+       "inventory"
+      ]
+     }
+    ],
+    "mechanisms": [],
+    "completion": "unverified",
+    "abstention_explanation": "Abstains: required criteria containment, orientation, inventory are unverified (none contradicted). Evidence that could resolve them: additional_viewpoint, orientation_measurement, task_specification.",
+    "evidence_requirements": [
+     {
+      "kind": "additional_viewpoint",
+      "criterion_id": "containment",
+      "reason": "A second camera viewpoint of the destination at the final frame to separate inside from overlap/occlusion.",
+      "objects": [
+       "green plate:0",
+       "green plate:1"
+      ],
+      "frames": [
+       2075,
+       2076
+      ]
+     },
+     {
+      "kind": "orientation_measurement",
+      "criterion_id": "orientation",
+      "reason": "An independent orientation predicate for 'upright_in_slot' (e.g. slot-aligned mask axis calibrated on the destination, or object pose estimation) at the final frame.",
+      "objects": [],
+      "frames": null
+     },
+     {
+      "kind": "additional_viewpoint",
+      "criterion_id": "orientation",
+      "reason": "A side or top view of the destination in which slot engagement / upright pose is visible.",
+      "objects": [],
+      "frames": null
+     },
+     {
+      "kind": "task_specification",
+      "criterion_id": "inventory",
+      "reason": "Declare the expected number of 'green plate' so detections can be checked for completeness.",
+      "objects": [
+       "green plate"
+      ],
+      "frames": null
+     }
+    ]
+   },
+   "outcomes": {
+    "pipeline": "uncertain",
+    "criteria_completion": "uncertain",
+    "evidence_grounded_muse": "uncertain",
+    "muse_only": "success"
+   },
+   "grounded_historical": false,
+   "mechanisms": {
+    "pipeline": [],
+    "grounded_hypothesis_categories": {},
+    "muse_only_categories": []
+   },
+   "missing_evidence": {
+    "unverified_criteria": 4,
+    "with_requirement": 4,
+    "requirement_kinds": {
+     "additional_viewpoint": 2,
+     "continuous_tracking": 1,
+     "gripper_measurement": 1,
+     "orientation_measurement": 1,
+     "task_specification": 1
+    },
+    "abstention_explained": true
+   },
+   "criteria_citations": {
+    "citations": 3,
+    "invalid": 0,
+    "decisive_without_citation": []
+   },
+   "model_citations": {
+    "evidence_grounded": {
+     "evidence_citations": 15,
+     "frame_citations": 2,
+     "invalid": 0,
+     "invalid_ids": [],
+     "historical_package": false
+    }
+   },
+   "claims": {
+    "evidence_grounded": {
+     "statements": 11,
+     "labeled_unverified": 3,
+     "unsupported": []
+    },
+    "muse_only": {
+     "statements": 7,
+     "labeled_unverified": 0,
+     "unsupported": [
+      {
+       "text": "robot arm positioned over dish rack with green plate newly seated in rack",
+       "reason": "uncited physical assertion (no evidence package)"
+      },
+      {
+       "text": "robot arm extends to grasp green plate on table",
+       "reason": "uncited physical assertion (no evidence package)"
+      },
+      {
+       "text": "Dish rack on left contains two green plates vertical, purple cup, and glasses; one green plate remains on table to the right; red robot arm behind rack",
+       "reason": "uncited physical assertion (no evidence package)"
+      },
+      {
+       "text": "Robot arm over rack; an additional green plate now seated in rack (three green plates visible), table plate still present",
+       "reason": "uncited physical assertion (no evidence package)"
+      },
+      {
+       "text": "Robot arm extended to table, gripper contacting green plate on table",
+       "reason": "uncited physical assertion (no evidence package)"
+      },
+      {
+       "text": "Table is clear; dish rack now holds two overlapping green plates in front section plus original plates, indicating second plate successfully stored",
+       "reason": "uncited physical assertion (no evidence package)"
+      }
+     ]
+    }
+   }
+  },
+  {
+   "investigation_id": "ep010",
+   "example_id": "botfails_dish_test_ep010",
+   "split": "development",
+   "sources": [
+    "data/experiments/botfails_ep010_w1260_v2/failure_report.json",
+    "data/experiments/botfails_ep010_w1260_v2/verification.json",
+    "data/experiments/botfails_ep010_w1260_v2_muse_pilot/pilot_report.json",
+    "data/experiments/botfails_ep010_w1260_v2_muse_pilot/validated_explanation.json",
+    "data/experiments/botfails_ep010_muse_only_matched_frames/structured_prediction.json"
+   ],
+   "criteria": {
+    "investigation_id": "ep010",
+    "task_id": "botfails_dish",
+    "assessments": [
+     {
+      "criterion_id": "containment",
+      "kind": "containment",
+      "required": true,
+      "state": "unverified",
+      "basis": "Latest object-region observation is frame 1380 of 2090; the final position after that is unobserved, so intermediate regions are not treated as the final state. Intermediate outside observations: green plate:1 (recovery remains possible).",
+      "evidence_ids": [
+       "E1"
+      ],
+      "objects": {},
+      "requirements": [
+       {
+        "kind": "final_state_observation",
+        "criterion_id": "containment",
+        "reason": "Object detections and destination geometry at (or within 1 s of) the last frame 2089.",
+        "objects": [
+         "green plate"
+        ],
+        "frames": [
+         2089,
+         2090
+        ]
+       },
+       {
+        "kind": "continuous_tracking",
+        "criterion_id": "containment",
+        "reason": "Track each object from its last observation to the end to establish where it ends up.",
+        "objects": [],
+        "frames": [
+         1381,
+         2090
+        ]
+       }
+      ],
+      "blocking": []
+     },
+     {
+      "criterion_id": "orientation",
+      "kind": "orientation",
+      "required": true,
+      "state": "unverified",
+      "basis": "Required pose 'upright_in_slot' is not measured by this investigation. 2D containment and model visual impressions do not establish physical orientation.",
+      "evidence_ids": [],
+      "objects": {},
+      "requirements": [
+       {
+        "kind": "orientation_measurement",
+        "criterion_id": "orientation",
+        "reason": "An independent orientation predicate for 'upright_in_slot' (e.g. slot-aligned mask axis calibrated on the destination, or object pose estimation) at the final frame.",
+        "objects": [],
+        "frames": null
+       },
+       {
+        "kind": "additional_viewpoint",
+        "criterion_id": "orientation",
+        "reason": "A side or top view of the destination in which slot engagement / upright pose is visible.",
+        "objects": [],
+        "frames": null
+       }
+      ],
+      "blocking": []
+     },
+     {
+      "criterion_id": "inventory",
+      "kind": "inventory",
+      "required": true,
+      "state": "unverified",
+      "basis": "3 'green plate' detected at the latest observation (frame 1380, not final), but the expected count is not declared.",
+      "evidence_ids": [
+       "E1"
+      ],
+      "objects": {},
+      "requirements": [
+       {
+        "kind": "task_specification",
+        "criterion_id": "inventory",
+        "reason": "Declare the expected number of 'green plate' so detections can be checked for completeness.",
+        "objects": [
+         "green plate"
+        ],
+        "frames": null
+       },
+       {
+        "kind": "final_state_observation",
+        "criterion_id": "inventory",
+        "reason": "Object detections and destination geometry at (or within 1 s of) the last frame 2089.",
+        "objects": [
+         "green plate"
+        ],
+        "frames": [
+         2089,
+         2090
+        ]
+       }
+      ],
+      "blocking": []
+     },
+     {
+      "criterion_id": "grasp_release",
+      "kind": "grasp_release",
+      "required": false,
+      "state": "unverified",
+      "basis": "Gripper openings measured (frames 1335), but this gripper signal cannot show whether an object is held, so release is not established. 1 release(s) outside the target are inferred (status inferred), not observed.",
+      "evidence_ids": [
+       "E2",
+       "E0",
+       "E1"
+      ],
+      "objects": {},
+      "requirements": [
+       {
+        "kind": "gripper_measurement",
+        "criterion_id": "grasp_release",
+        "reason": "A holding-sensitive signal (motor current, force, or jaw width with object) around each opening.",
+        "objects": [],
+        "frames": [
+         1335,
+         1336
+        ]
+       },
+       {
+        "kind": "continuous_tracking",
+        "criterion_id": "grasp_release",
+        "reason": "Continuous object tracking through each gripper opening to associate the object with the release.",
+        "objects": [],
+        "frames": [
+         1335,
+         1336
+        ]
+       }
+      ],
+      "blocking": []
+     },
+     {
+      "criterion_id": "completion",
+      "kind": "completion",
+      "required": true,
+      "state": "unverified",
+      "basis": "No required criterion is contradicted; unverified: containment, orientation, inventory. Missing evidence is not treated as failure.",
+      "evidence_ids": [],
+      "objects": {},
+      "requirements": [],
+      "blocking": [
+       "containment",
+       "orientation",
+       "inventory"
+      ]
+     }
+    ],
+    "mechanisms": [
+     {
+      "mechanism": "released_outside_target",
+      "category": "placement_outside_target",
+      "status": "inferred",
+      "verifier": "supported",
+      "objects": [
+       "green plate:1"
+      ],
+      "frames": [
+       1293,
+       1351
+      ],
+      "evidence_ids": [
+       "E0",
+       "E1",
+       "E2"
+      ],
+      "alternatives": [
+       "intended placement that missed the target",
+       "unintended drop during transport"
+      ],
+      "criterion_id": "grasp_release",
+      "resolving_evidence": [
+       {
+        "kind": "gripper_measurement",
+        "criterion_id": "grasp_release",
+        "reason": "A holding-sensitive gripper signal to show whether the object was held until the opening.",
+        "objects": [
+         "green plate:1"
+        ],
+        "frames": [
+         1293,
+         1351
+        ]
+       },
+       {
+        "kind": "final_state_observation",
+        "criterion_id": "containment",
+        "reason": "The object's region at the episode end, to show whether the misplacement was recovered.",
+        "objects": [
+         "green plate:1"
+        ],
+        "frames": [
+         2089,
+         2090
+        ]
+       }
+      ]
+     }
+    ],
+    "completion": "unverified",
+    "abstention_explanation": "Abstains: required criteria containment, orientation, inventory are unverified (none contradicted). Evidence that could resolve them: additional_viewpoint, continuous_tracking, final_state_observation, orientation_measurement, task_specification.",
+    "evidence_requirements": [
+     {
+      "kind": "final_state_observation",
+      "criterion_id": "containment",
+      "reason": "Object detections and destination geometry at (or within 1 s of) the last frame 2089.",
+      "objects": [
+       "green plate"
+      ],
+      "frames": [
+       2089,
+       2090
+      ]
+     },
+     {
+      "kind": "continuous_tracking",
+      "criterion_id": "containment",
+      "reason": "Track each object from its last observation to the end to establish where it ends up.",
+      "objects": [],
+      "frames": [
+       1381,
+       2090
+      ]
+     },
+     {
+      "kind": "orientation_measurement",
+      "criterion_id": "orientation",
+      "reason": "An independent orientation predicate for 'upright_in_slot' (e.g. slot-aligned mask axis calibrated on the destination, or object pose estimation) at the final frame.",
+      "objects": [],
+      "frames": null
+     },
+     {
+      "kind": "additional_viewpoint",
+      "criterion_id": "orientation",
+      "reason": "A side or top view of the destination in which slot engagement / upright pose is visible.",
+      "objects": [],
+      "frames": null
+     },
+     {
+      "kind": "task_specification",
+      "criterion_id": "inventory",
+      "reason": "Declare the expected number of 'green plate' so detections can be checked for completeness.",
+      "objects": [
+       "green plate"
+      ],
+      "frames": null
+     },
+     {
+      "kind": "final_state_observation",
+      "criterion_id": "inventory",
+      "reason": "Object detections and destination geometry at (or within 1 s of) the last frame 2089.",
+      "objects": [
+       "green plate"
+      ],
+      "frames": [
+       2089,
+       2090
+      ]
+     }
+    ]
+   },
+   "outcomes": {
+    "pipeline": "uncertain",
+    "criteria_completion": "uncertain",
+    "evidence_grounded_muse": "uncertain",
+    "muse_only": "failure"
+   },
+   "grounded_historical": false,
+   "mechanisms": {
+    "pipeline": [
+     {
+      "mechanism": "released_outside_target",
+      "category": "placement_outside_target",
+      "status": "inferred",
+      "verifier": "supported",
+      "objects": [
+       "green plate:1"
+      ],
+      "evidence_ids": [
+       "E0",
+       "E1",
+       "E2"
+      ]
+     }
+    ],
+    "grounded_hypothesis_categories": {
+     "placement_outside_target": [
+      "The opening at 44.5s may correspond to an intentional release or an unintended drop, but the pipeline does not establish intent; release is inferred from opening together with coming to rest outside target."
+     ]
+    },
+    "muse_only_categories": [
+     "placement_outside_target"
+    ]
+   },
+   "missing_evidence": {
+    "unverified_criteria": 4,
+    "with_requirement": 4,
+    "requirement_kinds": {
+     "additional_viewpoint": 1,
+     "continuous_tracking": 2,
+     "final_state_observation": 2,
+     "gripper_measurement": 1,
+     "orientation_measurement": 1,
+     "task_specification": 1
+    },
+    "abstention_explained": true
+   },
+   "criteria_citations": {
+    "citations": 8,
+    "invalid": 0,
+    "decisive_without_citation": []
+   },
+   "model_citations": {
+    "evidence_grounded": {
+     "evidence_citations": 16,
+     "frame_citations": 2,
+     "invalid": 0,
+     "invalid_ids": [],
+     "historical_package": false
+    }
+   },
+   "claims": {
+    "evidence_grounded": {
+     "statements": 8,
+     "labeled_unverified": 3,
+     "unsupported": []
+    },
+    "muse_only": {
+     "statements": 8,
+     "labeled_unverified": 0,
+     "unsupported": [
+      {
+       "text": "robot gripper contacts green plate on table (frame 0)",
+       "reason": "uncited physical assertion (no evidence package)"
+      },
+      {
+       "text": "plate comes to rest flat on table outside rack (frame 2)",
+       "reason": "uncited physical assertion (no evidence package)"
+      },
+      {
+       "text": "robot moves away from dropped plate toward remaining plates without correcting (frame 3)",
+       "reason": "uncited physical assertion (no evidence package)"
+      },
+      {
+       "text": "Red Lerobot arm gripper positioned on green plate on table, dish rack empty of plates on left",
+       "reason": "uncited physical assertion (no evidence package)"
+      },
+      {
+       "text": "Green plate blurred in mid-air falling toward table surface adjacent to rack, gripper open and empty",
+       "reason": "uncited physical assertion (no evidence package)"
+      },
+      {
+       "text": "Green plate lying flat on table outside dish rack, not slotted vertically inside",
+       "reason": "uncited physical assertion (no evidence package)"
+      },
+      {
+       "text": "Robot arm repositioned over other green plates, dropped plate remains on table unrecovered",
+       "reason": "uncited physical assertion (no evidence package)"
+      }
+     ]
+    }
+   }
+  },
+  {
+   "investigation_id": "ep013",
+   "example_id": "botfails_dish_test_ep013",
+   "split": "held-out",
+   "sources": [
+    "data/experiments/heldout_four_v2/botfails_dish_test_ep013/run_report.json",
+    "data/experiments/heldout_four_muse_comparison/ep013/evidence_grounded/package_snapshot.json",
+    "data/experiments/heldout_four_muse_comparison/ep013/evidence_grounded/validated_explanation.json",
+    "data/experiments/heldout_four_muse_comparison/ep013/muse_only/structured_prediction.json"
+   ],
+   "criteria": {
+    "investigation_id": "ep013",
+    "task_id": "botfails_dish",
+    "assessments": [
+     {
+      "criterion_id": "containment",
+      "kind": "containment",
+      "required": true,
+      "state": "contradicted",
+      "basis": "At final frame 2075, 1 required object(s) lie outside the 'dish rack' footprint in 2D (green plate:2). 1 other region(s) remain unknown.",
+      "evidence_ids": [
+       "E4"
+      ],
+      "objects": {
+       "green plate:0": "unknown",
+       "green plate:1": "inside",
+       "green plate:2": "outside"
+      },
+      "requirements": [],
+      "blocking": []
+     },
+     {
+      "criterion_id": "orientation",
+      "kind": "orientation",
+      "required": true,
+      "state": "unverified",
+      "basis": "Required pose 'upright_in_slot' is not measured by this investigation. 2D containment and model visual impressions do not establish physical orientation.",
+      "evidence_ids": [],
+      "objects": {},
+      "requirements": [
+       {
+        "kind": "orientation_measurement",
+        "criterion_id": "orientation",
+        "reason": "An independent orientation predicate for 'upright_in_slot' (e.g. slot-aligned mask axis calibrated on the destination, or object pose estimation) at the final frame.",
+        "objects": [],
+        "frames": null
+       },
+       {
+        "kind": "additional_viewpoint",
+        "criterion_id": "orientation",
+        "reason": "A side or top view of the destination in which slot engagement / upright pose is visible.",
+        "objects": [],
+        "frames": null
+       }
+      ],
+      "blocking": []
+     },
+     {
+      "criterion_id": "inventory",
+      "kind": "inventory",
+      "required": true,
+      "state": "unverified",
+      "basis": "3 'green plate' detected at the final frame 2075, but the expected count is not declared.",
+      "evidence_ids": [
+       "E4"
+      ],
+      "objects": {},
+      "requirements": [
+       {
+        "kind": "task_specification",
+        "criterion_id": "inventory",
+        "reason": "Declare the expected number of 'green plate' so detections can be checked for completeness.",
+        "objects": [
+         "green plate"
+        ],
+        "frames": null
+       }
+      ],
+      "blocking": []
+     },
+     {
+      "criterion_id": "grasp_release",
+      "kind": "grasp_release",
+      "required": false,
+      "state": "unverified",
+      "basis": "Gripper openings measured (frames 1528), but this gripper signal cannot show whether an object is held, so release is not established.",
+      "evidence_ids": [
+       "E5"
+      ],
+      "objects": {},
+      "requirements": [
+       {
+        "kind": "gripper_measurement",
+        "criterion_id": "grasp_release",
+        "reason": "A holding-sensitive signal (motor current, force, or jaw width with object) around each opening.",
+        "objects": [],
+        "frames": [
+         1528,
+         1529
+        ]
+       },
+       {
+        "kind": "continuous_tracking",
+        "criterion_id": "grasp_release",
+        "reason": "Continuous object tracking through each gripper opening to associate the object with the release.",
+        "objects": [],
+        "frames": [
+         1528,
+         1529
+        ]
+       }
+      ],
+      "blocking": []
+     },
+     {
+      "criterion_id": "completion",
+      "kind": "completion",
+      "required": true,
+      "state": "contradicted",
+      "basis": "Contradicted by: containment.",
+      "evidence_ids": [
+       "E4"
+      ],
+      "objects": {},
+      "requirements": [],
+      "blocking": []
+     }
+    ],
+    "mechanisms": [
+     {
+      "mechanism": "object_left_outside_target",
+      "category": "placement_outside_target",
+      "status": "end_state",
+      "verifier": "not_checked",
+      "objects": [
+       "green plate:2"
+      ],
+      "frames": null,
+      "evidence_ids": [
+       "E4"
+      ],
+      "alternatives": [
+       "never placed",
+       "placed then displaced",
+       "dropped in transport"
+      ],
+      "criterion_id": "containment",
+      "resolving_evidence": [
+       {
+        "kind": "continuous_tracking",
+        "criterion_id": "containment",
+        "reason": "Track the outside object(s) from the last tracked window to the end to tell never-placed from placed-then-displaced or dropped.",
+        "objects": [
+         "green plate:2"
+        ],
+        "frames": [
+         1618,
+         2090
+        ]
+       }
+      ]
+     }
+    ],
+    "completion": "contradicted",
+    "abstention_explanation": null,
+    "evidence_requirements": [
+     {
+      "kind": "orientation_measurement",
+      "criterion_id": "orientation",
+      "reason": "An independent orientation predicate for 'upright_in_slot' (e.g. slot-aligned mask axis calibrated on the destination, or object pose estimation) at the final frame.",
+      "objects": [],
+      "frames": null
+     },
+     {
+      "kind": "additional_viewpoint",
+      "criterion_id": "orientation",
+      "reason": "A side or top view of the destination in which slot engagement / upright pose is visible.",
+      "objects": [],
+      "frames": null
+     },
+     {
+      "kind": "task_specification",
+      "criterion_id": "inventory",
+      "reason": "Declare the expected number of 'green plate' so detections can be checked for completeness.",
+      "objects": [
+       "green plate"
+      ],
+      "frames": null
+     }
+    ]
+   },
+   "outcomes": {
+    "pipeline": "failure",
+    "criteria_completion": "failure",
+    "evidence_grounded_muse": "failure",
+    "muse_only": "failure"
+   },
+   "grounded_historical": false,
+   "mechanisms": {
+    "pipeline": [
+     {
+      "mechanism": "object_left_outside_target",
+      "category": "placement_outside_target",
+      "status": "end_state",
+      "verifier": "not_checked",
+      "objects": [
+       "green plate:2"
+      ],
+      "evidence_ids": [
+       "E4"
+      ]
+     }
+    ],
+    "grounded_hypothesis_categories": {
+     "placement_outside_target": [
+      "The plate observed outside at end-of-episode may have never been placed in the rack, or may have been placed and then displaced; pipeline provides no verified physical event to distinguish.",
+      "The unknown-region plate may be partially occluded or at rack edge causing insufficient geometry for inside/outside determination."
+     ]
+    },
+    "muse_only_categories": [
+     "placement_outside_target"
+    ]
+   },
+   "missing_evidence": {
+    "unverified_criteria": 3,
+    "with_requirement": 3,
+    "requirement_kinds": {
+     "additional_viewpoint": 1,
+     "continuous_tracking": 1,
+     "gripper_measurement": 1,
+     "orientation_measurement": 1,
+     "task_specification": 1
+    },
+    "abstention_explained": true
+   },
+   "criteria_citations": {
+    "citations": 5,
+    "invalid": 0,
+    "decisive_without_citation": []
+   },
+   "model_citations": {
+    "evidence_grounded": {
+     "evidence_citations": 16,
+     "frame_citations": 4,
+     "invalid": 0,
+     "invalid_ids": [],
+     "historical_package": false
+    }
+   },
+   "claims": {
+    "evidence_grounded": {
+     "statements": 13,
+     "labeled_unverified": 6,
+     "unsupported": []
+    },
+    "muse_only": {
+     "statements": 8,
+     "labeled_unverified": 0,
+     "unsupported": [
+      {
+       "text": "robot grasps green whisk",
+       "reason": "uncited physical assertion (no evidence package)"
+      },
+      {
+       "text": "green plate remains on table outside rack, repositioned but not stored",
+       "reason": "uncited physical assertion (no evidence package)"
+      },
+      {
+       "text": "Dish rack on left contains two green plates and two cups; one green plate sits on table at back right, whisk on table center",
+       "reason": "uncited physical assertion (no evidence package)"
+      },
+      {
+       "text": "Robot gripper holds green whisk above table",
+       "reason": "uncited physical assertion (no evidence package)"
+      },
+      {
+       "text": "Whisk now inside dish rack on left; green plate now on table foreground center, not in rack",
+       "reason": "uncited physical assertion (no evidence package)"
+      }
+     ]
+    }
+   }
+  },
+  {
+   "investigation_id": "pilot",
+   "example_id": "pilot",
+   "split": "recorded",
+   "sources": [
+    "data/submission_demo/pilot/audit/after/analysis.json",
+    "data/submission_demo/pilot/audit/after/evidence_package.json",
+    "data/submission_demo/pilot/audit/after/verification.json",
+    "data/submission_demo/pilot/audit/before/muse_result.json",
+    "data/submission_demo/pilot/audit/before/evidence_package.json"
+   ],
+   "criteria": {
+    "investigation_id": "pilot",
+    "task_id": "live_custom",
+    "assessments": [
+     {
+      "criterion_id": "containment",
+      "kind": "containment",
+      "required": true,
+      "state": "unverified",
+      "basis": "Destination 'white tray' segmentation is unavailable; containment cannot be measured. This does not mean the destination was absent.",
+      "evidence_ids": [
+       "E4"
+      ],
+      "objects": {},
+      "requirements": [
+       {
+        "kind": "destination_mask",
+        "criterion_id": "containment",
+        "reason": "A usable 'white tray' mask (or calibrated interior) at the final-state frame.",
+        "objects": [],
+        "frames": null
+       }
+      ],
+      "blocking": []
+     },
+     {
+      "criterion_id": "inventory",
+      "kind": "inventory",
+      "required": true,
+      "state": "supported",
+      "basis": "1/1 'screwdriver' located at final frame 736.",
+      "evidence_ids": [
+       "E5"
+      ],
+      "objects": {},
+      "requirements": [],
+      "blocking": []
+     },
+     {
+      "criterion_id": "grasp_release",
+      "kind": "grasp_release",
+      "required": false,
+      "state": "unverified",
+      "basis": "No gripper measurement: grasp and release cannot be measured; video-only position changes do not establish them.",
+      "evidence_ids": [],
+      "objects": {},
+      "requirements": [
+       {
+        "kind": "gripper_measurement",
+        "criterion_id": "grasp_release",
+        "reason": "Recorded gripper joint (and ideally width/current) synchronized with the video.",
+        "objects": [],
+        "frames": null
+       },
+       {
+        "kind": "continuous_tracking",
+        "criterion_id": "grasp_release",
+        "reason": "Object observations are missing for frames 433-537; recover tracking there (e.g. another viewpoint around the occluder) to see where the object is put down.",
+        "objects": [],
+        "frames": [
+         433,
+         538
+        ]
+       }
+      ],
+      "blocking": []
+     },
+     {
+      "criterion_id": "orientation",
+      "kind": "orientation",
+      "required": false,
+      "state": "not_assessed",
+      "basis": "The task specification does not declare this criterion.",
+      "evidence_ids": [],
+      "objects": {},
+      "requirements": [],
+      "blocking": []
+     },
+     {
+      "criterion_id": "completion",
+      "kind": "completion",
+      "required": true,
+      "state": "unverified",
+      "basis": "No required criterion is contradicted; unverified: containment. Missing evidence is not treated as failure.",
+      "evidence_ids": [],
+      "objects": {},
+      "requirements": [],
+      "blocking": [
+       "containment"
+      ]
+     }
+    ],
+    "mechanisms": [],
+    "completion": "unverified",
+    "abstention_explanation": "Abstains: required criteria containment are unverified (none contradicted). Evidence that could resolve them: destination_mask.",
+    "evidence_requirements": [
+     {
+      "kind": "destination_mask",
+      "criterion_id": "containment",
+      "reason": "A usable 'white tray' mask (or calibrated interior) at the final-state frame.",
+      "objects": [],
+      "frames": null
+     }
+    ]
+   },
+   "outcomes": {
+    "pipeline": "uncertain",
+    "criteria_completion": "uncertain",
+    "evidence_grounded_muse": "uncertain",
+    "muse_only": null
+   },
+   "grounded_historical": true,
+   "mechanisms": {
+    "pipeline": [],
+    "grounded_hypothesis_categories": {},
+    "muse_only_categories": []
+   },
+   "missing_evidence": {
+    "unverified_criteria": 2,
+    "with_requirement": 2,
+    "requirement_kinds": {
+     "continuous_tracking": 1,
+     "destination_mask": 1,
+     "gripper_measurement": 1
+    },
+    "abstention_explained": true
+   },
+   "criteria_citations": {
+    "citations": 2,
+    "invalid": 0,
+    "decisive_without_citation": []
+   },
+   "model_citations": {
+    "evidence_grounded": {
+     "evidence_citations": 4,
+     "frame_citations": 0,
+     "invalid": 0,
+     "invalid_ids": [],
+     "historical_package": true
+    }
+   },
+   "claims": {
+    "evidence_grounded": {
+     "statements": 4,
+     "labeled_unverified": 0,
+     "unsupported": []
+    }
+   }
+  }
+ ],
+ "scores": {
+  "outcome_rows": [
+   {
+    "investigation_id": "ep003",
+    "split": "held-out",
+    "reference_outcome": "success",
+    "reference_status": "reference",
+    "pipeline": "success",
+    "criteria_completion": "uncertain",
+    "evidence_grounded_muse": "success",
+    "muse_only": "success",
+    "classes": {
+     "pipeline": "correct",
+     "criteria_completion": "abstain",
+     "evidence_grounded_muse": "correct",
+     "muse_only": "correct"
+    }
+   },
+   {
+    "investigation_id": "ep005",
+    "split": "held-out",
+    "reference_outcome": "failure",
+    "reference_status": "reference",
+    "pipeline": "uncertain",
+    "criteria_completion": "uncertain",
+    "evidence_grounded_muse": "uncertain",
+    "muse_only": "success",
+    "classes": {
+     "pipeline": "abstain",
+     "criteria_completion": "abstain",
+     "evidence_grounded_muse": "abstain",
+     "muse_only": "wrong"
+    }
+   },
+   {
+    "investigation_id": "ep006",
+    "split": "held-out",
+    "reference_outcome": "success",
+    "reference_status": "disputed",
+    "pipeline": "uncertain",
+    "criteria_completion": "uncertain",
+    "evidence_grounded_muse": "uncertain",
+    "muse_only": "success",
+    "classes": {
+     "pipeline": "disputed",
+     "criteria_completion": "disputed",
+     "evidence_grounded_muse": "disputed",
+     "muse_only": "disputed"
+    }
+   },
+   {
+    "investigation_id": "ep010",
+    "split": "development",
+    "reference_outcome": "failure",
+    "reference_status": "reference",
+    "pipeline": "uncertain",
+    "criteria_completion": "uncertain",
+    "evidence_grounded_muse": "uncertain",
+    "muse_only": "failure",
+    "classes": {
+     "pipeline": "abstain",
+     "criteria_completion": "abstain",
+     "evidence_grounded_muse": "abstain",
+     "muse_only": "correct"
+    }
+   },
+   {
+    "investigation_id": "ep013",
+    "split": "held-out",
+    "reference_outcome": "failure",
+    "reference_status": "reference",
+    "pipeline": "failure",
+    "criteria_completion": "failure",
+    "evidence_grounded_muse": "failure",
+    "muse_only": "failure",
+    "classes": {
+     "pipeline": "correct",
+     "criteria_completion": "correct",
+     "evidence_grounded_muse": "correct",
+     "muse_only": "correct"
+    }
+   },
+   {
+    "investigation_id": "pilot",
+    "split": "recorded",
+    "reference_outcome": null,
+    "reference_status": "no_reference",
+    "pipeline": "uncertain",
+    "criteria_completion": "uncertain",
+    "evidence_grounded_muse": "uncertain",
+    "muse_only": null,
+    "classes": {
+     "pipeline": "no_reference",
+     "criteria_completion": "no_reference",
+     "evidence_grounded_muse": "no_reference",
+     "muse_only": "no_reference"
+    }
+   }
+  ],
+  "outcome_summary": {
+   "pipeline": {
+    "abstain": 2,
+    "correct": 2,
+    "disputed": 1,
+    "no_reference": 1,
+    "scorable": 4,
+    "abstention_rate": 0.5,
+    "definitive_accuracy": 1.0
+   },
+   "criteria_completion": {
+    "abstain": 3,
+    "correct": 1,
+    "disputed": 1,
+    "no_reference": 1,
+    "scorable": 4,
+    "abstention_rate": 0.75,
+    "definitive_accuracy": 1.0
+   },
+   "evidence_grounded_muse": {
+    "abstain": 2,
+    "correct": 2,
+    "disputed": 1,
+    "no_reference": 1,
+    "scorable": 4,
+    "abstention_rate": 0.5,
+    "definitive_accuracy": 1.0
+   },
+   "muse_only": {
+    "correct": 3,
+    "disputed": 1,
+    "no_reference": 1,
+    "wrong": 1,
+    "scorable": 4,
+    "abstention_rate": 0.0,
+    "definitive_accuracy": 0.75
+   }
+  },
+  "mechanism_rows": [
+   {
+    "investigation_id": "ep005",
+    "category": "incorrect_orientation",
+    "demodoctor_criteria": "localized: criterion unverified with resolving evidence",
+    "evidence_grounded_muse": "hypothesis only (unverified)",
+    "muse_only": "missed (verdict success)"
+   },
+   {
+    "investigation_id": "ep010",
+    "category": "placement_outside_target",
+    "demodoctor_criteria": "identified (inferred, verifier supported)",
+    "evidence_grounded_muse": "hypothesis only (unverified)",
+    "muse_only": "asserted without citations"
+   },
+   {
+    "investigation_id": "ep013",
+    "category": "placement_outside_target",
+    "demodoctor_criteria": "identified (end_state, verifier not_checked)",
+    "evidence_grounded_muse": "hypothesis only (unverified)",
+    "muse_only": "asserted without citations"
+   }
+  ],
+  "mechanism_summary": {
+   "reference_mechanisms": 3,
+   "identified": 2,
+   "localized_unverified": 1,
+   "missed": 0,
+   "false_mechanisms_on_reference_success": []
+  },
+  "claims_summary": {
+   "evidence_grounded_labeled_unverified": 23,
+   "evidence_grounded_statements": 61,
+   "evidence_grounded_unsupported": 0,
+   "muse_only_labeled_unverified": 0,
+   "muse_only_statements": 38,
+   "muse_only_unsupported": 28
+  },
+  "citation_summary": {
+   "criteria_citations": 24,
+   "criteria_decisive_without_citation": 0,
+   "criteria_invalid": 0,
+   "model_citations": 102,
+   "model_invalid": 0
+  },
+  "missing_evidence_summary": {
+   "abstentions": 5,
+   "abstentions_explained": 5,
+   "unverified_criteria": 20,
+   "with_requirement": 20,
+   "requirement_kinds": {
+    "additional_viewpoint": 7,
+    "continuous_tracking": 7,
+    "destination_mask": 1,
+    "final_state_observation": 2,
+    "gripper_measurement": 6,
+    "orientation_measurement": 5,
+    "task_specification": 5
+   }
+  }
+ }
+}

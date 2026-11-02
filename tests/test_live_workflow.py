@@ -46,12 +46,15 @@ def test_upload_dry_run_returns_complete_results(client, tmp_path):
         time.sleep(0.02)
     assert status["status"] == "completed", status
     result = client.get(f"/api/jobs/{job_id}/analysis").json()
+    assert result["criteria"]["completion"] == "not_assessed"
+    assert all(a["state"] == "not_assessed" for a in result["criteria"]["assessments"])
     for key in ("title", "task_outcome", "outcome_label", "frame_catalog", "observed", "inferred",
                 "hypotheses", "factual_claims", "visual_interpretations", "limitations", "disclaimer"):
         assert key in result
     assert result["dry_run"] is True
     assert result["task_outcome"] == "uncertain"
     assert result["evidence_catalog"] == []
+    assert client.get(f"/api/jobs/{job_id}/tracks").json()["frames"] == {}
     assert client.get("/api/budget").json()["spent_usd"] == 0
     assert client.get(f"/api/jobs/{job_id}/files/video.mp4").content == video.read_bytes()
 

@@ -19,7 +19,10 @@ DemoDoctor is a robotics investigation workspace powered by Meta SAM 3.1 and
 Muse Spark Open. It connects video to object tracks, independently checked claims
 and cited explanations. Builders can inspect what was observed, what was inferred
 and why a task verdict remains uncertain. Six recorded demonstrations run without
-API credentials; the upload workflow offers an explicitly labeled free dry run.
+API credentials. Uploads default to a free dry run; explicitly enabled local Real
+Analysis uses the existing pipeline after provider setup and per-job cost approval.
+Saved diagnostic hypotheses remain unverified. Fresh-provider generalization has
+not been validated by this update.
 
 ## Fit and demonstrated scope
 

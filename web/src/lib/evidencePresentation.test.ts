@@ -91,4 +91,12 @@ describe("Evidence presentation preserves verification context", () => {
       })[0].label,
     ).toBe("Uncertain");
   });
+  it("preserves end-state support without relabeling it as observation or uncertainty", () => {
+    const supported = Object.freeze({ text: "End-state assessment", evidence_ids: ["E4"], status: "supported_by_end_state" });
+    const groups = findingGroups({ observed: [], inferred: [supported, { ...supported, status: "uncertain" }] });
+    expect(groups.map(g => g.label)).toEqual(["End-state supported", "Uncertain"]);
+    expect(groups[0].items[0]).toBe(supported);
+    expect(groups[0].tone).toBe("inferred");
+    expect(supported.status).toBe("supported_by_end_state");
+  });
 });

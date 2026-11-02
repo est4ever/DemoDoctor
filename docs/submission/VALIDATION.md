@@ -1,5 +1,8 @@
 # Executed public-snapshot validation
 
+For the current incremental update, executed results and dependency findings, see
+[UPDATE_20261101.md](UPDATE_20261101.md). The October 31 record below is historical.
+
 Validated October 31, 2026 (Eastern), in the separate release directory. Source
 checkpoint: 05b175db352ae306c8607e6e08f06036f330b55b. Original development worktrees,
 private history, PR #3, application and final video were not modified. Only the
@@ -81,3 +84,34 @@ suite ran using the freshly installed isolated release venv (228 passed, 40 skip
 A new npm ci, all 47 frontend tests and the production build also passed from that
 tracked-only tree. Only the final validation notes/source inventory were added
 afterward; application, test and replay files did not change.
+
+## Final local incremental candidate
+
+Current verification and remaining decisions: [final update report](FINAL_UPDATE_20261101.md). Earlier counts and proposed milestones in historical documents do not describe this final candidate. Publication remains approval-gated.
+
+## Isolated clean-source installation verification
+
+The staged public files were exported to an independent test directory with no
+private jobs, caches, environment files, dependency directories or Git history.
+Python dependencies were then installed into a completely new local Python 3.12
+virtual environment from requirements-lock.txt using PyPI, with private pip
+configuration and provider credentials excluded. pip check passed and the full
+suite in that fresh environment produced **403 passed, 45 skipped** in 26.43 s.
+Before that install, the same clean source also passed using the existing verified
+dependency environment; that earlier check is not misrepresented as a fresh install.
+
+Frontend npm ci --offline installed 227 packages from the unchanged lockfile into
+the clean source, then **118 tests passed** and the production build passed. Both
+backend and this freshly built frontend started from the clean export in offline
+mode with Meta and Fireworks unconfigured. All six actual replay videos, default
+criteria, source controls, SAM overlays and Unknowns navigation passed again in
+gstack Chromium. No personal .env or original development data was available.
+
+The fresh npm install reported an unapproved optional esbuild postinstall notice;
+the installed native package still completed tests and production build. No global
+npm settings, dependency declarations, lockfile, application code or safeguards
+were changed in response. This notice is separate from the disclosed advisories.
+
+## Frozen application acceptance
+
+The current freeze is documented in [RELEASE_READINESS_20261101.md](RELEASE_READINESS_20261101.md): 448 integrated Python passes; public/fresh Python 403 passes and 45 explicit data-dependent skips; frontend 131 passes and production build passed. Historic counts above describe earlier checkpoints.

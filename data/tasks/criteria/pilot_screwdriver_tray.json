@@ -1,0 +1,19 @@
+{
+  "task_id": "live_custom",
+  "description": "Place the screwdriver in the white tray.",
+  "target": "white tray",
+  "objects": [{"concept": "screwdriver", "count": null}],
+  "criteria_basis": "Task text only. Exact expected object count is not supplied. No orientation requirement is stated, so orientation is not assessed.",
+  "criteria": [
+    {"criterion_id": "containment", "kind": "containment", "required": true,
+     "description": "The screwdriver is inside the white tray at the end.", "basis": "task text",
+     "params": {"final_tail_s": 1.0}},
+    {"criterion_id": "inventory", "kind": "inventory", "required": true,
+     "description": "The screwdriver is located at the end.", "basis": "task text",
+     "params": {"final_tail_s": 1.0}},
+    {"criterion_id": "grasp_release", "kind": "grasp_release", "required": false,
+     "description": "The screwdriver is released over/in the tray.", "basis": "mechanism criterion"},
+    {"criterion_id": "completion", "kind": "completion", "required": true,
+     "description": "All required criteria hold.", "basis": "conjunction of required criteria"}
+  ]
+}

@@ -625,5 +625,36 @@
     "ignored environments, secrets, jobs, logs and video production",
     "unused original SAM response caches; React display tracks and overlays retained"
   ],
-  "scientific_values_and_evidence_ids_changed": false
+  "scientific_values_and_evidence_ids_changed": false,
+  "incremental_update": {
+    "source_checkpoint": "097f8e1e6509b512886fc8eebe564007758bb759",
+    "public_parent": "26a8a9f3d06631be956f181125274e829cae64da",
+    "source_changes": [
+      "f60965f",
+      "097f8e1"
+    ],
+    "private_history_imported": false,
+    "scientific_results_or_replay_assets_changed": false
+  },
+  "final_incremental_update": {
+    "source_checkpoint": "cc5c3ab3e68f27bb4427aef5a23c3e7c794ca622",
+    "source_baseline": "097f8e1e6509b512886fc8eebe564007758bb759",
+    "public_parent": "35b00505608db9f975a13414dc8e4998238bb82d",
+    "private_history_imported": false,
+    "scientific_results_or_replay_assets_changed": false,
+    "personal_jobs_or_new_video_included": false,
+    "adaptations": [
+      "Documentation uses portable paths and anonymized private job identifiers",
+      "Criterion presentation rebound to public catalogs",
+      "Optional original research-cache/reference tests disclose missing inputs; synthetic core tests remain enabled"
+    ]
+  },
+  "diagnostic_context_update": {
+    "source_checkpoint": "de5009f26818d6d8a6cc0b15ba87fd89004095b6",
+    "public_parent": "c1cebf3f353eb62422cabacce3922bda1b166609",
+    "private_history_imported": false,
+    "original_scientific_results_changed": false,
+    "personal_reviews_or_media_included": false,
+    "runtime_presentation_only": true
+  }
 }

@@ -1,0 +1,363 @@
+{
+  "schema": "demodoctor.criteria/v2",
+  "investigation_id": "ep003",
+  "task_id": "botfails_dish",
+  "assessments": [
+    {
+      "criterion_id": "containment",
+      "kind": "containment",
+      "required": true,
+      "state": "supported",
+      "basis": "At sampled keyframe 2075 (2D only; later frames unobserved), all 3 observed object(s) are inside the 'dish rack' in 2D image space (not 3D placement or orientation).",
+      "evidence_ids": [
+        "E4"
+      ],
+      "objects": {
+        "green plate:0": "inside",
+        "green plate:1": "inside",
+        "green plate:2": "inside"
+      },
+      "requirements": [],
+      "blocking": [],
+      "name": "Object location / containment",
+      "sources": [
+        {
+          "evidence_id": "E4",
+          "kind": "containment_2d",
+          "object_id": "green plate:0",
+          "frame": 2075,
+          "value": "inside",
+          "view": "primary",
+          "source_ref": "data/experiments/heldout_four_v2/botfails_dish_test_ep003/run_report.json#/end_state/plates/0",
+          "package_id": "data/experiments/heldout_four_muse_comparison/ep003/evidence_grounded/package_snapshot.json",
+          "measurement": {
+            "interior_fraction": 1.0,
+            "footprint_fraction": 1.0,
+            "geometry_rule": "reliable_interior_inside"
+          }
+        },
+        {
+          "evidence_id": "E4",
+          "kind": "containment_2d",
+          "object_id": "green plate:1",
+          "frame": 2075,
+          "value": "inside",
+          "view": "primary",
+          "source_ref": "data/experiments/heldout_four_v2/botfails_dish_test_ep003/run_report.json#/end_state/plates/1",
+          "package_id": "data/experiments/heldout_four_muse_comparison/ep003/evidence_grounded/package_snapshot.json",
+          "measurement": {
+            "interior_fraction": 1.0,
+            "footprint_fraction": 1.0,
+            "geometry_rule": "reliable_interior_inside"
+          }
+        },
+        {
+          "evidence_id": "E4",
+          "kind": "containment_2d",
+          "object_id": "green plate:2",
+          "frame": 2075,
+          "value": "inside",
+          "view": "primary",
+          "source_ref": "data/experiments/heldout_four_v2/botfails_dish_test_ep003/run_report.json#/end_state/plates/2",
+          "package_id": "data/experiments/heldout_four_muse_comparison/ep003/evidence_grounded/package_snapshot.json",
+          "measurement": {
+            "interior_fraction": 1.0,
+            "footprint_fraction": 1.0,
+            "geometry_rule": "reliable_interior_inside"
+          }
+        }
+      ]
+    },
+    {
+      "criterion_id": "orientation",
+      "kind": "orientation",
+      "required": false,
+      "state": "unverified",
+      "basis": "No approved orientation success predicate is specified. Model suggestions and dataset anomaly wording do not define it.",
+      "evidence_ids": [],
+      "objects": {},
+      "requirements": [
+        {
+          "kind": "task_specification",
+          "criterion_id": "orientation",
+          "reason": "Specify the required physical pose independently of episode outcomes.",
+          "objects": [],
+          "frames": null
+        },
+        {
+          "kind": "orientation_measurement",
+          "criterion_id": "orientation",
+          "reason": "An independently validated final-frame orientation measurement is also needed.",
+          "objects": [],
+          "frames": null
+        }
+      ],
+      "blocking": [],
+      "name": "Object orientation",
+      "sources": []
+    },
+    {
+      "criterion_id": "inventory",
+      "kind": "inventory",
+      "required": true,
+      "state": "unverified",
+      "basis": "3 'green plate' detected at the latest observation (frame 2075, not final), but the expected count is not declared.",
+      "evidence_ids": [
+        "E4"
+      ],
+      "objects": {},
+      "requirements": [
+        {
+          "kind": "task_specification",
+          "criterion_id": "inventory",
+          "reason": "Declare the expected number of 'green plate' so detections can be checked for completeness.",
+          "objects": [
+            "green plate"
+          ],
+          "frames": null
+        },
+        {
+          "kind": "final_state_observation",
+          "criterion_id": "inventory",
+          "reason": "Object detections and destination geometry at the last frame 2089; earlier observations do not establish the final state.",
+          "objects": [
+            "green plate"
+          ],
+          "frames": [
+            2089,
+            2090
+          ]
+        }
+      ],
+      "blocking": [],
+      "name": "Required objects accounted for",
+      "sources": [
+        {
+          "evidence_id": "E4",
+          "kind": "detection",
+          "object_id": "green plate:0",
+          "frame": 2075,
+          "value": "green plate",
+          "view": "primary",
+          "source_ref": "data/experiments/heldout_four_v2/botfails_dish_test_ep003/run_report.json#/end_state/plates/0",
+          "package_id": "data/experiments/heldout_four_muse_comparison/ep003/evidence_grounded/package_snapshot.json",
+          "measurement": {}
+        },
+        {
+          "evidence_id": "E4",
+          "kind": "detection",
+          "object_id": "green plate:1",
+          "frame": 2075,
+          "value": "green plate",
+          "view": "primary",
+          "source_ref": "data/experiments/heldout_four_v2/botfails_dish_test_ep003/run_report.json#/end_state/plates/1",
+          "package_id": "data/experiments/heldout_four_muse_comparison/ep003/evidence_grounded/package_snapshot.json",
+          "measurement": {}
+        },
+        {
+          "evidence_id": "E4",
+          "kind": "detection",
+          "object_id": "green plate:2",
+          "frame": 2075,
+          "value": "green plate",
+          "view": "primary",
+          "source_ref": "data/experiments/heldout_four_v2/botfails_dish_test_ep003/run_report.json#/end_state/plates/2",
+          "package_id": "data/experiments/heldout_four_muse_comparison/ep003/evidence_grounded/package_snapshot.json",
+          "measurement": {}
+        }
+      ]
+    },
+    {
+      "criterion_id": "grasp_release",
+      "kind": "grasp_release",
+      "required": false,
+      "state": "unverified",
+      "basis": "Gripper openings measured (frames 1875), but this gripper signal cannot show whether an object is held, so release is not established.",
+      "evidence_ids": [
+        "E5"
+      ],
+      "objects": {},
+      "requirements": [
+        {
+          "kind": "gripper_measurement",
+          "criterion_id": "grasp_release",
+          "reason": "A holding-sensitive signal (motor current, force, or jaw width with object) around each opening.",
+          "objects": [],
+          "frames": [
+            1875,
+            1876
+          ]
+        },
+        {
+          "kind": "continuous_tracking",
+          "criterion_id": "grasp_release",
+          "reason": "Continuous object tracking through each gripper opening to associate the object with the release.",
+          "objects": [],
+          "frames": [
+            1875,
+            1876
+          ]
+        }
+      ],
+      "blocking": [],
+      "name": "Grasp or release",
+      "sources": []
+    },
+    {
+      "criterion_id": "completion",
+      "kind": "completion",
+      "required": true,
+      "state": "unverified",
+      "basis": "Physical completion remains unverified: inventory. Any contradicted 2D sample is scoped to that frame; missing or later evidence is not treated as a final task outcome.",
+      "evidence_ids": [],
+      "objects": {},
+      "requirements": [
+        {
+          "kind": "task_specification",
+          "criterion_id": "completion",
+          "reason": "Declare the expected number of 'green plate' so detections can be checked for completeness.",
+          "objects": [
+            "green plate"
+          ],
+          "frames": null
+        },
+        {
+          "kind": "final_state_observation",
+          "criterion_id": "completion",
+          "reason": "Object detections and destination geometry at the last frame 2089; earlier observations do not establish the final state.",
+          "objects": [
+            "green plate"
+          ],
+          "frames": [
+            2089,
+            2090
+          ]
+        },
+        {
+          "kind": "task_specification",
+          "criterion_id": "completion",
+          "reason": "An operator-approved complete task checklist, followed by independent evidence for its stated conditions; unstated conditions are not assumed.",
+          "objects": [],
+          "frames": null
+        }
+      ],
+      "blocking": [
+        "inventory"
+      ],
+      "name": "Physical task-completion conditions",
+      "sources": []
+    }
+  ],
+  "mechanisms": [],
+  "completion": "unverified",
+  "abstention_explanation": "Abstains on physical completion: unresolved criteria inventory. Evidence that could resolve them: continuous_tracking, final_state_observation, gripper_measurement, orientation_measurement, task_specification. Scoped 2D findings are preserved separately.",
+  "evidence_requirements": [
+    {
+      "kind": "task_specification",
+      "criterion_id": "orientation",
+      "reason": "Specify the required physical pose independently of episode outcomes.",
+      "objects": [],
+      "frames": null
+    },
+    {
+      "kind": "orientation_measurement",
+      "criterion_id": "orientation",
+      "reason": "An independently validated final-frame orientation measurement is also needed.",
+      "objects": [],
+      "frames": null
+    },
+    {
+      "kind": "task_specification",
+      "criterion_id": "inventory",
+      "reason": "Declare the expected number of 'green plate' so detections can be checked for completeness.",
+      "objects": [
+        "green plate"
+      ],
+      "frames": null
+    },
+    {
+      "kind": "final_state_observation",
+      "criterion_id": "inventory",
+      "reason": "Object detections and destination geometry at the last frame 2089; earlier observations do not establish the final state.",
+      "objects": [
+        "green plate"
+      ],
+      "frames": [
+        2089,
+        2090
+      ]
+    },
+    {
+      "kind": "gripper_measurement",
+      "criterion_id": "grasp_release",
+      "reason": "A holding-sensitive signal (motor current, force, or jaw width with object) around each opening.",
+      "objects": [],
+      "frames": [
+        1875,
+        1876
+      ]
+    },
+    {
+      "kind": "continuous_tracking",
+      "criterion_id": "grasp_release",
+      "reason": "Continuous object tracking through each gripper opening to associate the object with the release.",
+      "objects": [],
+      "frames": [
+        1875,
+        1876
+      ]
+    },
+    {
+      "kind": "task_specification",
+      "criterion_id": "completion",
+      "reason": "Declare the expected number of 'green plate' so detections can be checked for completeness.",
+      "objects": [
+        "green plate"
+      ],
+      "frames": null
+    },
+    {
+      "kind": "final_state_observation",
+      "criterion_id": "completion",
+      "reason": "Object detections and destination geometry at the last frame 2089; earlier observations do not establish the final state.",
+      "objects": [
+        "green plate"
+      ],
+      "frames": [
+        2089,
+        2090
+      ]
+    },
+    {
+      "kind": "task_specification",
+      "criterion_id": "completion",
+      "reason": "An operator-approved complete task checklist, followed by independent evidence for its stated conditions; unstated conditions are not assumed.",
+      "objects": [],
+      "frames": null
+    }
+  ],
+  "scope": "Independent criterion assessment; recorded verdicts and model citations are unchanged.",
+  "notes": [],
+  "catalog_binding": [
+    {
+      "evidence_id": "E4",
+      "source": "sam:green plate (end keyframe)",
+      "frame_start": 2075,
+      "frame_end": 2076,
+      "summary": "End-of-episode plate observations: green plate:0: region=inside conf=0.941605806350708; green plate:1: region=inside conf=0.9139785170555115; green plate:2: region=inside conf=0.9298245906829834"
+    },
+    {
+      "evidence_id": "E5",
+      "source": "proprio:main_gripper",
+      "frame_start": 1875,
+      "frame_end": 1876,
+      "summary": "Measured gripper opening (window anchor) at frame 1875 (62.500s); window score=3.1378. Opening alone is not a drop; holding is not detectable from this joint."
+    }
+  ],
+  "source_artifacts": [
+    "data/experiments/heldout_four_v2/botfails_dish_test_ep003/run_report.json",
+    "data/experiments/heldout_four_muse_comparison/ep003/evidence_grounded/package_snapshot.json",
+    "data/experiments/heldout_four_muse_comparison/ep003/evidence_grounded/validated_explanation.json",
+    "data/experiments/heldout_four_muse_comparison/ep003/muse_only/structured_prediction.json"
+  ]
+}

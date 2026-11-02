@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import type { AnalysisBundle, EvidenceItem, JointsBundle, TracksBundle } from "../lib/types";
 
 type Props = {
@@ -6,20 +7,38 @@ type Props = {
   tracks?: TracksBundle | null;
   joints?: JointsBundle | null;
   fps: number;
+  jobId?: string | null;
   seek: (t: number, options?: { pause?: boolean }) => void;
 };
 
 /** Read-only presentation of the current catalog and its loaded source artifacts. */
-export function EvidenceSource({ item, analysis, tracks, joints, fps, seek }: Props) {
+export function EvidenceSource(props: Props) {
+  const {item,jobId,analysis}=props;
+  const [cameraTracks,setCameraTracks]=useState<{cameraId:string;jobId:string;tracks:TracksBundle}|null>(null);
+  const [cameraError,setCameraError]=useState("");
+  useEffect(()=>{setCameraTracks(null);setCameraError("");if(!item.camera_id||!jobId)return;let cancelled=false;
+    fetch(`/api/jobs/${jobId}/cameras/${item.camera_id}/tracks.json`).then(r=>{if(!r.ok)throw Error("Camera-specific source observations unavailable");return r.json();})
+      .then(tracks=>{if(!cancelled)setCameraTracks({cameraId:item.camera_id!,jobId,tracks});}).catch(e=>{if(!cancelled)setCameraError(String(e));});return()=>{cancelled=true;};
+  },[item.camera_id,jobId]);
+  const c=analysis.multicamera?.cameras.find(c=>c.camera_id===item.camera_id);
+  const bound=item.camera_id&&jobId&&cameraTracks?.cameraId===item.camera_id&&cameraTracks.jobId===jobId?cameraTracks.tracks:null;
+  return <>{item.camera_id&&<div className="source-limitation"><strong>{item.camera_name} · {item.camera_id}</strong><p>Original {item.original_evidence_id} · {item.source_video_id} · camera-local pixels. Cross-view identity is unverified.</p>{cameraError&&<p role="alert">{cameraError}</p>}</div>}
+    <EvidenceSourceDetails {...props} tracks={item.camera_id?bound:props.tracks} fps={c?.fps??props.fps}
+      seek={item.camera_id?(s,options)=>props.seek(s-(c?.playback_offset_s??0),options):props.seek}/>
+  </>;
+}
+
+function EvidenceSourceDetails({ item, analysis, tracks, joints, fps, seek, jobId }: Props) {
   const claims = (item.claims ?? []).filter((c): c is Record<string, unknown> => !!c && typeof c === "object");
   const displacement = claims.find(c => c.type === "displacement");
   const trackId = item.track_id ?? claims.find(c => typeof c.track_id === "string")?.track_id;
   const track = typeof trackId === "string" ? tracks?.tracks[trackId] : undefined;
   const from = displacement?.from_frame ?? item.frame_start;
   const to = displacement?.to_frame;
-  const points = track ? (displacement
+  const rawPoints = track ? (displacement
     ? [track.points.find(p => p.frame_index === from), track.points.find(p => p.frame_index === to)].filter(p => p != null)
     : [track.points[0], track.points[track.points.length - 1]].filter(p => p != null)) : [];
+  const points = rawPoints.filter((p,i,all)=>all.findIndex(other=>other.frame_index===p.frame_index)===i);
   const center = (box: number[]) => [(box[0] + box[2]) / 2, (box[1] + box[3]) / 2];
   const gripperClaim = claims.find(c => c.type === "gripper_open");
   const frame = typeof gripperClaim?.frame === "number" ? gripperClaim.frame : item.frame_start;
@@ -35,10 +54,10 @@ export function EvidenceSource({ item, analysis, tracks, joints, fps, seek }: Pr
       {/No joint data/i.test(item.summary ?? "") && <p className="source-limitation"><strong>Joint/gripper measurements unavailable.</strong> No joint dataset is attached to this video-only investigation. Gripper opening, grasp and release cannot be measured from this entry.</p>}
       {/Not every expected object/i.test(item.summary ?? "") && <p className="source-limitation">An established final object position is missing; this record cannot verify placement in the destination.</p>}
       {/empty_result/i.test(item.summary ?? "") && <>
-        <p className="source-limitation"><strong>Destination measurement unavailable.</strong> Segmentation returned no usable tray mask (empty_result). No destination-mask artifact is available; this does not mean the tray was physically absent.</p>
+        <p className="source-limitation"><strong>Destination measurement unavailable.</strong> Segmentation returned no usable {jobId ? "destination" : "tray"} mask (empty_result). No destination-mask artifact is available; this does not mean the {jobId ? "destination" : "tray"} was physically absent.</p>
         {analysis.recorded_evidence?.provenance.target_segmentation && <pre aria-label="Destination segmentation diagnostic">{JSON.stringify(analysis.recorded_evidence.provenance.target_segmentation, null, 2)}</pre>}
       </>}
-      <p>Provenance: saved analysis catalog · report-level uncertainty, not a timed physical event. Separate raw report artifact unavailable in this replay.</p>
+      <p>Provenance: saved analysis catalog · report-level uncertainty, not a timed physical event. {jobId ? "The original job report and verification are available below." : "Separate raw report artifact unavailable in this replay."}</p>
     </>}
     {sam && <>
       <h4>Recorded image-space source</h4>
@@ -69,6 +88,13 @@ export function EvidenceSource({ item, analysis, tracks, joints, fps, seek }: Pr
       <dt>Frames</dt><dd>{item.frame_start != null ? `${item.frame_start} – ${item.frame_end ?? item.frame_start} (catalog bounds)` : "No frame assigned"}</dd>
     </dl>
     {item.note && <p>{item.note}</p>}
+    {jobId && <div className="claim-links" aria-label="Original job source artifacts">
+      {[['failure_report.json','Failure report'],['verification.json','Independent verification'],['evidence_package.json','Original evidence package'],['muse_result.json','Original Muse response']].map(([file,label]) =>
+        file === 'muse_result.json' && item.camera_id ? <a key={file} href={`/api/jobs/${encodeURIComponent(jobId)}/files/${file}`} target="_blank" rel="noreferrer">Combined Muse response ↗</a> :
+        <a key={file} href={item.camera_id?`/api/jobs/${encodeURIComponent(jobId)}/cameras/${item.camera_id}/${file}`:`/api/jobs/${encodeURIComponent(jobId)}/files/${file}`} target="_blank" rel="noreferrer">{label} ↗</a>)}
+      {item.camera_id&&<a href={`/api/jobs/${encodeURIComponent(jobId)}/cameras/${item.camera_id}/provenance.json`} target="_blank" rel="noreferrer">Crop, original timestamps & frame mapping ↗</a>}
+      {item.camera_id&&<a href={`/api/jobs/${encodeURIComponent(jobId)}/cameras/${item.camera_id}/provider_observations.json`} target="_blank" rel="noreferrer">Original camera/provider observations ↗</a>}
+    </div>}
     <details><summary>Raw evidence record · {item.evidence_id}</summary><pre aria-label="Raw evidence record">{JSON.stringify(item, null, 2)}</pre></details>
   </>;
 }

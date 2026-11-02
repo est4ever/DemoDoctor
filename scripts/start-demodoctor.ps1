@@ -1,18 +1,29 @@
 #Requires -Version 5.1
 [CmdletBinding()]
-param([string]$Python, [switch]$NoBrowser, [ValidateRange(10, 180)][int]$TimeoutSeconds = 90)
+param([string]$Python, [switch]$NoBrowser, [ValidateRange(10, 180)][int]$TimeoutSeconds = 90,
+      [switch]$RealAnalysis, [string]$CredentialsFile, [ValidateRange(0.01, 10)][double]$PerRunBudgetUsd)
 . "$PSScriptRoot\demodoctor-common.ps1"
 $lock = Enter-DemoLock
 $created = @()
 try {
+    if (($CredentialsFile -or $PSBoundParameters.ContainsKey('PerRunBudgetUsd')) -and !$RealAnalysis) { throw 'Credentials/budget configuration requires the explicit -RealAnalysis switch.' }
+    if ($CredentialsFile) { $CredentialsFile = (Resolve-Path -LiteralPath $CredentialsFile).Path }
     $state = Read-DemoState
     $missing = @()
     foreach ($kind in @('backend', 'frontend')) {
         $port = if ($kind -eq 'backend') { 8765 } else { 5173 }
         $existing = Get-DemoExisting $kind
         if ($null -ne $existing) {
+            if ($kind -eq 'backend') {
+                $health = Get-DemoJson 'http://127.0.0.1:8765/api/health'
+                $enabled = $null -ne $health -and $health.PSObject.Properties['real_analysis_enabled'] -and $health.real_analysis_enabled
+                if ($null -eq $health -or [bool]$enabled -ne [bool]$RealAnalysis) {
+                    throw 'Existing backend mode differs. Run DemoDoctor-Stop for managed services, then start the desired mode. No service was stopped.'
+                }
+                if ($CredentialsFile -or $PSBoundParameters.ContainsKey('PerRunBudgetUsd')) { throw 'Configuration is applied only at startup. Stop managed services before changing credentials or budget.' }
+            }
             Write-Host "Reusing DemoDoctor $kind on port $port."
-            if (!$existing.offline) { Write-Warning "Existing manual $kind is not managed by this launcher; it will not be stopped. Uploads still default to dry-run; the manual backend has its original API permissions." }
+            if ($existing.instance -eq 'manual') { Write-Warning "Existing manual $kind is not managed by this launcher; it will not be stopped. Uploads still default to dry-run; the manual backend has its original API permissions." }
             continue
         }
         if (Test-DemoPort $port) { throw "Port $port is occupied by an unrecognized service. Close it yourself or use DemoDoctor-Status. Nothing was killed." }
@@ -42,7 +53,7 @@ try {
     }
     foreach ($kind in $missing) {
         $executable = if ($kind -eq 'backend') { $Python } else { $node }
-        $state.$kind = Start-DemoProcess $kind $executable
+        $state.$kind = Start-DemoProcess $kind $executable -RealAnalysis:$RealAnalysis -CredentialsFile $CredentialsFile -PerRunBudgetUsd $(if ($PSBoundParameters.ContainsKey('PerRunBudgetUsd')) { $PerRunBudgetUsd.ToString([Globalization.CultureInfo]::InvariantCulture) } else { '' })
         $created += $kind
         Save-DemoState $state
         Wait-DemoService $kind $state.$kind $TimeoutSeconds
@@ -52,7 +63,9 @@ try {
     Test-DemoReplays
     if (!$NoBrowser) { Start-Process 'http://127.0.0.1:5173/' | Out-Null }
     Write-Host 'DemoDoctor ready: http://127.0.0.1:5173/ | PILOT + 5 cached investigations verified.'
-    Write-Host "Replay ready; uploads default to dry-run. Launcher-started inference is offline-only. Logs: $script:DemoRuntime"
+    if ($RealAnalysis) { Write-Host 'Local Real Analysis enabled. Uploads still default to Dry Run; each real job requires estimate confirmation. Zero automatic paid retries.' }
+    else { Write-Host 'Replay ready; launcher inference is offline-only.' }
+    Write-Host "Logs: $script:DemoRuntime"
 } catch {
     # Roll back only processes created by this invocation; preserve reused services.
     foreach ($kind in $created) { Stop-DemoOwned $state.$kind $kind; $state.$kind = $null }

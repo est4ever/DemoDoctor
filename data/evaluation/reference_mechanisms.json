@@ -1,0 +1,28 @@
+{
+  "purpose": "Evaluation-only references for diagnostic_eval.py. Never read by task_criteria.py or saved_investigations.py, and never an inference input. Outcomes restate existing human references (cross-checked by tests); mechanism categories are coarse labels read from the quoted reference text.",
+  "categories": {
+    "placement_outside_target": "A required object rests or ends outside the target (drop, misplacement, never placed, displaced).",
+    "incorrect_orientation": "A required object is in/at the target but not in the required pose (e.g. flat instead of upright in a slot)."
+  },
+  "episodes": [
+    {"investigation_id": "ep003", "reference_outcome": "success", "mechanisms": [], "status": "reference",
+     "source": "data/experiments/expanded_eval_prep/VERIFIED_OUTCOMES.json#botfails_dish_test_ep003",
+     "quote": "End: green plates and cups/whisk contained in rack; no task objects left out on the table."},
+    {"investigation_id": "ep005", "reference_outcome": "failure", "mechanisms": ["incorrect_orientation"], "status": "reference",
+     "source": "data/experiments/expanded_eval_prep/VERIFIED_OUTCOMES.json#botfails_dish_test_ep005",
+     "quote": "End state shows green plates lying flat / leaning incorrectly in the rack (not upright in plate slots)."},
+    {"investigation_id": "ep006", "reference_outcome": "success", "mechanisms": [], "status": "disputed",
+     "source": "data/experiments/expanded_eval_prep/VERIFIED_OUTCOMES.json#botfails_dish_test_ep006; DIAGNOSTIC_COVERAGE_AUDIT.md (EP006)",
+     "quote": "Looks successfully stored despite dataset band suggesting wrong-way.",
+     "dispute": "Local visual reference (medium-high confidence) conflicts with the dataset wrong-way band; the coverage audit could not adjudicate slot orientation from the single view. Excluded from outcome and mechanism scoring."},
+    {"investigation_id": "ep010", "reference_outcome": "failure", "mechanisms": ["placement_outside_target"], "status": "reference",
+     "source": "data/event_labels.json#botfails_dish_test_ep010; DIAGNOSTIC_COVERAGE_AUDIT.md (EP010)",
+     "quote": "The green plate is misplaced, and the task is not completed successfully. / Plate visibly moves/lifts then rests outside at ~45s; plates remain outside at the true end."},
+    {"investigation_id": "ep013", "reference_outcome": "failure", "mechanisms": ["placement_outside_target"], "status": "reference",
+     "source": "data/experiments/expanded_eval_prep/VERIFIED_OUTCOMES.json#botfails_dish_test_ep013",
+     "quote": "End: two green plates upright in rack with cups/whisk, but one green plate remains flat on the table. Incomplete placement."},
+    {"investigation_id": "pilot", "reference_outcome": null, "mechanisms": [], "status": "no_reference",
+     "source": "DIAGNOSTIC_COVERAGE_AUDIT.md (PILOT)",
+     "quote": "No independent binary outcome annotation in retained package."}
+  ]
+}

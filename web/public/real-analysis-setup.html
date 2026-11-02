@@ -1,0 +1,17 @@
+<!doctype html>
+<html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>DemoDoctor local Real Analysis setup</title>
+<body style="max-width:52rem;margin:3rem auto;padding:1rem;font:1rem/1.6 system-ui;background:#151918;color:#e9eee8">
+<h1>Local Real Analysis setup</h1>
+<p>Ordinary DemoDoctor starts offline. Dry Run is always the default in Import Footage. No inference runs at startup, upload preparation or refresh.</p>
+<ol>
+<li>Install the Python and React dependencies described in the project README.</li>
+<li>Set <code>MODEL_API_KEY</code> (Meta) and <code>FIREWORKS_API_KEY</code> (Fireworks) in the backend environment or a private, Git-ignored <code>.env</code>. Never enter credentials in this browser. Configuration detection does not authenticate an account or check credits.</li>
+<li>Stop managed offline services with <code>DemoDoctor-Stop</code>. Start <code>DemoDoctor -RealAnalysis</code>. An explicit <code>-CredentialsFile C:\private\providers.env</code> can load an existing file into the backend process. These flags also work with <code>scripts\start-demodoctor.ps1</code>.</li>
+<li>The existing default $1 run limit is below the full-context Muse reservation ($1.32 before SAM). The owner can explicitly set a limit at startup, for example <code>DemoDoctor -RealAnalysis -PerRunBudgetUsd 2.10</code>. This changes only the per-run limit in the existing ledger; it does not reset spend or raise the total budget. Reconciliation of unknown charges is required before further inference.</li>
+<li>Choose a video, task, object noun phrase, destination noun phrase and window (maximum 30 seconds). Use a single camera, not a multi-view composite. Select Real Analysis, review the file hash, exact frame window, operations and estimate, then explicitly approve Analyze.</li>
+</ol>
+<p>The estimate is conservative admission accounting at published standard rates, not a provider-enforced billing guarantee. There are zero automatic paid retries. A lost connection should recover the same job, not start another one. All jobs remain local.</p>
+<p>Video-only inputs do not provide measured gripper opening or release. Raw destination footprints have no calibrated interior, and assume a stationary camera/target. The outcome detector is all objects in target; it does not verify drawer closure, pouring or arbitrary instructions. Uncertainty is an intended result.</p>
+<p>Never expose this local inference API publicly. Ordinary <code>DemoDoctor</code> preserves offline behavior. Stop the real session before switching back.</p>
+<p><a href="/#upload" style="color:#d9f36c">Return to Import Footage</a></p>
+</body></html>

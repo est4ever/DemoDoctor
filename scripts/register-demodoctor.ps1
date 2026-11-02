@@ -11,6 +11,7 @@ $scriptDirectory = $PSScriptRoot.Replace("'", "''")
 $block = @"
 $begin
 function DemoDoctor { & '$scriptDirectory\start-demodoctor.ps1' @args }
+function DemoDoctor-RealAnalysis { & '$scriptDirectory\start-demodoctor-real-analysis.ps1' @args }
 function DemoDoctor-Status { & '$scriptDirectory\status-demodoctor.ps1' @args }
 function DemoDoctor-Stop { & '$scriptDirectory\stop-demodoctor.ps1' @args }
 $end
@@ -30,5 +31,5 @@ if (Test-Path -LiteralPath $profilePath) {
     Copy-Item -LiteralPath $profilePath -Destination (Join-Path $script:DemoRuntime ("profile-backup-" + [Guid]::NewGuid().ToString('N') + '.ps1'))
 }
 [IO.File]::WriteAllText($profilePath, $updated, (New-Object Text.UTF8Encoding($true)))
-Write-Host "Registered DemoDoctor, DemoDoctor-Status and DemoDoctor-Stop in $profilePath"
+Write-Host "Registered DemoDoctor, DemoDoctor-RealAnalysis, DemoDoctor-Status and DemoDoctor-Stop in $profilePath"
 Write-Host 'Open a new Windows PowerShell terminal. No PATH or execution-policy changes were made.'

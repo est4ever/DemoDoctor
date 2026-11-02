@@ -1,6 +1,7 @@
 # Final submission packet
 
-Prepared October 31, 2026 from the owner-frozen application `736e4e1`.
+Initially prepared October 31, 2026 from `736e4e1`; updated November 1
+with owner-authorized validated changes through `097f8e1`.
 Documentation only; no publication or submission has occurred.
 
 ## Project title
@@ -34,9 +35,12 @@ panels resize/collapse independently; Rerun is an optional recorded viewer.
 
 The deliverable includes six credential-free recorded investigations and a safe
 Windows launcher. Replays use saved real analysis; opening them makes no new
-provider calls. New uploads offer an explicitly labeled dry run that skips both
-SAM and Muse and creates no physical findings. This upload path is not presented
-as fresh real inference. The FastAPI backend is a local workstation service,
+provider calls. Uploads default to a dry run that skips SAM/Muse. The owner can
+explicitly enable local Real Analysis, configure providers and approve each video
+and cost estimate to use the existing inference pipeline. This update validates
+that workflow with synthetic providers, not a new paid generalization experiment.
+Saved diagnostic hypotheses are exposed as Unverified with original citations.
+EP005 remains uncertain; physical orientation is not independently verified. The FastAPI backend is a local workstation service,
 not an authenticated public multi-user deployment.
 
 ## Architecture and Meta-model contribution
@@ -123,8 +127,8 @@ THIRD_PARTY.md and supplied ElevenLabs Hope / DemoDoctor Resolve permissions.
 |---|---|
 | Official deadline | November 4, 2026, 9 PM Eastern (November 5, 02:00 UTC) |
 | Submission portal | https://cerebralvalley.ai/e/meta-ai-developer-hackathon/hackathon/submit |
-| GitHub URL | https://github.com/est4ever/DemoDoctor — planned separate public repository; not yet created |
-| Public source revision | Pending new snapshot publication; record its new parentless initial SHA |
+| GitHub URL | https://github.com/est4ever/DemoDoctor — public initial release exists; incremental update pending owner approval |
+| Public source revision | Initial published root 26a8a9f; record the approved incremental update SHA after publication |
 | Video URL | Pending rights/host approval and upload; no URL invented |
 | Live app URL | None; primary deliverable is source and local offline replay |
 | Track / theme | Indie Developer / Push the Frontier, subject to eligibility confirmation |

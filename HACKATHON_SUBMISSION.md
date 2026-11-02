@@ -1,9 +1,10 @@
 # DemoDoctor submission handoff
 
-This separate snapshot has a new, parentless Git history. Application source is
-from validated checkpoint 05b175db352ae306c8607e6e08f06036f330b55b; the original
-private history and PR #3 are not imported or changed. Build-history documentation
-discloses the October 24 foundation and actual October 26-31 contributions.
+This repository has a separate public history rooted at release 26a8a9f.
+The November 1 incremental update transfers validated source changes through
+097f8e1e6509b512886fc8eebe564007758bb759; private commits and PR #3 are not
+imported or changed. Build-history documentation preserves the October 24
+foundation disclosure and dated hackathon contributions.
 
 Final title: **DemoDoctor: Evidence-Grounded Robot Failure Analysis**.
 Intended track/theme: **Indie Developer / Push the Frontier**, subject to accepted
@@ -20,6 +21,6 @@ registration and organizer confirmation of pre-event reuse eligibility.
 - [Exact new-repository publication procedure](docs/submission/PUBLICATION.md)
 
 Do not merge or close the original private PR as part of publishing this snapshot.
-Public GitHub creation/push, video upload, deployment and final submission each
-remain unperformed and require owner authorization. The target public repository
+The initial public repository already exists. Pushing this incremental update,
+video upload, deployment and final submission require separate owner authorization. The target public repository
 name is **est4ever/DemoDoctor**, not DemoDoctor-Hackathon.

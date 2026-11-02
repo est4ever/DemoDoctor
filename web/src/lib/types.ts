@@ -79,6 +79,7 @@ export type CriteriaBundle = {
   assessments: Array<{
     criterion_id: string; kind: string; name: string; state: CriteriaBundle["completion"];
     required: boolean; basis: string; evidence_ids: string[];
+    objects?: Record<string,string>;
     sources: Array<{ evidence_id: string; kind: string; object_id: string; frame: number; view: string; source_ref: string; package_id: string; value: string; measurement?: Record<string, string | number> }>;
     requirements: Array<{ kind: string; reason: string }>;
   }>;

@@ -1,19 +1,18 @@
-import type { AnalysisBundle } from "../lib/types";
+import type { AnalysisBundle,TracksBundle } from "../lib/types";
+import {endpointMeasurement} from '../lib/readableEvidence';
 
-export function RecordedEvidence({ analysis: a, fps, seek }: {
-  analysis: AnalysisBundle; fps: number; seek: (t: number, options?: { pause?: boolean }) => void;
+export function RecordedEvidence({ analysis: a, fps, seek,tracks }: {
+  analysis: AnalysisBundle; fps: number; seek: (t: number, options?: { pause?: boolean }) => void; tracks?:TracksBundle|null;
 }) {
   const record = a.recorded_evidence;
   if (!record) return null;
   const coverage = record.provenance.observation_coverage;
-  const displacement = a.evidence_catalog.flatMap(e => e.claims ?? []).find(
-    c => (c as { type?: string }).type === "displacement",
-  ) as { from_frame: number; to_frame: number; value_px: number } | undefined;
+  const displacement = a.evidence_catalog.map(e=>endpointMeasurement(a,e,tracks)).find(Boolean);
   return <section className="finding" aria-label="Recorded pilot evidence">
     <h2>Observed image-space evidence</h2>
     <p>{record.verification.claims_checked} independently checked claims · {record.verification.claims_failed} failed · {record.verification.ok ? "Checks passed" : "Checks failed"}</p>
     {displacement && <>
-      <p>{displacement.value_px.toFixed(2)} px box-center endpoint difference. This does not establish physical identity across the gap, grasp, release, placement, or task completion.</p>
+      <p>{displacement.value.toFixed(2)} px box-center endpoint difference. This does not establish physical identity across the gap, grasp, release, placement, or task completion.</p>
       {[displacement.from_frame, displacement.to_frame].map(frame => <button className="evidence-seek" key={frame} onClick={() => seek(frame / fps, { pause: true })}>Observed endpoint frame {frame} · {(frame / fps).toFixed(3)}s ↗</button>)}
     </>}
     {coverage?.missing_ranges.map(gap => <p key={gap.frame_start}>

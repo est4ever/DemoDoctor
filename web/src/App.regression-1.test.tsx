@@ -35,7 +35,7 @@ beforeEach(() => {
 afterEach(async () => { await act(async () => root.unmount()); host.remove(); vi.useRealTimers(); vi.restoreAllMocks(); vi.unstubAllGlobals(); });
 async function load(hash: string) { history.replaceState({}, "", "/" + hash); await act(async () => root.render(<App />)); }
 async function click(text: string) {
-  const button = [...host.querySelectorAll<HTMLButtonElement>("button")].find(b => b.textContent?.includes(text));
+  const button = [...host.querySelectorAll<HTMLElement>("button,a[href]")].find(b => b.textContent?.includes(text));
   expect(button).toBeDefined(); await act(async () => button!.click());
 }
 
@@ -94,6 +94,16 @@ it("shows recording failures in the visible viewer shell and permits return", as
 it("keeps post-ready viewer failures visible instead of a blank overlay", async () => {
   await load("#rerun-ep010"); await click("Simulate ready"); await click("Simulate recording failure");
   expect(host.querySelector('[role="alert"]')?.textContent).toContain("Recording unavailable");
+});
+it('moves focus into the ready viewer and returns it on Escape',async()=>{
+  await load('#ep010');
+  const trigger=host.querySelector<HTMLButtonElement>('[data-testid="open-advanced-robotics-viewer"]')!;
+  await act(async()=>{trigger.focus();trigger.click();await new Promise(r=>setTimeout(r,0));});
+  await click('Simulate ready');
+  const dialog=host.querySelector<HTMLElement>('[role=dialog]')!;
+  expect(dialog.contains(document.activeElement)).toBe(true);
+  await act(async()=>{dialog.dispatchEvent(new KeyboardEvent('keydown',{key:'Escape',bubbles:true,cancelable:true}));await new Promise(r=>setTimeout(r,0));});
+  expect(location.hash).toBe('#ep010');expect(document.activeElement).toBe(trigger);
 });
 
 it("contains optional viewer module/render failures and preserves the primary investigation", async () => {

@@ -44,6 +44,28 @@ export function citationBinding(a: AnalysisBundle, item: EvidenceItem, savedJob=
   return binding;
 }
 export function validateCitations(a: AnalysisBundle, savedJob=false): void {
+  // JSON is untrusted at runtime: TypeScript's number annotations do not prevent
+  // false/null/empty metadata from being coerced by video arithmetic later.
+  const metadata=(raw:unknown):void=>{
+    if(!raw||typeof raw!=='object'||Array.isArray(raw))throw Error('Camera metadata is malformed. Investigation quarantined.');
+    const r=raw as Record<string,unknown>;
+    const fail=()=>{throw Error('Camera metadata has invalid numeric types. Investigation quarantined; no analysis was started.');};
+    for(const key of ['fps','duration_s','offset_s','playback_offset_s','source_timestamp_s','original_timestamp_s','shared_timestamp_s','timestamp_s','window_start_s','window_end_s','shared_start_s','shared_end_s'])
+      if(key in r&&(typeof r[key]!=='number'||!Number.isFinite(r[key])))fail();
+    for(const key of ['frame_start','frame_end','n_frames','camera_frame','source_frame','original_frame','frame_index','width','height'])if(key in r&&!Number.isInteger(r[key]))fail();
+    if('timestamps_s' in r&&(!Array.isArray(r.timestamps_s)||r.timestamps_s.some(t=>typeof t!=='number'||!Number.isFinite(t))))fail();
+    for(const key of ['crop','native_image_dimensions'])if(key in r&&!(key==='crop'&&r[key]===null)){
+      const v=r[key];if(!Array.isArray(v)||v.length!==(key==='crop'?4:2)||v.some(n=>!Number.isInteger(n)))fail();
+    }
+    if(r.frame_mapping!=null){if(!Array.isArray(r.frame_mapping))fail();else r.frame_mapping.forEach(metadata);}
+  };
+  if(a.multicamera){
+    metadata(a.multicamera);
+    for(const rows of [a.multicamera.cameras,a.multicamera.sources])if(rows!==undefined){
+      if(!Array.isArray(rows))throw Error('Camera metadata is malformed. Investigation quarantined.');
+      rows.forEach(metadata);
+    }
+  }
   const seen=new Set<string>();
   for (const item of a.evidence_catalog ?? []) {
     if (seen.has(item.evidence_id)) throw Error('Duplicate evidence ID; investigation quarantined.');

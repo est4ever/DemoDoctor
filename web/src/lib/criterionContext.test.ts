@@ -22,3 +22,22 @@ it.each([{source_sha256:'c'.repeat(64)},{camera_sha256:'d'.repeat(64)},{camera_s
  {camera_id:'cam1'},{source_video_id:'source1'},{original_frame:46},{frame_ref:null}])('rejects a stale/malformed T binding before direct source seeking: %j',patch=>{
  expect(criterionContextTime({...boundFrame,...patch} as unknown as CriterionContextFrame,boundManifest)).toBeNull();
 });
+
+it.each([false,true,null,'','0'])('rejects a coercible camera offset before any arithmetic: %j',bad=>{
+  const m={...boundManifest,cameras:[{...boundManifest.cameras[0],playback_offset_s:bad}]} as unknown as MultiCameraManifest;
+  const f={...boundFrame,shared_timestamp_s:3};
+  expect(criterionContextTime(f,m)).toBeNull();
+});
+it.each([false,true,null,''])('rejects malformed native timestamps, frame bounds, fps and duration: %j',bad=>{
+  const base={...boundManifest,cameras:[{...boundManifest.cameras[0],playback_offset_s:0,offset_s:0,frame_start:0}]};
+  const f={...boundFrame,original_frame:0,original_timestamp_s:0,shared_timestamp_s:0};
+  expect(criterionContextTime({...f,original_timestamp_s:bad} as unknown as CriterionContextFrame,base)).toBeNull();
+  for(const key of ['playback_offset_s','offset_s','fps','frame_start','frame_end']){
+    expect(criterionContextTime(f,{...base,cameras:[{...base.cameras[0],[key]:bad}]} as unknown as MultiCameraManifest)).toBeNull();
+  }
+  expect(criterionContextTime(f,{...base,duration_s:bad} as unknown as MultiCameraManifest)).toBeNull();
+});
+it('preserves a valid explicit numerical zero and the original frame zero',()=>{
+  const m={...boundManifest,cameras:[{...boundManifest.cameras[0],playback_offset_s:0,offset_s:0,frame_start:0}]};
+  expect(criterionContextTime({...boundFrame,original_frame:0,original_timestamp_s:0,shared_timestamp_s:0},m)).toBe(0);
+});

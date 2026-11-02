@@ -85,3 +85,13 @@ history remain unchanged. The current SOURCE_MANIFEST includes this incremental
 tree; earlier export provenance records remain preserved. See
 [defensive release review](../integration/DEFENSIVE_INTEGRITY_RELEASE.md) for exact
 source scope, tests, skipped research fixtures and native browser checks.
+
+## Combined local candidate — November 2
+
+Public parent: `27375223d2740e4a3570c5212632a8be15bf008c`. Selective integration through development checkpoint
+`bb5c509ac2dff14b3c1c0dcc2afdbe5d9407cebf` preserves the public Git history and prior defensive
+release adaptations. Reviewed workstation/upload corrections and strict JSON numeric
+metadata checks are included; experimental physical-action detectors remain excluded.
+No original media, citations, outcomes, notices or private jobs are changed or added.
+See [combined review](../integration/COMBINED_RELEASE_REVIEW.md) for exact tests,
+file scope, remaining P2 issues and independent-review status. Publication is pending.

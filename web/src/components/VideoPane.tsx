@@ -176,6 +176,7 @@ export function VideoPane({
         style={{ aspectRatio }}
       >
         <video
+          aria-label={mode==='sam'?'Recorded robot footage with SAM overlay':'Recorded robot footage'}
           ref={ref}
           key={activeSrc}
           src={activeSrc}

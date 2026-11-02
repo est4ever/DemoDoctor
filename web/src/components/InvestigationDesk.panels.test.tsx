@@ -36,6 +36,7 @@ const time = () => host.querySelector('[data-testid="time"]')!.textContent;
 
 it("collapses without unmounting evidence, losing source expansion, scrolling or seeking", async () => {
   await load();
+  await act(async()=>host.querySelector<HTMLButtonElement>('#inspector-tab-Evidence')!.click());
   const item = [...host.querySelectorAll<HTMLButtonElement>('.evidence-list button')].find(b => b.querySelector('.evidence-id')?.textContent === 'E2')!;
   await act(async () => item.click());
   const source = host.querySelector<HTMLDetailsElement>('#evidence-source-details')!;

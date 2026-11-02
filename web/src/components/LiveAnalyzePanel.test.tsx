@@ -50,6 +50,30 @@ it("defaults to dry run and never starts a real job on upload or mount",async()=
   const req=vi.mocked(fetch).mock.calls.find(c=>c[0]==="/api/analyze")![1]!.body as FormData;
   expect(req.get("dry_run")).toBe("true");expect(req.get("run_muse")).toBe("false");
 });
+it('explains missing input inline, focuses it, and makes no submission',async()=>{
+  expect(button('Prepare dry run').disabled).toBe(false);
+  await click('Prepare dry run');
+  const input=host.querySelector<HTMLInputElement>('#analysis-video')!;
+  expect(input.getAttribute('aria-invalid')).toBe('true');
+  expect(document.activeElement).toBe(input);
+  expect(host.querySelector('#analysis-input-error')?.textContent).toContain('Choose a non-empty robot video');
+  expect(posts).toEqual([]);
+});
+it('focuses cost review once, allows other controls, and returns focus on cancellation',async()=>{
+  await upload();await real();await click('Review real analysis estimate');
+  expect(document.activeElement).toBe(host.querySelector('[aria-label="Confirm real analysis"]'));
+  button('Check local service').focus();await click('Check local service');
+  expect(document.activeElement).toBe(button('Check local service'));
+  await click('Cancel');expect(document.activeElement).toBe(button('Review real analysis estimate'));
+  expect(posts).toEqual(['/api/analyze']);expect(confirmed).toBe(false);
+});
+it('locks repeated approval and form submissions while a job is in flight',async()=>{
+  await upload();await real();await click('Review real analysis estimate');
+  const approveButton=button('Analyze — approve');
+  await act(async()=>{approveButton.click();approveButton.click();});
+  await act(async()=>host.querySelector('form')!.dispatchEvent(new Event('submit',{bubbles:true,cancelable:true})));
+  expect(posts).toEqual(['/api/analyze','/api/jobs/new-job/start']);
+});
 it("requires a file-bound estimate confirmation and hands actual results to the workstation",async()=>{
   await upload();await real();await click("Review real analysis estimate");
   expect(host.textContent).toContain("new.mp4 · 0.000–2.000s");expect(host.textContent).toContain("$1.3325");

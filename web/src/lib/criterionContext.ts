@@ -4,6 +4,12 @@ import type { CriterionContextFrame, MultiCameraManifest } from "./types";
 export function criterionContextTime(frame: CriterionContextFrame, manifest?: MultiCameraManifest, requireBinding=false): number | null {
   if (!frame || typeof frame.frame_ref!=='string' || !Array.isArray(manifest?.cameras)) return null;
   const camera = manifest?.cameras.find(c => c && c.camera_id === frame.camera_id && c.source_video_id === frame.source_video_id);
+  const finite=(v:unknown):v is number=>typeof v==='number'&&Number.isFinite(v);
+  if (!camera || !finite(camera.playback_offset_s) || !finite(camera.fps) || camera.fps<=0 ||
+      !Number.isInteger(camera.frame_start) || !Number.isInteger(camera.frame_end) ||
+      !finite(manifest?.duration_s) || manifest.duration_s<=0 ||
+      !finite(frame.original_timestamp_s) || !finite(frame.shared_timestamp_s) ||
+      (camera.offset_s!==undefined&&!finite(camera.offset_s))) return null;
   if (!camera || !Number.isInteger(frame.original_frame) || frame.original_frame < camera.frame_start || frame.original_frame >= camera.frame_end) return null;
   // New T references require the entire binding. Legacy unhashed C/F references
   // retain their explicit timestamp/ID path; they are never treated as T records.

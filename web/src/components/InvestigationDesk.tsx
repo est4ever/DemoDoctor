@@ -1,9 +1,15 @@
-import { useEffect, useLayoutEffect, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { EvidenceSource } from "./EvidenceSource";
 import { citationTime } from '../lib/citationIntegrity';
+import {markerTarget} from '../lib/timelineNavigation';
+import {routeIntent} from '../lib/playbackIntent';
+import {readableEvidence} from '../lib/readableEvidence';
+import {InvestigationOverview} from './InvestigationOverview';
+import {CriterionCoverage} from './CriterionCoverage';
 import { RecordedEvidence } from "./RecordedEvidence";
 import { DiagnosticDetails } from "./DiagnosticDetails";
 import type { CSSProperties, ReactNode } from "react";
+import {NavigationLink} from './ui';
 import { DEFAULT_PANELS, usePanelLayout } from "../lib/usePanelLayout";
 import { PanelDivider } from "./PanelDivider";
 import type {
@@ -17,7 +23,6 @@ import type {
 import { formatTime } from "../lib/playback";
 import { getHighlight } from "../lib/types";
 import {
-  evidenceHeadline,
   evidenceStatus,
   evidenceTone,
   markerPresentation,
@@ -41,6 +46,8 @@ type Props = {
   activeEvidence: EvidenceItem | null;
   selectEvidence: (id: string) => void;
   selectMarker: (marker: TimelineMarker) => void;
+  navigationMessage?: string;
+  interactionSuspended?: boolean;
   liveMode: boolean;
   liveJobId?: string | null;
   inspectCriterionFrame?: (frame: CriterionContextFrame) => void;
@@ -101,21 +108,23 @@ export function InvestigationDesk(p: Props) {
     window.addEventListener("hashchange", sync);
     return () => window.removeEventListener("hashchange", sync);
   }, []);
-  const [tab, setTab] = useState(() => p.analysis.criteria ? "Findings" : "Evidence");
+  const [tab, setTab] = useState("Findings");
   useEffect(() => {
-    setTab(p.analysis.criteria ? "Findings" : "Evidence");
+    setTab("Findings");
   }, [p.analysis]);
   const [query, setQuery] = useState("");
   const [filter, setFilter] = useState("All");
   const a = p.analysis;
+  const originalRecord=useMemo(()=>JSON.stringify(a,null,2),[a]);
   const displayKey = p.liveMode ? a.episode_key : p.episodeKey;
+  useEffect(()=>{document.title=`${page==='home'?'Overview':page==='upload'?'Import footage':p.liveMode?'Saved investigation':displayKey.toUpperCase()+' investigation'} · DemoDoctor`;},[page,displayKey,p.liveMode]);
   const highlight = getHighlight(a);
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
       const target = e.target as HTMLElement;
       if (
-        page !== "desk" ||
-        /INPUT|TEXTAREA|SELECT|BUTTON/.test(target.tagName) ||
+        page !== "desk" || p.interactionSuspended ||
+        target.closest('input,textarea,select,button,a,summary,[role="separator"],[role="tab"]') ||
         target.isContentEditable
       )
         return;
@@ -145,7 +154,7 @@ export function InvestigationDesk(p: Props) {
     p.seek(p.t, { pause: true });
     p.switchEpisode(key);
     setPage("desk");
-    setTab("Evidence");
+    setTab("Findings");
     setQuery("");
     setFilter("All");
   };
@@ -161,6 +170,10 @@ export function InvestigationDesk(p: Props) {
   const activeTime = active ? citationTime(a,active,p.liveMode) : null;
   const [sourceOpen, setSourceOpen] = useState(false);
   const [inspection, setInspection] = useState(0);
+  const linkedEvidence=routeIntent().evidence;
+  useEffect(()=>{
+    if(linkedEvidence && active?.evidence_id===linkedEvidence){setTab('Evidence');setSourceOpen(true);}
+  },[a,linkedEvidence,active?.evidence_id]);
   const sourceSummary = useRef<HTMLElement>(null);
   const inspectorScroll = useRef<HTMLDivElement>(null);
   const inspectEvidence = (id: string) => {
@@ -168,6 +181,7 @@ export function InvestigationDesk(p: Props) {
     setSourceOpen(true);
     setInspection(n => n + 1); // Re-open/reveal even when selecting the same ID again.
   };
+  const openMarker=(m:TimelineMarker)=>{p.selectMarker(m);setTab('Evidence');};
   useLayoutEffect(() => {
     if (!inspection) return;
     sourceSummary.current?.focus({ preventScroll: true });
@@ -177,6 +191,7 @@ export function InvestigationDesk(p: Props) {
     <div className={`workstation adjustable-panels ${panels.desktop ? "panels-desktop" : "panels-narrow"} ${panels.navCollapsed ? "nav-collapsed" : ""}`}
       style={{"--nav-width": `${panels.navCollapsed ? panels.leftOffset : panels.leftWidth}px`, "--nav-offset": `${panels.leftOffset}px`,
         "--inspector-width": `${panels.rightWidth}px`, "--inspector-column": `${panels.inspectorCollapsed ? 44 : panels.rightWidth}px`} as CSSProperties}>
+      <a className="skip-link" href="#workspace-main" onClick={event=>{event.preventDefault();document.getElementById('workspace-main')?.focus();}}>Skip to main content</a>
       <span id="panel-resize-help" className="sr-only">Use Left and Right arrows to resize, Home or End for limits, Enter or double-click to reset.</span>
       {!panels.desktop && (panels.navDrawer || panels.inspectorDrawer) && <button className="panel-backdrop" tabIndex={-1} aria-label="Close side panel" onClick={() => {
         panelFocus.current = panels.navDrawer ? "left" : "right"; panels.setNavDrawer(false); panels.setInspectorDrawer(false);
@@ -188,9 +203,9 @@ export function InvestigationDesk(p: Props) {
           <button ref={navToggle} className="panel-button" aria-controls="workspace-navigation" aria-expanded={!panels.navCollapsed}
             aria-label={panels.navCollapsed ? "Expand navigation" : "Collapse navigation"} title={panels.navCollapsed ? "Expand navigation" : "Collapse navigation"} onClick={toggleNav}>{panels.navCollapsed ? "›" : "‹"}</button>
         </div>
-        <button
+        <NavigationLink href="#home"
           className="wordmark"
-          onClick={() => navigate("home")}
+          onNavigate={() => navigate("home")}
           aria-label="DemoDoctor home"
         >
           <span className="logo-mark">
@@ -199,37 +214,37 @@ export function InvestigationDesk(p: Props) {
           <span className="nav-copy">
             DemoDoctor<small>ROBOTICS INVESTIGATION</small>
           </span>
-        </button>
+        </NavigationLink>
         <div className="rail-label">WORKSPACE</div>
         <nav aria-label="Main navigation">
-          <button
+          <NavigationLink href="#home" aria-current={page==='home'?'page':undefined}
             aria-label="Overview" title="Overview"
             className={page === "home" ? "nav-active" : ""}
-            onClick={() => navigate("home")}
+            onNavigate={() => navigate("home")}
           >
             <span aria-hidden="true">⌂</span><span className="nav-copy">Overview</span> <kbd>01</kbd>
-          </button>
-          <button
+          </NavigationLink>
+          <NavigationLink href={p.liveMode&&p.liveJobId?`#job/${p.liveJobId}`:`#${p.episodeKey}`} aria-current={page==='desk'?'page':undefined}
             aria-label="Investigation" title="Investigation"
             className={page === "desk" ? "nav-active" : ""}
-            onClick={() => navigate("desk")}
+            onNavigate={() => navigate("desk")}
           >
             <span aria-hidden="true">⌖</span><span className="nav-copy">Investigation</span> <kbd>02</kbd>
-          </button>
-          <button
+          </NavigationLink>
+          <NavigationLink href="#upload" aria-current={page==='upload'?'page':undefined}
             aria-label="Import footage" title="Import footage"
             className={page === "upload" ? "nav-active" : ""}
-            onClick={() => navigate("upload")}
+            onNavigate={() => navigate("upload")}
           >
             <span aria-hidden="true">↥</span><span className="nav-copy">Import footage</span> <kbd>03</kbd>
-          </button>
+          </NavigationLink>
         </nav>
         <div className="rail-label session-heading">
           DEMONSTRATIONS <span>{p.episodes.length}</span>
         </div>
         <div className="session-list">
           {p.episodes.map((ep) => (
-            <button
+            <NavigationLink href={`#${ep.key}`}
               key={ep.key}
               aria-label={`Open ${ep.key.toUpperCase()} ${ep.label}`} title={ep.label}
               aria-current={page === "desk" && !p.liveMode && ep.key === p.episodeKey ? "page" : undefined}
@@ -238,20 +253,18 @@ export function InvestigationDesk(p: Props) {
                   ? "session-active"
                   : ""
               }
-              onClick={() => open(ep.key)}
+              onNavigate={() => open(ep.key)}
             >
               <span className="session-dot" />
               <span className="episode-glyph" aria-hidden="true">{ep.key === "pilot" ? "P" : ep.key.slice(-2)}</span>
               <span className="nav-copy">
                 {ep.key.toUpperCase()}
                 <small>
-                  {ep.key === "ep010"
-                    ? "Dish tidy-up · development"
-                    : ep.label.split("—")[1]?.trim()}
+                  {ep.key==='pilot'?'Recorded video-only pilot':'Recorded investigation'}
                 </small>
               </span>
               <span className="session-arrow">↗</span>
-            </button>
+            </NavigationLink>
           ))}
         </div>
         <div className="rail-bottom">
@@ -265,8 +278,8 @@ export function InvestigationDesk(p: Props) {
       {panels.desktop && !panels.navCollapsed && <PanelDivider side="left" width={panels.leftWidth} min={180} max={panels.leftMax}
         onResize={width => panels.setPreferences(v => ({...v, leftWidth: width}))}
         onReset={() => panels.setPreferences(v => ({...v, leftWidth: DEFAULT_PANELS.leftWidth}))}
-        style={{left: `calc(${panels.leftWidth}px - 5px)`}} />}
-      <main className="desk-main" inert={!panels.desktop && panels.navDrawer}>
+        style={{left: `calc(${panels.leftWidth}px - 12px)`}} />}
+      <main id="workspace-main" tabIndex={-1} className="desk-main" inert={!panels.desktop && panels.navDrawer}>
         <header className="topbar" inert={!panels.desktop && panels.inspectorDrawer}>
           <div>
             <span className="breadcrumb">Workspace</span>
@@ -340,9 +353,9 @@ export function InvestigationDesk(p: Props) {
                   Inspect the suspected release, compare SAM tracks with the
                   original footage, and trace each claim to its source.
                 </p>
-                <button className="lime-button" onClick={() => open("ep010")}>
+                <NavigationLink href="#ep010" className="lime-button" onNavigate={() => open("ep010")}>
                   Open investigation <span>↗</span>
-                </button>
+                </NavigationLink>
                 <small>Development episode · Frozen analysis</small>
               </div>
             </div>
@@ -352,10 +365,10 @@ export function InvestigationDesk(p: Props) {
             </div>
             <div className="episode-grid">
               {p.episodes.map((ep, i) => (
-                <button
+                <NavigationLink href={`#${ep.key}`}
                   className="episode-card"
                   key={ep.key}
-                  onClick={() => open(ep.key)}
+                  onNavigate={() => open(ep.key)}
                 >
                   <div className="episode-thumbnail">
                     <video
@@ -374,7 +387,7 @@ export function InvestigationDesk(p: Props) {
                   </div>
                   <p>{ep.label.split("—")[1]?.trim()}</p>
                   <small>OPEN CACHED REPLAY</small>
-                </button>
+                </NavigationLink>
               ))}
             </div>
             <div className="home-note">
@@ -386,9 +399,9 @@ export function InvestigationDesk(p: Props) {
                   view of each processing stage.
                 </p>
               </div>
-              <button onClick={() => navigate("upload")}>
+              <NavigationLink href="#upload" onNavigate={() => navigate("upload")}>
                 Import footage ↗
-              </button>
+              </NavigationLink>
             </div>
           </div>
         ) : page === "upload" ? (
@@ -409,7 +422,7 @@ export function InvestigationDesk(p: Props) {
                   {displayKey.toUpperCase()} <span>/</span>{" "}
                   {a.split.toUpperCase()}
                 </div>
-                <h1>{a.title}</h1>
+                <h1>{p.liveMode ? 'Uploaded task investigation' : `${p.episodeKey.toUpperCase()} investigation`}</h1>
                 <p>{a.task}</p>
               </div>
               <div className="heading-actions">
@@ -491,24 +504,24 @@ export function InvestigationDesk(p: Props) {
                         title={highlight.label}
                       />
                     )}
-                    {a.timeline_markers.map((m, index) => (
+                    {a.timeline_markers.map((m, index) => {
+                      const target=markerTarget(a,m,p.liveMode,p.duration);
+                      return (
                       <button
                         key={m.id}
-                        title={`${m.label} · ${m.t}s · ${m.kind}`}
-                        aria-label={`Seek to ${m.label}`}
+                        title={target.time==null?`${m.label} · no validated seek timestamp`:`${m.label} · ${target.time}s · ${m.kind}`}
+                        aria-label={`${target.time==null?'Inspect':'Seek to'} ${m.label}${target.time==null?' · no camera seek':''}`}
                         style={{
-                          left: `${p.duration ? (m.t / p.duration) * 100 : 0}%`,
-                          top: `${(index % 3) * 25}px`,
-                        }}
-                        onClick={() => p.selectMarker(m)}
+                          left: `${Math.min(98,Math.max(2,p.duration && Number.isFinite(m.t)?(m.t/p.duration)*100:0))}%`,
+                          '--marker-lane': index % 3,
+                        } as CSSProperties}
+                        onClick={() => openMarker(m)}
                         className={`timeline-marker ${markerPresentation(m).tone}`}
-                        aria-pressed={m.evidence_ids.includes(
-                          active?.evidence_id ?? "",
-                        )}
+                        aria-pressed={target.time!=null && Math.abs(p.t-target.time)<.5/p.fps}
                       >
                         {index + 1}
                       </button>
-                    ))}
+                    );})}
                     <span
                       className="playhead"
                       style={{
@@ -518,6 +531,7 @@ export function InvestigationDesk(p: Props) {
                   </div>
                   <input
                     aria-label="Timeline position"
+                    aria-valuetext={`${formatTime(p.t)} of ${formatTime(p.duration)}`}
                     type="range"
                     min="0"
                     max={p.duration || 1}
@@ -531,6 +545,7 @@ export function InvestigationDesk(p: Props) {
                     <span>ONE CLOCK · CAMERA + OVERLAYS + EVIDENCE</span>
                     <span>Space to play · ← → frame</span>
                   </div>
+                  {p.navigationMessage && <p className="navigation-message" role="status">{p.navigationMessage}</p>}
                 </section>
               </div>
               <div className={`inspector-shell ${panels.inspectorCollapsed ? "is-collapsed" : ""}`}>
@@ -581,20 +596,20 @@ export function InvestigationDesk(p: Props) {
                     </button>
                   ))}
                 </div>
-                {active && (
+                {active && tab==='Evidence' && (
                   <section
                     className="source-detail"
                     aria-label="Selected evidence"
                   >
                     <div className="selected-evidence-heading">
                       <span className="eyebrow">
-                        SELECTED EVIDENCE {active.evidence_id}
+                        SELECTED EVIDENCE <span className="evidence-id">{active.evidence_id}</span>
                       </span>
                       <span className={`provenance ${evidenceTone(active)}`}>
                         {status(active)}
                       </span>
                     </div>
-                    <h3>{evidenceHeadline(active)}</h3>
+                    <h3>{readableEvidence(active)}</h3>
                     <button className="inspect-source-button" aria-label={`Inspect source for ${active.evidence_id}`} aria-controls="evidence-source-details" aria-expanded={sourceOpen} onClick={() => inspectEvidence(active.evidence_id)}>Inspect source ↗</button>
                     {activeTime != null ? (
                       <button
@@ -619,7 +634,7 @@ export function InvestigationDesk(p: Props) {
                   aria-labelledby={`inspector-tab-${tab}`}
                   tabIndex={0}
                 >
-                  {active && (
+                  {active && tab==='Evidence' && (
                     <div className="technical-evidence">
                       <details id="evidence-source-details" open={sourceOpen} onToggle={e => setSourceOpen(e.currentTarget.open)}>
                         <summary ref={sourceSummary}>Source & technical evidence · {active.evidence_id}</summary>
@@ -627,13 +642,13 @@ export function InvestigationDesk(p: Props) {
                       </details>
                     </div>
                   )}
-                  <details className="investigation-summary">
+                  {tab==='Evidence' && <details className="investigation-summary">
                     <summary>Investigation summary</summary>
                     <h3>{a.diagnosis_headline}</h3>
                     <p>{a.diagnosis_summary}</p>
-                    <RecordedEvidence analysis={a} fps={p.fps} seek={p.seek} />
+                    <RecordedEvidence analysis={a} tracks={p.tracks} fps={p.fps} seek={p.seek} />
                     <p className="summary-disclaimer">{a.disclaimer}</p>
-                  </details>
+                  </details>}
                   {tab === "Evidence" ? (
                     <>
                       <details className="timeline-index">
@@ -642,13 +657,11 @@ export function InvestigationDesk(p: Props) {
                           {a.timeline_markers.map((m, index) => (
                             <button
                               key={m.id}
-                              onClick={() => p.selectMarker(m)}
-                              aria-pressed={m.evidence_ids.includes(
-                                active?.evidence_id ?? "",
-                              )}
+                              onClick={() => openMarker(m)}
+                              aria-pressed={markerTarget(a,m,p.liveMode,p.duration).time!=null && Math.abs(p.t-m.t)<.5/p.fps}
                             >
                               <span className="mono">
-                                <b>{index + 1}</b> {m.t.toFixed(2)}s
+                                <b>{index + 1}</b> {markerTarget(a,m,p.liveMode,p.duration).time!=null?`${m.t.toFixed(2)}s`:'No seek time'}
                               </span>
                               <span className="event-label">{m.label}</span>
                               <span
@@ -699,7 +712,7 @@ export function InvestigationDesk(p: Props) {
                                 {status(e)}
                               </span>
                             </div>
-                            <p>{evidenceHeadline(e)}</p>
+                            <p>{readableEvidence(e)}</p>
                             <small>
                               {e.t_start != null
                                 ? `${e.t_start.toFixed(2)}s`
@@ -711,15 +724,22 @@ export function InvestigationDesk(p: Props) {
                           </button>
                         ))}
                         {!evidence.length && (
-                          <p className="empty-state">
-                            No evidence matches. Try another search or filter.
+                          <p className="empty-state" role="status">
+                            {!a.evidence_catalog.length
+                              ? a.dry_run ? 'Dry Run skipped SAM and Muse. No physical evidence was generated. Open Findings for preparation status, or return to Import footage to review a new analysis.'
+                                : 'No evidence records were saved for this investigation. Inspect Findings and Unknowns for missing-data explanations; reopening does not run inference.'
+                              : 'No evidence matches. Try another search or filter.'}
                           </p>
                         )}
                       </div>
                     </>
                   ) : tab === "Findings" ? (
                     <div className="inspector-content">
-                      <DiagnosticDetails analysis={a} inspectEvidence={(id) => { inspectEvidence(id); setTab("Evidence"); }} seek={p.seek} inspectFrame={p.inspectCriterionFrame} videoSrc={p.originalVideoSrc} fps={p.fps} duration={p.duration} jobId={p.liveMode?p.liveJobId:null}/>
+                      <InvestigationOverview analysis={a} tracks={p.tracks} joints={p.joints} savedJob={p.liveMode} inspectEvidence={id=>{inspectEvidence(id);setTab('Evidence');}}>
+                      {a.criteria && <CriterionCoverage criteria={a.criteria} citations={ids=><div className="claim-links">{ids.map(id=><button key={id} aria-label={`Inspect diagnostic citation ${id}`} onClick={()=>{inspectEvidence(id);setTab('Evidence');}}>{readableEvidence(a.evidence_catalog.find(e=>e.evidence_id===id)??{evidence_id:id})} ↗</button>)}</div>} inspectFrame={p.inspectCriterionFrame} manifest={a.multicamera}/>}
+                      </InvestigationOverview>
+                      <details className="findings-technical"><summary>Technical Details · original statements, frames and provenance</summary>
+                      <DiagnosticDetails analysis={a} showCriteria={false} inspectEvidence={(id) => { inspectEvidence(id); setTab("Evidence"); }} seek={p.seek} inspectFrame={p.inspectCriterionFrame} videoSrc={p.originalVideoSrc} fps={p.fps} duration={p.duration} jobId={p.liveMode?p.liveJobId:null}/>
                       {findingGroups(a).map((group) => (
                         <div key={group.label}>
                           <h3
@@ -784,12 +804,15 @@ export function InvestigationDesk(p: Props) {
                       )}
                       {a.highlight_muse_comparison && (
                         <article>
-                          <h3>Muse-only comparison</h3>
+                          <h3>Historical comparison / reference context</h3>
+                          <p>This saved comparison includes curator/reference commentary. It is not an independently detected failure mechanism.</p>
                           <p>{a.comparison_note}</p>
                           <p>Baseline verdict: {a.muse_only?.verdict}</p>
                           <p>{a.muse_only?.summary}</p>
                         </article>
                       )}
+                      <details><summary>Full unchanged analysis record</summary><pre>{originalRecord}</pre></details>
+                      </details>
                     </div>
                   ) : (
                     <div className="inspector-content">

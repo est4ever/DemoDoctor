@@ -42,6 +42,15 @@ def same_value(a,b):
     return a==b
 
 
+def same_metadata(a,b):
+    """Exact typed provenance equality; citation timestamp tolerances do not apply."""
+    if number(a) and number(b):return a==b
+    if type(a) is not type(b):return False
+    if isinstance(a,dict):return a.keys()==b.keys() and all(same_metadata(a[k],b[k]) for k in a)
+    if isinstance(a,list):return len(a)==len(b) and all(same_metadata(x,y) for x,y in zip(a,b))
+    return a==b
+
+
 def check_record(actual,expected,known_fields=None):
     """Missing historical fields are unverified; supplied conflicting fields fail."""
     missing=[]
@@ -155,11 +164,39 @@ def digest(path):
 
 
 def hash_value(value):return isinstance(value,str) and re.fullmatch('[0-9a-f]{64}',value) is not None
-def number(x):return isinstance(x,(int,float)) and not isinstance(x,bool) and math.isfinite(x)
+def number(x):
+    if type(x) not in (int,float):return False
+    try:return math.isfinite(x)
+    except OverflowError:return False
+
+
+def numeric_metadata(record):
+    """JSON numbers only, without repairing/coercing historical records.
+
+    Absent optional legacy fields remain absent. crop=None still means uncropped,
+    not a zero rectangle. A supplied numeric field must have its actual JSON type.
+    """
+    if not isinstance(record,dict):raise ProvenanceError('Malformed numeric provenance record')
+    for key in ('fps','duration_s','offset_s','playback_offset_s','source_timestamp_s',
+                'original_timestamp_s','shared_timestamp_s','timestamp_s',
+                'window_start_s','window_end_s','shared_start_s','shared_end_s'):
+        if key in record and not number(record[key]):raise ProvenanceError('Non-numeric provenance '+key)
+    for key in ('frame_start','frame_end','n_frames','camera_frame','source_frame','original_frame','frame_index','width','height'):
+        if key in record and type(record[key]) is not int:raise ProvenanceError('Non-integer provenance '+key)
+    if 'timestamps_s' in record and (not isinstance(record['timestamps_s'],list) or any(not number(t) for t in record['timestamps_s'])):
+        raise ProvenanceError('Non-numeric native timestamps')
+    for key,length in (('crop',4),('native_image_dimensions',2)):
+        if key in record and not (key=='crop' and record[key] is None):
+            value=record[key]
+            if not isinstance(value,list) or len(value)!=length or any(type(v) is not int for v in value):raise ProvenanceError('Non-integer provenance '+key)
+    if record.get('frame_mapping') is not None:
+        if not isinstance(record['frame_mapping'],list):raise ProvenanceError('Malformed frame mapping')
+        for row in record['frame_mapping']:numeric_metadata(row)
 
 
 def frame(camera,record):
     """Validate an explicitly camera-tagged frame, never substitute another view."""
+    numeric_metadata(record)
     f=record.get('original_frame',record.get('source_frame',record.get('frame_index')))
     if type(f) is not int or not camera['frame_start']<=f<camera['frame_end']:raise ProvenanceError('Frame outside approved camera interval')
     for key in ('camera_id','source_video_id'):
@@ -173,7 +210,7 @@ def frame(camera,record):
         # Provider timestamp_s is native; frame catalog timestamp_s is shared.
         if key=='timestamp_s' and 'frame_ref' not in record:continue
         if key in record and (not number(record[key]) or abs(record[key]-(t-camera['playback_offset_s']))>1e-6):raise ProvenanceError('Shared frame timestamp mismatch')
-    if 'native_image_dimensions' in record and 'width' in camera and record['native_image_dimensions']!=[camera['width'],camera['height']]:raise ProvenanceError('Camera-local dimensions mismatch')
+    if 'native_image_dimensions' in record and 'width' in camera and not same_metadata(record['native_image_dimensions'],[camera['width'],camera['height']]):raise ProvenanceError('Camera-local dimensions mismatch')
 
 
 def validate(job, analysis=None):
@@ -193,18 +230,21 @@ def validate(job, analysis=None):
     if not isinstance(sources,list) or not 1<=len(sources)<=3 or not isinstance(cameras,list) or not 1<=len(cameras)<=3:raise ProvenanceError('Invalid source/camera collection')
     sm={};cm={}
     for s in sources:
+        numeric_metadata(s)
         sid=s.get('source_video_id')
         if sid not in {'source1','source2','source3'} or sid in sm or not hash_value(s.get('sha256')):raise ProvenanceError('Invalid/duplicate source identity or hash')
         if digest(file(job,sid+'.mp4'))!=s['sha256']:raise ProvenanceError('Original source content hash mismatch')
         sm[sid]=s
     for c in cameras:
+        numeric_metadata(c)
         cid=c.get('camera_id');sid=c.get('source_video_id')
         if cid not in {'cam1','cam2','cam3'} or cid in cm or sid not in sm:raise ProvenanceError('Invalid/duplicate camera-to-source binding')
         if not hash_value(c.get('sha256')) or not hash_value(c.get('source_sha256')) or c['source_sha256']!=sm[sid]['sha256']:raise ProvenanceError('Camera-to-original-source hash mismatch')
         if digest(file(job,cid+'/video.mp4'))!=c['sha256']:raise ProvenanceError('Derived camera content hash mismatch')
         p=read(job,cid+'/provenance.json')
         # Compare the entire approved camera record, not just five convenient fields.
-        if p!=c:raise ProvenanceError('Camera provenance differs from approved extraction record')
+        numeric_metadata(p)
+        if not same_metadata(p,c):raise ProvenanceError('Camera provenance differs from approved extraction record')
         start,end,n=c.get('frame_start'),c.get('frame_end'),c.get('n_frames');ts=c.get('timestamps_s');fps=c.get('fps');offset=c.get('playback_offset_s')
         if not all(type(v) is int for v in (start,end,n)) or not 0<=start<end<=n or not number(fps) or fps<=0 or not number(offset):raise ProvenanceError('Invalid approved native interval')
         if not isinstance(ts,list) or len(ts)!=n or any(not number(t) or abs(t-i/fps)>1e-6 for i,t in enumerate(ts)):raise ProvenanceError('Invalid native camera timestamps')
@@ -215,11 +255,11 @@ def validate(job, analysis=None):
             if ('width' in c and (c['width'],c['height'])!=(w,h)) or ('width' in s and (x+w>s['width'] or y+h>s['height'])):raise ProvenanceError('Crop dimensions/bounds mismatch')
         elif 'width' in s and ((c.get('width'),c.get('height'))!=(s['width'],s['height']) or c['sha256']!=s['sha256']):raise ProvenanceError('Uncropped camera is not the original source')
         for key in ('n_frames','timestamps_s','fps'):
-            if key in s and s[key]!=c[key]:raise ProvenanceError('Camera/source native mapping mismatch')
+            if key in s and not same_metadata(s[key],c[key]):raise ProvenanceError('Camera/source native mapping mismatch')
         mapping=c.get('frame_mapping')
         if mapping is not None:
             expected=[{'camera_frame':i,'source_frame':i,'source_timestamp_s':t,'shared_timestamp_s':t-offset} for i,t in enumerate(ts)]
-            if mapping!=expected:raise ProvenanceError('Source-to-camera frame mapping mismatch')
+            if not same_metadata(mapping,expected):raise ProvenanceError('Source-to-camera frame mapping mismatch')
         if file(job,cid+'/provider_observations.json').is_file():
             observations=read(job,cid+'/provider_observations.json').get('observations',[])
             if not isinstance(observations,list):raise ProvenanceError('Malformed observation collection')
@@ -229,10 +269,12 @@ def validate(job, analysis=None):
         saved=analysis.get('multicamera') or {};saved_cameras=saved.get('cameras',[])
         if len(saved_cameras)!=len(cameras) or {c.get('camera_id') for c in saved_cameras}!=set(cm):raise ProvenanceError('Saved analysis camera set mismatch')
         for c in saved_cameras:
+            numeric_metadata(c)
             authoritative=cm[c['camera_id']]
-            if any(k in c and c[k]!=authoritative.get(k) for k in authoritative):raise ProvenanceError('Saved analysis camera binding mismatch')
+            if any(k in c and not same_metadata(c[k],authoritative.get(k)) for k in authoritative):raise ProvenanceError('Saved analysis camera binding mismatch')
         for s in saved.get('sources',[]):
-            if s.get('source_video_id') not in sm or s!=sm[s['source_video_id']]:raise ProvenanceError('Saved analysis source binding mismatch')
+            numeric_metadata(s)
+            if s.get('source_video_id') not in sm or not same_metadata(s,sm[s['source_video_id']]):raise ProvenanceError('Saved analysis source binding mismatch')
         for r in analysis.get('frame_catalog',[]):
             if 'camera_id' in r:
                 if r['camera_id'] not in cm:raise ProvenanceError('Unknown frame camera')
@@ -257,7 +299,7 @@ def validate(job, analysis=None):
             for r in analysis.get('frame_catalog',[]):
                 b=frames.get(r.get('frame_ref'))
                 if frames and b is None:raise ProvenanceError('Frame is not in the original Muse input package')
-                if b and any(r.get(k)!=b[k] for k in ('camera_id','source_video_id','original_frame','original_timestamp_s')):raise ProvenanceError('Original Muse frame binding mismatch')
+                if b and any(not same_metadata(r.get(k),b[k]) for k in ('camera_id','source_video_id','original_frame','original_timestamp_s')):raise ProvenanceError('Original Muse frame binding mismatch')
         if analysis is not None:citation_authority(job,analysis,m)
     return m
 
@@ -268,6 +310,7 @@ def validate_artifact(job,manifest,camera_id,name,record=None):
     c=cameras[camera_id]
     if name.endswith('.json'):
         r=record if record is not None else read(job,camera_id+'/'+name)
+        numeric_metadata(r)
         for k in ('camera_id','source_video_id'):
             if k in r and r[k]!=c[k]:raise ProvenanceError('Artifact camera/source mismatch')
         if name=='analysis.json' and (r.get('criteria') or {}).get('temporal_evidence'):
@@ -281,4 +324,6 @@ def validate_artifact(job,manifest,camera_id,name,record=None):
         r=record if record is not None else read(job,camera_id+'/'+name)
         for k in ('camera_id','source_video_id'):
             if k in r and r[k]!=c[k]:raise ProvenanceError('Track camera/source mismatch')
-        if 'camera_provenance' in r and r['camera_provenance']!=c:raise ProvenanceError('Track extraction record mismatch')
+        if 'camera_provenance' in r:
+            numeric_metadata(r['camera_provenance'])
+            if not same_metadata(r['camera_provenance'],c):raise ProvenanceError('Track extraction record mismatch')

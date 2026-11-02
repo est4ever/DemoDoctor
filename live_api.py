@@ -286,9 +286,14 @@ def get_tracks(job_id: str) -> dict[str, Any]:
         raise HTTPException(404, "tracks not ready")
     manifest=_validated_camera_manifest(job_id)
     tracks=json.loads(path.read_text(encoding="utf-8"))
-    if manifest is not None and tracks.get('camera_id'):
-        from saved_provenance import validate_artifact
-        try:validate_artifact(path.parent,manifest,tracks['camera_id'],'tracks.json',tracks)
+    if manifest is not None:
+        from saved_provenance import validate_artifact, numeric_metadata
+        try:
+            numeric_metadata(tracks)
+            if 'camera_id' in tracks or 'camera_provenance' in tracks:
+                provenance=tracks.get('camera_provenance')
+                cid=tracks.get('camera_id') or (provenance.get('camera_id') if isinstance(provenance,dict) else None)
+                validate_artifact(path.parent,manifest,cid,'tracks.json',tracks)
         except (OSError,ValueError,KeyError,TypeError):raise HTTPException(409,'Saved track camera/source binding is invalid')
     return tracks
 

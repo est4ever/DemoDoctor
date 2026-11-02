@@ -1,5 +1,6 @@
 import type { CriteriaBundle, CriterionContextFrame, MultiCameraManifest } from "../lib/types";
 import { boundTemporalEvidence } from '../lib/temporalContext';
+import {criterionExplanation,resolvingObservation} from '../lib/readableEvidence';
 
 const stateLabel = { supported: "Supported", contradicted: "Contradicted", unverified: "Unverified", not_assessed: "Not assessed" };
 export function CriterionCoverage({ criteria: c, citations, inspectFrame, manifest }: {
@@ -8,14 +9,30 @@ export function CriterionCoverage({ criteria: c, citations, inspectFrame, manife
   manifest?:MultiCameraManifest;
 }) {
   const temporal=boundTemporalEvidence(c,manifest);
+  const actions=c.assessments.filter(a=>a.kind==='action');
+  const primary=actions.length?actions:c.assessments;
+  const secondary=actions.length?c.assessments.filter(a=>a.kind!=='action'):[];
+  const assessment=(a:CriteriaBundle['assessments'][number])=><article key={a.criterion_id} data-criterion={a.kind} data-criterion-id={a.criterion_id}>
+      <div className="criterion-heading"><h3>{a.name}</h3>
+      <span className={`provenance ${a.state === "supported" ? "observed" : "uncertain"}`}>{stateLabel[a.state]}</span></div>
+      {!(a.kind==='action' && a.state==='unverified') && <p>{criterionExplanation(a)}</p>}
+      {a.requirements.length>0 && <div className="missing-observation"><h4>Missing evidence</h4><ul>{[...new Set(a.requirements.map(r=>resolvingObservation(r,a.kind)))].map((r,i)=><li key={i}>{r}</li>)}</ul></div>}
+      <details className="criterion-technical"><summary>Technical Details · original assessment and sources</summary>
+      <p>{a.basis}</p>
+      {a.requirements.length>0 && <><h4>What would resolve this</h4><ul>{a.requirements.map((r,i)=><li key={i}>{r.reason}</li>)}</ul></>}
+      {a.evidence_ids.length>0 && citations(a.evidence_ids)}
+      {a.sources.map((s,i)=><div key={i}><p>{s.evidence_id} · {s.kind} · {s.value} · {s.object_id} · frame {s.frame} · {s.view}<br/><small>{s.source_ref} · package {s.package_id}</small></p>{Object.entries(s.measurement??{}).map(([key,value])=><p key={key}><small>{key}: {value}</small></p>)}</div>)}
+      <details><summary>Full unchanged criterion record</summary><pre>{JSON.stringify(a,null,2)}</pre></details>
+      </details>
+    </article>;
   return <details open className="model-explanation criterion-coverage">
     <summary>Task-criterion coverage</summary>
     <p>Scoped assessments; recorded verdicts unchanged.</p>
     {!!c.temporal_evidence?.length && !temporal.length && <p role="alert">Temporal source provenance mismatch; context withheld. Original criterion outcomes are unchanged.</p>}
-    {c.assessments.map(a => <article key={a.criterion_id} data-criterion={a.kind}>
-      <h3>{a.name}</h3>
-      <span className={`provenance ${a.state === "supported" ? "observed" : "uncertain"}`}>{stateLabel[a.state]}</span>
-      <p>{a.basis}</p>
+    {primary.map(assessment)}
+    {!!secondary.length && <details className="criterion-secondary"><summary>Other criteria and overall completion ({secondary.length})</summary>{secondary.map(assessment)}</details>}
+    <details className="criterion-temporal-technical"><summary>Technical Details · temporal observations and verification scope</summary>
+    {c.assessments.map(a => <section key={a.criterion_id}>
       {a.kind==='action' && !!temporal.length && <details><summary>Visual observations and contradictory-evidence review</summary>
         <p>Camera-local box measurements below describe returned SAM proposals, not verified pickup, release, containment or closure. A large change may be a false match.</p>
         {temporal.map(v=>{
@@ -26,17 +43,7 @@ export function CriterionCoverage({ criteria: c, citations, inspectFrame, manife
         })}
         <p>Inspect gap boundaries and final context for contrary evidence. No cross-camera identity association or physical-action conclusion is supplied.</p>
       </details>}
-      {a.requirements.length > 0 && <><h4>What would resolve this</h4><ul>
-        {a.requirements.map((r, i) => <li key={i}>{r.reason}</li>)}
-      </ul></>}
-      {(a.evidence_ids.length > 0 || a.sources.length > 0) && <details><summary>Supporting evidence and source records</summary>
-        {a.evidence_ids.length > 0 && citations(a.evidence_ids)}
-        {a.sources.map((s, i) => <div key={i}><p>{s.evidence_id} · {s.kind} · {s.value} · {s.object_id} · frame {s.frame} · {s.view}<br />
-          <small>{s.source_ref} · package {s.package_id}</small></p>
-          {Object.entries(s.measurement ?? {}).map(([key, value]) => <p key={key}><small>{key}: {value}</small></p>)}
-        </div>)}
-      </details>}
-    </article>)}
+    </section>)}
     <details className="criterion-scope"><summary>Assessment scope and task definition</summary>
       <p>{c.scope} Supported or contradicted applies only to the stated measurement scope; 2D containment does not verify full physical completion.</p>
       {c.task_text && <p>Explicit instruction: {c.task_text}. No extra object counts, orientation or success requirements are inferred.</p>}
@@ -72,5 +79,6 @@ export function CriterionCoverage({ criteria: c, citations, inspectFrame, manife
       </article>)}
     </section>}
     {c.abstention_explanation && <p>{c.abstention_explanation}</p>}
+    </details>
   </details>;
 }

@@ -48,6 +48,8 @@ button:disabled {
 button:focus-visible,
 a:focus-visible,
 input:focus-visible,
+select:focus-visible,
+textarea:focus-visible,
 summary:focus-visible {
   outline: 2px solid var(--accent);
   outline-offset: 4px;
@@ -151,7 +153,7 @@ kbd,
   display: grid;
   gap: 6px;
 }
-.rail nav button {
+.rail nav :is(button,a) {
   display: flex;
   gap: 12px;
   align-items: center;
@@ -162,12 +164,12 @@ kbd,
   color: #a5afac;
   font-size: 12px;
 }
-.rail nav button > span {
+.rail nav :is(button,a) > span {
   font-size: 20px;
   line-height: 1;
   width: 20px;
 }
-.rail nav button.nav-active {
+.rail nav :is(button,a).nav-active {
   background: #263021;
   color: #d2efab;
   border-color: #39462c;
@@ -185,7 +187,7 @@ kbd,
 .session-heading > span {
   color: #65706c;
 }
-.session-list button {
+.session-list :is(button,a) {
   display: flex;
   gap: 9px;
   align-items: flex-start;
@@ -196,7 +198,7 @@ kbd,
   font-size: 11px;
   color: #a9b1ae;
 }
-.session-list button > span:last-child {
+.session-list :is(button,a) > span:last-child {
   margin-left: auto;
   color: #77847b;
 }
@@ -506,7 +508,7 @@ kbd,
   color: #98a596;
   margin-top: 4px;
 }
-.home-note button {
+.home-note :is(button,a) {
   margin-left: auto;
   font-size: 10px;
   color: #c3dfaa;
@@ -1233,12 +1235,12 @@ kbd,
     margin-left: auto;
     gap: 3px;
   }
-  .rail nav button {
+  .rail nav :is(button,a) {
     font-size: 0;
     padding: 8px;
     gap: 0;
   }
-  .rail nav button > span {
+  .rail nav :is(button,a) > span {
     font-size: 20px;
   }
   .rail kbd,
@@ -1291,7 +1293,7 @@ kbd,
     gap: 12px;
     flex-wrap: wrap;
   }
-  .home-note button {
+  .home-note :is(button,a) {
     margin-left: 35px;
   }
   .section-line > span {
@@ -1402,10 +1404,10 @@ kbd,
 .inspector-heading h2 {
   font-size: 14px;
 }
-.rail nav button {
+.rail nav :is(button,a) {
   font-size: 13px;
 }
-.session-list button {
+.session-list :is(button,a) {
   font-size: 12px;
 }
 .session-list small {
@@ -1447,7 +1449,7 @@ kbd,
 .home-note strong {
   font-size: 14px;
 }
-.home-note button {
+.home-note :is(button,a) {
   font-size: 12px;
 }
 .topbar {
@@ -1469,7 +1471,7 @@ kbd,
   font-size: 12px;
 }
 @media (max-width: 620px) {
-  .rail nav button {
+  .rail nav :is(button,a) {
     font-size: 0;
   }
   .timeline-footer {
@@ -1948,16 +1950,10 @@ kbd,
     margin-bottom: 4px;
   }
   .investigation-page .timeline-track {
-    height: 48px;
+    height: 80px;
   }
   .investigation-page .timeline-marker {
-    top: 0 !important;
-  }
-  .investigation-page .timeline-marker:nth-of-type(3n + 2) {
-    top: 12px !important;
-  }
-  .investigation-page .timeline-marker:nth-of-type(3n) {
-    top: 24px !important;
+    top: calc(var(--marker-lane, 0) * var(--marker-lane-height, 28px)) !important;
   }
   .investigation-page .timeline-footer {
     margin-top: 2px;
@@ -2051,8 +2047,8 @@ kbd,
 .adjustable-panels .desk-main { margin-left: var(--nav-offset); min-width: 0; }
 .adjustable-panels .wordmark { margin: 16px 0 30px; }
 .adjustable-panels .rail nav { display: grid; margin: 0; gap: 6px; }
-.adjustable-panels .rail nav button { font-size: 12px; gap: 12px; padding: 10px 12px; }
-.adjustable-panels .rail nav button > .nav-copy { font-size: 12px; width: auto; line-height: 1.5; }
+.adjustable-panels .rail nav :is(button,a) { font-size: 12px; gap: 12px; padding: 10px 12px; }
+.adjustable-panels .rail nav :is(button,a) > .nav-copy { font-size: 12px; width: auto; line-height: 1.5; }
 .adjustable-panels .session-list, .adjustable-panels .rail-label, .adjustable-panels .rail-bottom { display: block; }
 .adjustable-panels .session-heading { display: flex; }
 .panel-actions, .topbar-panel-actions { display: flex; align-items: center; gap: 6px; }
@@ -2077,9 +2073,9 @@ kbd,
 .adjustable-panels.nav-collapsed .session-arrow { display: none; }
 .adjustable-panels.nav-collapsed .wordmark,
 .adjustable-panels.nav-collapsed .nav-panel-actions { justify-content: center; }
-.adjustable-panels.nav-collapsed .rail nav button { justify-content: center; padding: 10px 4px; }
+.adjustable-panels.nav-collapsed .rail nav :is(button,a) { justify-content: center; padding: 10px 4px; }
 .adjustable-panels.nav-collapsed .session-list { margin-top: 24px; }
-.adjustable-panels.nav-collapsed .session-list button { justify-content: center; padding: 10px 4px; }
+.adjustable-panels.nav-collapsed .session-list :is(button,a) { justify-content: center; padding: 10px 4px; }
 .adjustable-panels.nav-collapsed .episode-glyph {
   display: grid; place-items: center; min-width: 24px; height: 24px;
   border: 1px solid var(--border); border-radius: 4px; font: 11px Consolas, monospace;
@@ -2126,4 +2122,65 @@ kbd,
   .adjustable-panels .topbar { height: auto; min-height: 48px; padding: 8px 12px; flex-wrap: wrap; gap: 6px; }
   .adjustable-panels .topbar-panel-actions { flex-wrap: wrap; }
   .adjustable-panels .rail nav { flex-direction: column; }
+}
+
+/* Investigation explanations first; raw records remain in explicit disclosures. */
+.investigation-page .investigation-overview { font-size: 15px; line-height: 1.55; }
+.investigation-overview h2 { font-size: 19px; font-weight: 650; margin: 0 0 10px; }
+.investigation-overview h3 { font-size: 16px; font-weight: 650; margin: 20px 0 8px; }
+.investigation-overview p { margin: 8px 0 12px; color: #d7ddd8; }
+.investigation-overview .possible-mechanism { margin: 12px 0; padding-left: 12px; border-left: 2px solid var(--border); }
+.investigation-overview .provenance { font-size: 12px; }
+.investigation-overview .claim-links button { font-size: 14px; text-align: left; }
+.inspector-content > .criterion-coverage { margin-top: 22px; }
+.criterion-coverage > article { padding-block: 14px; border-bottom: 1px solid var(--border); }
+.criterion-heading { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; }
+.criterion-heading h3 { margin: 0; font-size: 16px; line-height: 1.45; }
+.criterion-coverage > article > p { font-size: 14px; line-height: 1.55; margin: 8px 0; }
+.missing-observation { margin-block: 12px; font-size: 14px; line-height: 1.5; }
+.missing-observation h4 { margin: 0 0 6px; color: #c5f365; font-size: 13px; }
+.missing-observation ul { padding-left: 18px; margin: 0; }
+.missing-observation li + li { margin-top: 6px; }
+.criterion-technical, .criterion-temporal-technical, .criterion-secondary, .findings-technical { margin-top: 14px; font-size: 13px; line-height: 1.5; }
+.criterion-technical summary, .findings-technical > summary { color: var(--muted); }
+.findings-technical { border-top: 1px solid var(--border); padding-top: 14px; }
+.findings-technical pre, .criterion-technical pre { white-space: pre-wrap; overflow-wrap: anywhere; }
+.investigation-page .source-detail .evidence-id { color: var(--muted); }
+.navigation-message { font-size: 13px; margin: 6px 0 0; color: var(--muted); }
+.investigation-page .timeline-track > .timeline-marker { top: calc(var(--marker-lane, 0) * var(--marker-lane-height, 28px)) !important; }
+.investigation-page .timeline-marker:focus-visible { outline: 2px solid #c5f365; outline-offset: 3px; z-index: 5; }
+.investigation-overview > .criterion-coverage { margin-top: 18px; font-size: 14px; }
+.investigation-overview > details > summary { font-size: 13px; }
+.investigation-overview .claim-links { display: flex; flex-direction: column; align-items: stretch; gap: 6px; }
+.investigation-overview .claim-links button { font-family: inherit; font-size: 14px; line-height: 1.4; padding: 8px 10px; }
+.hypothesis-sources > summary { font-size: 13px; }
+
+/* Guideline fixes preserve the existing graphite/lime layout. */
+.skip-link { position: fixed; top: 8px; left: 12px; z-index: 200; padding: 10px 16px; background: var(--accent); color: #101213; transform: translateY(-200%); }
+.skip-link:focus { transform: none; }
+.rail a, .home-note a, a.episode-card { color: inherit; text-decoration: none; }
+a.lime-button { text-decoration: none; }
+.upload-drop:focus-within { outline: 2px solid var(--accent); outline-offset: 4px; }
+.recovery-link { display: inline-flex; align-items: center; border: 1px solid var(--border); border-radius: 12px; padding: 10px 16px; min-height: 44px; }
+input:not([type=checkbox]):not([type=radio]), select { min-height: 24px; }
+label:has(input[type=checkbox]), label:has(input[type=radio]) { min-height: 24px; }
+a.episode-card { display: block; }
+button, a, input, select, textarea, summary { touch-action: manipulation; -webkit-tap-highlight-color: #c3ef6833; scroll-margin-block: 12px; }
+button:not(.panel-backdrop), summary, .claim-links a { min-height: 24px; }
+.panel-button { min-width: 28px; }
+.investigation-page .timeline-marker { width: 24px; min-width: 24px; height: 24px; }
+.panel-divider { width: 24px; }
+.panel-divider::after { inset-inline: 11px; }
+.right-divider { left: -12px; }
+.panel-divider:active { user-select: none; }
+.inspector-scroll { scroll-padding-block: 12px; }
+html { scroll-padding-top: 64px; }
+@media (max-width: 620px), (pointer: coarse) {
+  button:not(.panel-backdrop), .rail a, .claim-links a, summary, input:not([type=checkbox]):not([type=radio]), select { min-height: 44px; }
+  button:not(.panel-backdrop), .rail a { min-width: 44px; }
+  input, textarea, select { font-size: 16px !important; }
+  label:has(input[type=checkbox]), label:has(input[type=radio]) { display: inline-flex; align-items: center; gap: 8px; min-height: 44px; padding-block: 6px; }
+  .investigation-page .timeline-track { --marker-lane-height: 48px; height: 144px; }
+  .investigation-page .timeline-marker { width: 44px; min-width: 44px; height: 44px; }
+  .panels-narrow .inspector-shell { bottom: max(12px, env(safe-area-inset-bottom)); right: max(12px, env(safe-area-inset-right)); }
 }

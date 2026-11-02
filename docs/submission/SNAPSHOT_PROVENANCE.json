@@ -672,5 +672,22 @@
     "original_scientific_results_changed": false,
     "private_jobs_recordings_ledgers_or_credentials_included": false,
     "public_source_package_hashes_regenerated": true
+  },
+  "combined_integrity_usability_update": {
+    "public_parent": "27375223d2740e4a3570c5212632a8be15bf008c",
+    "source_checkpoint": "bb5c509ac2dff14b3c1c0dcc2afdbe5d9407cebf",
+    "source_commits": [
+      "70a0a67",
+      "6674f8a",
+      "6ec15cf",
+      "f5de6d5",
+      "14ba306",
+      "bb5c509"
+    ],
+    "prior_defensive_repairs_preserved": true,
+    "private_history_imported": false,
+    "experimental_detectors_excluded": true,
+    "original_scientific_results_changed": false,
+    "private_jobs_recordings_ledgers_or_credentials_included": false
   }
 }

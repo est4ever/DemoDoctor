@@ -161,3 +161,66 @@ def test_reopen_cannot_bypass_root_track_camera_binding(ready):
 def test_child_analysis_alias_cannot_expose_an_unbound_temporal_cache(ready):
     write(ready,'cam1/analysis.json',{'criteria':{'temporal_evidence':[{'frames':[{'source_sha256':'wrong'}]}]}})
     with TestClient(api.app) as client:assert client.get(f'/api/jobs/{ready.name}/cameras/cam1/analysis.json').status_code==409
+
+
+@pytest.fixture
+def numeric_ready(ready):
+    # The original task-coverage fixture is intentionally not a completed saved
+    # job. Supply that schema here so /reopen cannot reject an unrelated absence.
+    a=read(ready,'analysis.json');a['video']={'fps':10,'n_frames':10,'duration_s':1}
+    for key in ('observed','inferred','unknowns','physical_events','timeline_markers'):a[key]=[]
+    write(ready,'analysis.json',a);write(ready,'status.json',{'job_id':ready.name,'status':'completed','dry_run':False})
+    write(ready,'cam1/tracks.json',{'frames':{},'tracks':{}})
+    for name in ('evidence_package','verification','failure_report'):write(ready,f'cam1/{name}.json',{'evidence_catalog':[]})
+    with TestClient(api.app) as client:
+        assert client.get(f'/api/jobs/{ready.name}/reopen').status_code==200
+        assert client.get(f'/api/jobs/{ready.name}/cameras/cam1/tracks.json').status_code==200
+    return ready
+
+
+@pytest.mark.parametrize('value',[False,True,None,'','0',1e-10])
+def test_saved_offset_requires_a_real_json_number_on_every_read_alias(numeric_ready,value):
+    ready=numeric_ready
+    p=read(ready,'cam1/provenance.json');p['playback_offset_s']=value
+    write(ready,'cam1/provenance.json',p);before=hashes(ready)
+    with TestClient(api.app) as client:
+        for suffix in ('reopen','analysis','tracks','cameras/cam1/provenance.json','cameras/cam1/video.mp4'):
+            assert client.get(f'/api/jobs/{ready.name}/{suffix}').status_code==409,(value,suffix)
+    assert hashes(ready)==before
+
+
+@pytest.mark.parametrize('mutation',['crop','native_time','mapping_frame','mapping_time','input_offset','source_time','analysis_offset','frame_alias','provider_time','track_record','root_track_record'])
+def test_boolean_zero_cannot_alias_source_crop_frame_or_analysis_metadata(numeric_ready,mutation):
+    ready=numeric_ready
+    m=read(ready,'multicamera.json');c=m['cameras'][0];a=read(ready,'analysis.json')
+    if mutation=='crop':c['crop'][0]=False
+    elif mutation=='native_time':c['timestamps_s'][0]=False
+    elif mutation.startswith('mapping_'):
+        c['frame_mapping']=[{'camera_frame':i,'source_frame':i,'source_timestamp_s':t,'shared_timestamp_s':t} for i,t in enumerate(c['timestamps_s'])]
+        c['frame_mapping'][0]['source_frame' if mutation=='mapping_frame' else 'source_timestamp_s']=False
+    elif mutation=='input_offset':c['offset_s']=False
+    elif mutation=='source_time':m['sources'][0]['timestamps_s']=[False]+c['timestamps_s'][1:]
+    elif mutation=='analysis_offset':a['multicamera']['cameras'][0]['playback_offset_s']=False
+    elif mutation in ('frame_alias','provider_time'):
+        write(ready,'cam1/provider_observations.json',{'observations':[{'frame_index':0,'source_frame':False} if mutation=='frame_alias' else {'frame_index':0,'timestamp_s':False}]})
+    elif mutation in ('track_record','root_track_record'):
+        tracks=read(ready,'tracks.json');tracks['camera_provenance']={**c,'playback_offset_s':False}
+        write(ready,'cam1/tracks.json' if mutation=='track_record' else 'tracks.json',tracks)
+    # Re-approve synthetic metadata deliberately: rejection must check types, not
+    # only notice a receipt hash mismatch. Original jobs are never touched.
+    if mutation not in ('analysis_offset','frame_alias','provider_time','track_record','root_track_record'):
+        approve(ready,m);write(ready,'cam1/provenance.json',c);a['multicamera']=m
+    write(ready,'analysis.json',a);before=hashes(ready)
+    suffix='cameras/cam1/tracks.json' if mutation=='track_record' else 'reopen'
+    with TestClient(api.app) as client:assert client.get(f'/api/jobs/{ready.name}/{suffix}').status_code==409,mutation
+    assert hashes(ready)==before
+
+
+def test_explicit_numeric_zero_and_int_float_equivalence_remain_valid_legacy_metadata(numeric_ready):
+    ready=numeric_ready
+    p=read(ready,'cam1/provenance.json');p['playback_offset_s']=0.0;write(ready,'cam1/provenance.json',p)
+    before=hashes(ready)
+    with TestClient(api.app) as client:
+        for suffix in ('analysis','reopen','cameras/cam1/provenance.json'):
+            r=client.get(f'/api/jobs/{ready.name}/{suffix}');assert r.status_code==200,(suffix,r.text)
+    assert hashes(ready)==before

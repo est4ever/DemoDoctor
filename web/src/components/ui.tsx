@@ -1,6 +1,7 @@
 import { clsx } from "clsx";
 import type {
   ButtonHTMLAttributes,
+  AnchorHTMLAttributes,
   InputHTMLAttributes,
   PropsWithChildren,
   ReactNode,
@@ -42,12 +43,14 @@ export function Panel({
 export function Button({
   className,
   variant = "default",
+  type = "button",
   ...props
 }: ButtonHTMLAttributes<HTMLButtonElement> & {
   variant?: "default" | "primary" | "ghost";
 }) {
   return (
     <button
+      type={type}
       className={clsx(
         "inline-flex items-center justify-center rounded-xl px-4 py-2.5 text-[0.95rem] font-medium transition disabled:opacity-40",
         variant === "primary" &&
@@ -61,6 +64,14 @@ export function Button({
       {...props}
     />
   );
+}
+
+/** Preserve native new-tab/copy-link behavior while synchronizing local routes. */
+export function NavigationLink({onNavigate,children,...props}:Omit<AnchorHTMLAttributes<HTMLAnchorElement>,'onClick'> & {onNavigate:()=>void}) {
+  return <a {...props} onClick={event=>{
+    if(event.button!==0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey)return;
+    event.preventDefault();onNavigate();
+  }}>{children}</a>;
 }
 
 export function Slider({

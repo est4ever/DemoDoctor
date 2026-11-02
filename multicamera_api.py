@@ -133,6 +133,11 @@ def register(app, api):
             raise HTTPException(400, "Invalid camera artifact path")
         if not path.is_file():
             raise HTTPException(404, "Camera source artifact unavailable")
+        manifest=api._validated_camera_manifest(job_id)
+        if manifest is None:raise HTTPException(409,'Approved camera provenance unavailable')
+        from saved_provenance import validate_artifact
+        try:validate_artifact(directory,manifest,camera_id,name)
+        except (OSError,ValueError,KeyError,TypeError):raise HTTPException(409,'Saved camera artifact provenance mismatch')
         return FileResponse(path, media_type="video/mp4" if name.endswith(".mp4") else "application/json")
 
     @app.get("/api/jobs/{job_id}/sources/{source_id}")
@@ -144,4 +149,7 @@ def register(app, api):
         path = api._job_file(job_id, source_id+".mp4")
         if not path.is_file():
             raise HTTPException(404, "Original source unavailable")
+        manifest=api._validated_camera_manifest(job_id)
+        if manifest is None or source_id not in {s['source_video_id'] for s in manifest['sources']}:
+            raise HTTPException(409,'Source is not bound to the approved investigation')
         return FileResponse(path, media_type="video/mp4")

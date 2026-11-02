@@ -31,12 +31,17 @@ def make(root,job_id='20261101T160738Z_test',*,dry=False,multi=False):
     write(d,'analysis.json',a);write(d,'tracks.json',tracks);write(d,'status.json',{'job_id':job_id,'status':'completed','dry_run':dry})
     write(d,'request.json',{'filename':r'C:\private\robot.mp4','dry_run':dry,'run_muse':not dry,'task_description':a['task']})
     if multi:
-        m={'sources':[{'source_video_id':'source1','filename':'droid.mp4'}],'cameras':[{'camera_id':'cam1','source_video_id':'source1'}]}
-        a['multicamera']=m;write(d,'analysis.json',a);write(d,'multicamera.json',m)
         (d/'source1.mp4').write_bytes(b'synthetic media')
         write(d,'cam1/tracks.json',tracks);(d/'cam1/video.mp4').write_bytes(b'synthetic cropped media')
+        camera={'camera_id':'cam1','source_video_id':'source1','crop':[0,0,1280,720],
+            'sha256':hashlib.sha256((d/'cam1/video.mp4').read_bytes()).hexdigest(),'source_sha256':hashlib.sha256((d/'source1.mp4').read_bytes()).hexdigest(),
+            'fps':15,'n_frames':2,'frame_start':0,'frame_end':2,'timestamps_s':[0,1/15],'playback_offset_s':0,'object_concept':'block','destination_concept':'drawer'}
+        m={'sources':[{'source_video_id':'source1','filename':'droid.mp4','sha256':camera['source_sha256']}],'cameras':[camera]}
+        a['multicamera']=m;a['frame_catalog']=[];write(d,'analysis.json',a);write(d,'multicamera.json',m)
+        write(d,'prepared-multicamera.json',{'manifest_sha256':hashlib.sha256((d/'multicamera.json').read_bytes()).hexdigest()})
+        write(d,'cam1/provenance.json',camera)
         if not dry:
-            for name in ('provider_observations','provenance','evidence_package','verification','failure_report'):write(d,f'cam1/{name}.json',{'synthetic':True})
+            for name in ('provider_observations','evidence_package','verification','failure_report'):write(d,f'cam1/{name}.json',{'synthetic':True})
             write(d,'evidence_package.json',{'synthetic':True})
     else:(d/'video.mp4').write_bytes(b'synthetic media')
     if not dry:write(d,'muse_result.json',{'synthetic':True})

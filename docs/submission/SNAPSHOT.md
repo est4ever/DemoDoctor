@@ -70,3 +70,18 @@ algorithm or scientific result was changed. Current results are in FINAL_UPDATE_
 ## Frozen diagnostic-context update
 
 Current source freeze: `de5009f26818d6d8a6cc0b15ba87fd89004095b6`. The incremental parent is `c1cebf3f353eb62422cabacce3922bda1b166609`. Only reviewed source/tests/docs were transferred; personal analyst reviews and all private job/video data remain excluded. Existing public history, licenses and original result hashes are preserved. See RELEASE_READINESS_20261101.md for current checks and limitations.
+
+## Defensive integrity update — November 2
+
+Public parent: `0e2e69690a81b8188b8fdcd5b367dc60673fc696`. This incremental
+release selectively ports reviewed source-bound criterion guards, temporal
+provenance checks and citation-binding repairs through development checkpoint
+`c0f28c3eb370355750dd34fe86fed7c58924265e`. Experimental pixel/action detectors
+and their API/UI are excluded. Original private history is not imported. Existing
+public code line endings and byte-preserving attributes are retained. The citation
+registry hashes unchanged public source artifacts; no original result is rewritten.
+All 19 replay hashes, provider artifacts, licenses/notices, README media and build
+history remain unchanged. The current SOURCE_MANIFEST includes this incremental
+tree; earlier export provenance records remain preserved. See
+[defensive release review](../integration/DEFENSIVE_INTEGRITY_RELEASE.md) for exact
+source scope, tests, skipped research fixtures and native browser checks.

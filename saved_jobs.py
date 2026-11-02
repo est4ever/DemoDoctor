@@ -70,6 +70,12 @@ def availability_error(directory: Path) -> str | None:
     if tracks is not None and (not isinstance(tracks.get('frames'),dict) or not isinstance(tracks.get('tracks'),dict)):return 'Saved tracks.json has an unsupported schema. No analysis was started.'
     for c in (analysis.get('multicamera') or {}).get('cameras',[]):
         if read(directory,c['camera_id']+'/tracks.json') is None:return 'Saved camera tracks are unreadable. No analysis was started.'
+    if analysis.get('multicamera'):
+        try:
+            from saved_provenance import validate, CitationBindingError
+            validate(directory,analysis)
+        except CitationBindingError:return 'Saved citation-to-evidence binding is invalid. Original artifacts are unchanged; no analysis was started.'
+        except (OSError,ValueError,TypeError,KeyError,IndexError,AttributeError):return 'Saved source/camera/crop/frame provenance is invalid or unavailable. No analysis was started.'
     return None
 
 

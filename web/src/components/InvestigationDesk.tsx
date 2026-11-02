@@ -1,5 +1,6 @@
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { EvidenceSource } from "./EvidenceSource";
+import { citationTime } from '../lib/citationIntegrity';
 import { RecordedEvidence } from "./RecordedEvidence";
 import { DiagnosticDetails } from "./DiagnosticDetails";
 import type { CSSProperties, ReactNode } from "react";
@@ -157,6 +158,7 @@ export function InvestigationDesk(p: Props) {
       (filter === "All" || status(e).toLowerCase() === filter.toLowerCase()),
   );
   const active = p.activeEvidence;
+  const activeTime = active ? citationTime(a,active,p.liveMode) : null;
   const [sourceOpen, setSourceOpen] = useState(false);
   const [inspection, setInspection] = useState(0);
   const sourceSummary = useRef<HTMLElement>(null);
@@ -594,17 +596,17 @@ export function InvestigationDesk(p: Props) {
                     </div>
                     <h3>{evidenceHeadline(active)}</h3>
                     <button className="inspect-source-button" aria-label={`Inspect source for ${active.evidence_id}`} aria-controls="evidence-source-details" aria-expanded={sourceOpen} onClick={() => inspectEvidence(active.evidence_id)}>Inspect source ↗</button>
-                    {active.t_start != null ? (
+                    {activeTime != null ? (
                       <button
                         className="evidence-seek"
                         onClick={() => p.selectEvidence(active.evidence_id)}
-                        aria-label={`Seek to selected evidence at ${active.t_start.toFixed(2)} seconds`}
+                        aria-label={`Seek to selected evidence at ${activeTime.toFixed(2)} seconds`}
                       >
-                        {formatTime(active.t_start)} <span>Seek camera ↗</span>
+                        {formatTime(activeTime)} <span>Seek camera ↗</span>
                       </button>
                     ) : (
                       <p className="untimed-evidence">
-                        Untimed evidence · no camera seek
+                        {active.t_start!=null || active.frame_start!=null ? 'No validated seek within the shared video window' : 'Untimed evidence · no camera seek'}
                       </p>
                     )}
                   </section>

@@ -280,6 +280,41 @@ def _concepts(task: TaskCriteria) -> set[str]:
     return {o.concept for o in task.objects}
 
 
+def _native_span_observed(ev: InvestigationEvidence, start: int, end: int, view: str) -> bool:
+    """Require a finite native span inside an explicitly observed camera window.
+
+    Legacy single-view adapters declare their scope through tracking_windows;
+    camera-aware analyzed_ranges take precedence and are never widened by them.
+    """
+    if (type(start) is not int or type(end) is not int or type(ev.n_frames) is not int or
+        not 0 <= start < end <= ev.n_frames or not isinstance(ev.fps, (int, float)) or
+        isinstance(ev.fps, bool) or not math.isfinite(ev.fps) or ev.fps <= 0):
+        return False
+    ranges = ev.analyzed_ranges
+    if not ranges and tuple(ev.viewpoints) == ('primary',):
+        ranges = tuple(('primary', a, b) for a, b in ev.tracking_windows)
+    return any(v == view and type(a) is int and type(b) is int and
+               0 <= a <= start < end <= b <= ev.n_frames for v, a, b in ranges)
+
+
+def _task_object_ids(task: TaskCriteria, ev: InvestigationEvidence, view: str, *, source_bound: bool = True) -> set[str]:
+    """Source-bound membership for decisive claims; weaker context is inference only."""
+    return {o.object_id for o in ev.final_observations if o.concept in _concepts(task)
+            and type(o.frame) is int and _native_span_observed(ev, o.frame, o.frame + 1, o.view)
+            and (o.view == view or ev.time_alignment_validated and o.object_id in ev.object_associations)
+            and (not source_bound or _supports(ev, o.evidence_ids, 'detection', o.object_id, o.frame, o.concept, o.view)
+                 or _supports(ev, o.evidence_ids, 'containment_2d', o.object_id, o.frame, o.region, o.view))}
+
+
+def _bound_task_event(task: TaskCriteria, ev: InvestigationEvidence, event: EventRecord, kind: str) -> bool:
+    # Historical inferred mechanisms can retain their original contextual track
+    # membership. That weaker binding can never establish an observed release.
+    return any(p.kind == kind and event.track_id in _task_object_ids(task, ev, p.view, source_bound=kind != 'event_inference')
+               and _native_span_observed(ev, event.frame_start, event.frame_end, p.view)
+               and _supports(ev, event.evidence_ids, kind, event.track_id, event.frame_start,
+                             event.subtype or event.kind, p.view) for p in ev.predicates)
+
+
 # --- assessors ------------------------------------------------------------------------
 
 def assess_containment(spec: CriterionSpec, task: TaskCriteria, ev: InvestigationEvidence) -> CriterionAssessment:
@@ -362,7 +397,7 @@ def assess_orientation(spec: CriterionSpec, task: TaskCriteria, ev: Investigatio
         a.requirements.append(EvidenceRequirement("orientation_measurement", a.criterion_id,
             "An independently validated final-frame orientation measurement is also needed."))
         return a
-    obs = [o for o in ev.orientation_observations if _supports(ev, o.evidence_ids,
+    obs = [o for o in ev.orientation_observations if o.object_id in _task_object_ids(task, ev, o.view) and _supports(ev, o.evidence_ids,
         "orientation_pose", o.object_id, o.frame, str(pose), o.view)]
     views = {o.view for o in obs}
     if len(views) > 1 and (not ev.time_alignment_validated or
@@ -440,8 +475,8 @@ def assess_grasp_release(spec: CriterionSpec, task: TaskCriteria, ev: Investigat
     a = CriterionAssessment(spec.criterion_id, "grasp_release", spec.required, "unverified", "")
     outside_releases = [e for e in ev.events if e.subtype == "released_outside_target"]
     observed_bad = [e for e in outside_releases if e.status == "observed" and e.verifier_verdict == "supported"
-                    and _supports(ev, e.evidence_ids, "physical_release", e.track_id, e.frame_start, e.subtype)]
-    if observed_bad and ev.holding_detectable:
+                    and _bound_task_event(task, ev, e, 'physical_release')]
+    if observed_bad and ev.gripper == 'measured' and ev.holding_detectable:
         a.state = "contradicted"
         a.evidence_ids = _uniq(x for e in observed_bad for x in e.evidence_ids)
         a.basis = "Observed, verifier-supported release outside the target with a holding-sensitive gripper signal."
@@ -463,8 +498,15 @@ def assess_grasp_release(spec: CriterionSpec, task: TaskCriteria, ev: Investigat
             a.basis += "."
     if outside_releases:
         a.evidence_ids = _uniq(a.evidence_ids + [x for e in outside_releases for x in e.evidence_ids])
-        a.basis += (f" {len(outside_releases)} release(s) outside the target are inferred (status "
-                    f"{'/'.join(sorted({e.status for e in outside_releases}))}), not observed.")
+        if all(e.status == 'inferred' and _bound_task_event(task, ev, e, 'event_inference') for e in outside_releases):
+            a.basis += (f" {len(outside_releases)} release(s) outside the target are inferred (status "
+                        f"{'/'.join(sorted({e.status for e in outside_releases}))}), not observed.")
+        else:
+            a.basis += (f" {len(outside_releases)} candidate outside-target event(s) have saved status "
+                        f"{'/'.join(sorted({e.status for e in outside_releases}))}; no valid task-object, "
+                        "native-scope and holding-sensitive observed-release conclusion is established here.")
+            a.requirements.append(EvidenceRequirement('continuous_tracking', a.criterion_id,
+                'Bind each release to the specified task object and a valid native camera/analysis interval; unrelated, future or unobserved events cannot establish task failure.'))
     if ev.tracking_missing_ranges:
         for start, end in ev.tracking_missing_ranges:
             a.requirements.append(EvidenceRequirement("continuous_tracking", a.criterion_id,
@@ -532,13 +574,12 @@ def assess_completion(spec: CriterionSpec, parts: list[CriterionAssessment]) -> 
 
 # --- mechanisms ---------------------------------------------------------------------------
 
-def mechanism_candidates(ev: InvestigationEvidence, assessments: list[CriterionAssessment]) -> list[MechanismCandidate]:
+def mechanism_candidates(ev: InvestigationEvidence, assessments: list[CriterionAssessment], task: TaskCriteria | None = None) -> list[MechanismCandidate]:
     out: list[MechanismCandidate] = []
     for e in ev.events:
         bound = (e.verifier_verdict == "supported" and e.status in ("inferred", "observed")
-                 and 0 <= e.frame_start < e.frame_end <= ev.n_frames
                  and bool(e.evidence_ids) and all(x in ev.evidence_ids for x in e.evidence_ids)
-                 and _supports(ev, e.evidence_ids, "event_inference", e.track_id, e.frame_start, e.subtype or e.kind))
+                 and task is not None and _bound_task_event(task, ev, e, 'event_inference'))
         status = "inferred" if bound else "unverified"
         verifier = e.verifier_verdict or "not_checked"
         if e.subtype == "released_outside_target" or e.kind == "dropped_in_transport":
@@ -604,7 +645,7 @@ def assess(task: TaskCriteria, ev: InvestigationEvidence) -> CriteriaReport:
         explanation = (f"Abstains on physical completion: unresolved criteria {', '.join(completion.blocking)}. "
                        f"Evidence that could resolve them: {kinds}. Scoped 2D findings are preserved separately.")
     return CriteriaReport(ev.investigation_id, task.task_id, assessments,
-                          mechanism_candidates(ev, assessments), completion.state, explanation, requirements)
+                          mechanism_candidates(ev, assessments, task), completion.state, explanation, requirements)
 
 
 def _dedupe(reqs: Iterable[EvidenceRequirement]) -> list[EvidenceRequirement]:

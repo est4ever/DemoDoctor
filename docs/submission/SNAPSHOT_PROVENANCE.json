@@ -656,5 +656,21 @@
     "original_scientific_results_changed": false,
     "personal_reviews_or_media_included": false,
     "runtime_presentation_only": true
+  },
+  "defensive_integrity_update": {
+    "public_parent": "0e2e69690a81b8188b8fdcd5b367dc60673fc696",
+    "validated_source_checkpoint": "c0f28c3eb370355750dd34fe86fed7c58924265e",
+    "source_commits": [
+      "8c55a9f0e6a46690a8626b33010229f599a4ceb2",
+      "9f0c681e03b12ea4e973f4cce582d19aa107d58c",
+      "2db00596baead65001ecc6e576afe4f6ea40b4bf",
+      "c0f28c3eb370355750dd34fe86fed7c58924265e"
+    ],
+    "selection": "Reviewed defensive subset; temporal selection is supporting original-frame inspection only",
+    "experimental_detector_modules_dispatch_ui_excluded": true,
+    "private_history_imported": false,
+    "original_scientific_results_changed": false,
+    "private_jobs_recordings_ledgers_or_credentials_included": false,
+    "public_source_package_hashes_regenerated": true
   }
 }

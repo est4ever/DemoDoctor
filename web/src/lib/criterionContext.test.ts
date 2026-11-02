@@ -10,3 +10,15 @@ describe("criterion frame provenance and seeking",()=>{
     expect(criterionContextTime({...frame,...change},manifest)).toBeNull();
   });
 });
+
+const boundManifest={...manifest,cameras:[{...manifest.cameras[0],sha256:'a'.repeat(64),source_sha256:'b'.repeat(64)}]};
+const boundFrame={...frame,frame_ref:'T_cam2_45',camera_sha256:'a'.repeat(64),source_sha256:'b'.repeat(64),crop:null};
+it('validates the full new T binding while retaining the legacy C path',()=>{
+ expect(criterionContextTime(boundFrame,boundManifest)).toBe(2);
+ expect(criterionContextTime(frame,manifest)).toBe(2);
+});
+it.each([{source_sha256:'c'.repeat(64)},{camera_sha256:'d'.repeat(64)},{camera_sha256:'bad'},
+ {source_sha256:undefined},{crop:undefined},{crop:[8,8,1280,720]},{crop:[0,0,-1,4]},
+ {camera_id:'cam1'},{source_video_id:'source1'},{original_frame:46},{frame_ref:null}])('rejects a stale/malformed T binding before direct source seeking: %j',patch=>{
+ expect(criterionContextTime({...boundFrame,...patch} as unknown as CriterionContextFrame,boundManifest)).toBeNull();
+});

@@ -150,6 +150,7 @@ Views share one timeline while masks, coordinates, track IDs, native timestamps 
 | [Architecture](docs/submission/ARCHITECTURE.md) · [Task actions](docs/integration/TASK_ACTION_COVERAGE.md) | Model roles, explicit subgoals and missing evidence |
 | [Recorded results](docs/submission/RESULTS.md) · [Evaluation](data/evaluation/heldout_diagnostic_v1/REPORT.md) | Narrow findings, abstention and research-fixture requirements |
 | [Published-baseline validation](docs/submission/RELEASE_READINESS_20261101.md) | Executed tests, 45 fixture-dependent skips, dependency advisories and known limitations |
+| [Defensive integrity update](docs/integration/DEFENSIVE_INTEGRITY_RELEASE.md) | Source/camera/crop and citation checks, exact release tests and limitations |
 | [Snapshot provenance](docs/submission/SNAPSHOT.md) · [Build history](docs/submission/BUILD_HISTORY.md) | Public snapshot exclusions, source integrity and contribution dates |
 
 The existing [three-minute video](https://youtu.be/MLNE2nCu_6I) demonstrates the recorded investigation workflow. The captures here show the published application; they do not depict the separate experimental visual-motion branch.

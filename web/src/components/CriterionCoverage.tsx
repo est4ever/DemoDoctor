@@ -1,17 +1,31 @@
-import type { CriteriaBundle, CriterionContextFrame } from "../lib/types";
+import type { CriteriaBundle, CriterionContextFrame, MultiCameraManifest } from "../lib/types";
+import { boundTemporalEvidence } from '../lib/temporalContext';
 
 const stateLabel = { supported: "Supported", contradicted: "Contradicted", unverified: "Unverified", not_assessed: "Not assessed" };
-export function CriterionCoverage({ criteria: c, citations, inspectFrame }: {
+export function CriterionCoverage({ criteria: c, citations, inspectFrame, manifest }: {
   criteria: CriteriaBundle; citations: (ids: string[]) => React.ReactNode;
   inspectFrame?: (frame: CriterionContextFrame) => void;
+  manifest?:MultiCameraManifest;
 }) {
+  const temporal=boundTemporalEvidence(c,manifest);
   return <details open className="model-explanation criterion-coverage">
     <summary>Task-criterion coverage</summary>
     <p>Scoped assessments; recorded verdicts unchanged.</p>
+    {!!c.temporal_evidence?.length && !temporal.length && <p role="alert">Temporal source provenance mismatch; context withheld. Original criterion outcomes are unchanged.</p>}
     {c.assessments.map(a => <article key={a.criterion_id} data-criterion={a.kind}>
       <h3>{a.name}</h3>
       <span className={`provenance ${a.state === "supported" ? "observed" : "uncertain"}`}>{stateLabel[a.state]}</span>
       <p>{a.basis}</p>
+      {a.kind==='action' && !!temporal.length && <details><summary>Visual observations and contradictory-evidence review</summary>
+        <p>Camera-local box measurements below describe returned SAM proposals, not verified pickup, release, containment or closure. A large change may be a false match.</p>
+        {temporal.map(v=>{
+          const peak=[...v.adjacent_box_steps].sort((x,y)=>y.distance_px-x.distance_px)[0];
+          return <div key={v.camera_id}><p>{v.camera_id} · {v.camera_motion} camera. {peak ? <>Largest adjacent box-center change: {peak.distance_px.toFixed(2)} px at frames {peak.frames.join('–')}; identity unverified.</> : 'No adjacent returned-box measurement available.'} {!v.full_source_final_frame_assessed && 'The full source final frame is outside analysis; final task state is unassessed.'}</p>
+            <div className="claim-links">{v.frames.map(f=><button key={f.frame_ref} disabled={!inspectFrame} onClick={()=>inspectFrame?.(f)} aria-label={`Inspect temporal ${f.camera_id} frame ${f.original_frame}`}>{f.camera_id} · F{f.original_frame} · {f.sam_observation_available ? 'SAM returned' : 'no SAM observation'} ↗</button>)}</div>
+          </div>;
+        })}
+        <p>Inspect gap boundaries and final context for contrary evidence. No cross-camera identity association or physical-action conclusion is supplied.</p>
+      </details>}
       {a.requirements.length > 0 && <><h4>What would resolve this</h4><ul>
         {a.requirements.map((r, i) => <li key={i}>{r.reason}</li>)}
       </ul></>}

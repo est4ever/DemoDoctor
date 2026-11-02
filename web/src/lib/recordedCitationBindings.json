@@ -1,0 +1,943 @@
+{
+  "ep010": {
+    "schema": "demodoctor.citation-bindings/v1",
+    "records": {
+      "E0": {
+        "status": "record_match",
+        "reason": "Original record locator matched; source-video identity is a separate check.",
+        "package": "data/experiments/botfails_ep010_w1260_v2/failure_report.json",
+        "package_sha256": "63810eaf9a778d7e6210a15a15dcb3dfa69e2331042e6e934c2a1152d751958e",
+        "original_evidence_id": "E0",
+        "expected": {
+          "source": "sam:green plate",
+          "kind": "detection",
+          "status_context": "inferred",
+          "frame_start": 1293,
+          "frame_end": 1351,
+          "t_start": 43.1,
+          "t_end": 45.03333333333333,
+          "summary": "track green plate:1 moved 86px (0.5x its size) from rest at frame 1293 to rest at frame 1350",
+          "claims": [
+            {
+              "type": "displacement",
+              "track_id": "green plate:1",
+              "from_frame": 1293,
+              "to_frame": 1350,
+              "value_px": 85.87
+            }
+          ]
+        }
+      },
+      "E1": {
+        "status": "record_match",
+        "reason": "Original record locator matched; source-video identity is a separate check.",
+        "package": "data/experiments/botfails_ep010_w1260_v2/failure_report.json",
+        "package_sha256": "63810eaf9a778d7e6210a15a15dcb3dfa69e2331042e6e934c2a1152d751958e",
+        "original_evidence_id": "E1",
+        "expected": {
+          "source": "sam:green plate+target",
+          "kind": "comparison",
+          "status_context": "inferred",
+          "frame_start": 1350,
+          "frame_end": 1381,
+          "t_start": 45.0,
+          "t_end": 46.03333333333333,
+          "summary": "came to rest outside the target (31 of 31 rest observations)",
+          "claims": [
+            {
+              "type": "rest_region",
+              "track_id": "green plate:1",
+              "region": "outside",
+              "frames": [
+                1350,
+                1351,
+                1352,
+                1353,
+                1354,
+                1355,
+                1356,
+                1357,
+                1358,
+                1359,
+                1360,
+                1361,
+                1362,
+                1363,
+                1364,
+                1365,
+                1366,
+                1367,
+                1368,
+                1369,
+                1370,
+                1371,
+                1372,
+                1373,
+                1374,
+                1375,
+                1376,
+                1377,
+                1378,
+                1379,
+                1380
+              ]
+            }
+          ]
+        }
+      },
+      "E2": {
+        "status": "record_match",
+        "reason": "Original record locator matched; source-video identity is a separate check.",
+        "package": "data/experiments/botfails_ep010_w1260_v2/failure_report.json",
+        "package_sha256": "63810eaf9a778d7e6210a15a15dcb3dfa69e2331042e6e934c2a1152d751958e",
+        "original_evidence_id": "E2",
+        "expected": {
+          "source": "proprio:observation.state[gripper]",
+          "kind": "measurement",
+          "status_context": "inferred",
+          "frame_start": 1335,
+          "frame_end": 1336,
+          "t_start": 44.5,
+          "t_end": 44.53333333333333,
+          "summary": "measured gripper opened at frame 1335 (44.5s), during or just after the move",
+          "claims": [
+            {
+              "type": "gripper_open",
+              "frame": 1335
+            }
+          ]
+        }
+      },
+      "E3": {
+        "status": "record_match",
+        "reason": "Original record locator matched; source-video identity is a separate check.",
+        "package": "data/experiments/botfails_ep010_w1260_v2/failure_report.json",
+        "package_sha256": "63810eaf9a778d7e6210a15a15dcb3dfa69e2331042e6e934c2a1152d751958e",
+        "original_evidence_id": "E3",
+        "expected": {
+          "source": "pipeline:report",
+          "kind": "derived",
+          "status_context": "uncertain",
+          "frame_start": null,
+          "frame_end": null,
+          "t_start": null,
+          "t_end": null,
+          "summary": "Gripper reading cannot show whether an object is held (In ep000 the gripper visibly holds a green plate at ~48 s while observation.state[main_gripper] reads 0.4, the same as an empty closure (0.4-0.6 measured vs commanded ~-0.2); a thin plate does not change the closed reading. Larger measured values mean more open (open_sign=+1). Closed-plateau |frame-diff| p95 on ep000 is ~1.8 on a span of ~86; ",
+          "claims": []
+        }
+      },
+      "E4": {
+        "status": "record_match",
+        "reason": "Original record locator matched; source-video identity is a separate check.",
+        "package": "data/experiments/botfails_ep010_w1260_v2/failure_report.json",
+        "package_sha256": "63810eaf9a778d7e6210a15a15dcb3dfa69e2331042e6e934c2a1152d751958e",
+        "original_evidence_id": "E4",
+        "expected": {
+          "source": "pipeline:report",
+          "kind": "derived",
+          "status_context": "uncertain",
+          "frame_start": null,
+          "frame_end": null,
+          "t_start": null,
+          "t_end": null,
+          "summary": "Not every expected object has an established final position: green plate: 0/? established inside.",
+          "claims": []
+        }
+      }
+    },
+    "scope": "Locator integrity only; not independent verification of physical claims."
+  },
+  "ep003": {
+    "schema": "demodoctor.citation-bindings/v1",
+    "records": {
+      "E0": {
+        "status": "record_match",
+        "reason": "Original record locator matched; source-video identity is a separate check.",
+        "package": "data/experiments/heldout_four_muse_comparison/ep003/evidence_grounded/package_snapshot.json",
+        "package_sha256": "050fd63db3a6e83b7b20d232f8803868273a58edc9fa01e7189b4718e65e8ed2",
+        "original_evidence_id": "E0",
+        "expected": {
+          "source": "pipeline:report",
+          "kind": "derived",
+          "status_context": "uncertain",
+          "frame_start": null,
+          "frame_end": null,
+          "t_start": null,
+          "t_end": null,
+          "summary": "Gripper reading cannot show whether an object is held (In ep000 the gripper visibly holds a green plate at ~48 s while observation.state[main_gripper] reads 0.4, the same as an empty closure (0.4-0.6 measured vs commanded ~-0.2); a thin plate does not change the closed reading. Larger measured values mean more open (open_sign=+1). Closed-plateau |frame-diff| p95 on ep000 is ~1.8 on a span of ~86; open_rise_frac=0.15 and noise_mult=5 keep the rise threshold at 0.15*span (noise term does not domin",
+          "claims": [],
+          "track_id": null,
+          "event_index": null
+        }
+      },
+      "E1": {
+        "status": "record_match",
+        "reason": "Original record locator matched; source-video identity is a separate check.",
+        "package": "data/experiments/heldout_four_muse_comparison/ep003/evidence_grounded/package_snapshot.json",
+        "package_sha256": "050fd63db3a6e83b7b20d232f8803868273a58edc9fa01e7189b4718e65e8ed2",
+        "original_evidence_id": "E1",
+        "expected": {
+          "source": "pipeline:report",
+          "kind": "derived",
+          "status_context": "uncertain",
+          "frame_start": null,
+          "frame_end": null,
+          "t_start": null,
+          "t_end": null,
+          "summary": "Not every expected object has an established final position: green plate: 0/? established inside.",
+          "claims": [],
+          "track_id": null,
+          "event_index": null
+        }
+      },
+      "E2": {
+        "status": "record_match",
+        "reason": "Original record locator matched; source-video identity is a separate check.",
+        "package": "data/experiments/heldout_four_muse_comparison/ep003/evidence_grounded/package_snapshot.json",
+        "package_sha256": "050fd63db3a6e83b7b20d232f8803868273a58edc9fa01e7189b4718e65e8ed2",
+        "original_evidence_id": "E2",
+        "expected": {
+          "source": "pipeline:report",
+          "kind": "derived",
+          "status_context": "uncertain",
+          "frame_start": null,
+          "frame_end": null,
+          "t_start": null,
+          "t_end": null,
+          "summary": "Episode prediction basis=end_state_inside; latest_window_verdict=uncertain; end_state_verdict=success.",
+          "claims": [],
+          "track_id": null,
+          "event_index": null
+        }
+      },
+      "E3": {
+        "status": "record_match",
+        "reason": "Original record locator matched; source-video identity is a separate check.",
+        "package": "data/experiments/heldout_four_muse_comparison/ep003/evidence_grounded/package_snapshot.json",
+        "package_sha256": "050fd63db3a6e83b7b20d232f8803868273a58edc9fa01e7189b4718e65e8ed2",
+        "original_evidence_id": "E3",
+        "expected": {
+          "source": "pipeline:report",
+          "kind": "derived",
+          "status_context": "uncertain",
+          "frame_start": null,
+          "frame_end": null,
+          "t_start": null,
+          "t_end": null,
+          "summary": "2D containment ≠ verified upright orientation; orientation failures may remain uncertain.",
+          "claims": [],
+          "track_id": null,
+          "event_index": null
+        }
+      },
+      "E4": {
+        "status": "record_match",
+        "reason": "Original record locator matched; source-video identity is a separate check.",
+        "package": "data/experiments/heldout_four_muse_comparison/ep003/evidence_grounded/package_snapshot.json",
+        "package_sha256": "050fd63db3a6e83b7b20d232f8803868273a58edc9fa01e7189b4718e65e8ed2",
+        "original_evidence_id": "E4",
+        "expected": {
+          "source": "sam:green plate (end keyframe)",
+          "kind": "detection",
+          "status_context": "uncertain",
+          "frame_start": 2075,
+          "frame_end": 2076,
+          "t_start": 69.16666666666667,
+          "t_end": 69.2,
+          "summary": "End-of-episode plate observations: green plate:0: region=inside conf=0.941605806350708; green plate:1: region=inside conf=0.9139785170555115; green plate:2: region=inside conf=0.9298245906829834",
+          "claims": [],
+          "track_id": null,
+          "event_index": null
+        }
+      },
+      "E5": {
+        "status": "record_match",
+        "reason": "Original record locator matched; source-video identity is a separate check.",
+        "package": "data/experiments/heldout_four_muse_comparison/ep003/evidence_grounded/package_snapshot.json",
+        "package_sha256": "050fd63db3a6e83b7b20d232f8803868273a58edc9fa01e7189b4718e65e8ed2",
+        "original_evidence_id": "E5",
+        "expected": {
+          "source": "proprio:main_gripper",
+          "kind": "measurement",
+          "status_context": "observed",
+          "frame_start": 1875,
+          "frame_end": 1876,
+          "t_start": 62.5,
+          "t_end": 62.5,
+          "summary": "Measured gripper opening (window anchor) at frame 1875 (62.500s); window score=3.1378. Opening alone is not a drop; holding is not detectable from this joint.",
+          "claims": [],
+          "track_id": null,
+          "event_index": null
+        }
+      },
+      "E6": {
+        "status": "record_match",
+        "reason": "Original record locator matched; source-video identity is a separate check.",
+        "package": "data/experiments/heldout_four_muse_comparison/ep003/evidence_grounded/package_snapshot.json",
+        "package_sha256": "050fd63db3a6e83b7b20d232f8803868273a58edc9fa01e7189b4718e65e8ed2",
+        "original_evidence_id": "E6",
+        "expected": {
+          "source": "sam:green plate (window 1050-1170)",
+          "kind": "derived",
+          "status_context": "uncertain",
+          "frame_start": 1050,
+          "frame_end": 1170,
+          "t_start": 35.0,
+          "t_end": 39.0,
+          "summary": "Window track coverage (not a failure event): green plate:0: n_frames=120 span=[1050, 1169]; green plate:1: n_frames=120 span=[1050, 1169]; green plate:2: n_frames=120 span=[1050, 1169]",
+          "claims": [],
+          "track_id": null,
+          "event_index": null
+        }
+      },
+      "E7": {
+        "status": "record_match",
+        "reason": "Original record locator matched; source-video identity is a separate check.",
+        "package": "data/experiments/heldout_four_muse_comparison/ep003/evidence_grounded/package_snapshot.json",
+        "package_sha256": "050fd63db3a6e83b7b20d232f8803868273a58edc9fa01e7189b4718e65e8ed2",
+        "original_evidence_id": "E7",
+        "expected": {
+          "source": "sam:green plate (window 1845-1965)",
+          "kind": "derived",
+          "status_context": "uncertain",
+          "frame_start": 1845,
+          "frame_end": 1965,
+          "t_start": 61.5,
+          "t_end": 65.5,
+          "summary": "Window track coverage (not a failure event): green plate:0: n_frames=120 span=[1845, 1964]; green plate:1: n_frames=120 span=[1845, 1964]; green plate:2: n_frames=120 span=[1845, 1964]",
+          "claims": [],
+          "track_id": null,
+          "event_index": null
+        }
+      }
+    },
+    "scope": "Locator integrity only; not independent verification of physical claims."
+  },
+  "ep005": {
+    "schema": "demodoctor.citation-bindings/v1",
+    "records": {
+      "E0": {
+        "status": "record_match",
+        "reason": "Original record locator matched; source-video identity is a separate check.",
+        "package": "data/experiments/heldout_four_muse_comparison/ep005/evidence_grounded/package_snapshot.json",
+        "package_sha256": "3f74c36917acc02a62dbc30d7d02616a22b08e5110c5e62fa52649a234e4ecba",
+        "original_evidence_id": "E0",
+        "expected": {
+          "source": "pipeline:report",
+          "kind": "derived",
+          "status_context": "uncertain",
+          "frame_start": null,
+          "frame_end": null,
+          "t_start": null,
+          "t_end": null,
+          "summary": "Gripper reading cannot show whether an object is held (In ep000 the gripper visibly holds a green plate at ~48 s while observation.state[main_gripper] reads 0.4, the same as an empty closure (0.4-0.6 measured vs commanded ~-0.2); a thin plate does not change the closed reading. Larger measured values mean more open (open_sign=+1). Closed-plateau |frame-diff| p95 on ep000 is ~1.8 on a span of ~86; open_rise_frac=0.15 and noise_mult=5 keep the rise threshold at 0.15*span (noise term does not domin",
+          "claims": [],
+          "track_id": null,
+          "event_index": null
+        }
+      },
+      "E1": {
+        "status": "record_match",
+        "reason": "Original record locator matched; source-video identity is a separate check.",
+        "package": "data/experiments/heldout_four_muse_comparison/ep005/evidence_grounded/package_snapshot.json",
+        "package_sha256": "3f74c36917acc02a62dbc30d7d02616a22b08e5110c5e62fa52649a234e4ecba",
+        "original_evidence_id": "E1",
+        "expected": {
+          "source": "pipeline:report",
+          "kind": "derived",
+          "status_context": "uncertain",
+          "frame_start": null,
+          "frame_end": null,
+          "t_start": null,
+          "t_end": null,
+          "summary": "Not every expected object has an established final position: green plate: 0/? established inside.",
+          "claims": [],
+          "track_id": null,
+          "event_index": null
+        }
+      },
+      "E2": {
+        "status": "record_match",
+        "reason": "Original record locator matched; source-video identity is a separate check.",
+        "package": "data/experiments/heldout_four_muse_comparison/ep005/evidence_grounded/package_snapshot.json",
+        "package_sha256": "3f74c36917acc02a62dbc30d7d02616a22b08e5110c5e62fa52649a234e4ecba",
+        "original_evidence_id": "E2",
+        "expected": {
+          "source": "pipeline:report",
+          "kind": "derived",
+          "status_context": "uncertain",
+          "frame_start": null,
+          "frame_end": null,
+          "t_start": null,
+          "t_end": null,
+          "summary": "Episode prediction basis=insufficient_inside_or_outside; latest_window_verdict=uncertain; end_state_verdict=uncertain.",
+          "claims": [],
+          "track_id": null,
+          "event_index": null
+        }
+      },
+      "E3": {
+        "status": "record_match",
+        "reason": "Original record locator matched; source-video identity is a separate check.",
+        "package": "data/experiments/heldout_four_muse_comparison/ep005/evidence_grounded/package_snapshot.json",
+        "package_sha256": "3f74c36917acc02a62dbc30d7d02616a22b08e5110c5e62fa52649a234e4ecba",
+        "original_evidence_id": "E3",
+        "expected": {
+          "source": "pipeline:report",
+          "kind": "derived",
+          "status_context": "uncertain",
+          "frame_start": null,
+          "frame_end": null,
+          "t_start": null,
+          "t_end": null,
+          "summary": "2D containment ≠ verified upright orientation; orientation failures may remain uncertain.",
+          "claims": [],
+          "track_id": null,
+          "event_index": null
+        }
+      },
+      "E4": {
+        "status": "record_match",
+        "reason": "Original record locator matched; source-video identity is a separate check.",
+        "package": "data/experiments/heldout_four_muse_comparison/ep005/evidence_grounded/package_snapshot.json",
+        "package_sha256": "3f74c36917acc02a62dbc30d7d02616a22b08e5110c5e62fa52649a234e4ecba",
+        "original_evidence_id": "E4",
+        "expected": {
+          "source": "sam:green plate (end keyframe)",
+          "kind": "detection",
+          "status_context": "uncertain",
+          "frame_start": 2075,
+          "frame_end": 2076,
+          "t_start": 69.16666666666667,
+          "t_end": 69.2,
+          "summary": "End-of-episode plate observations: green plate:0: region=unknown conf=0.96875; green plate:1: region=unknown conf=0.9726027250289917; green plate:2: region=unknown conf=0.9649122953414917",
+          "claims": [],
+          "track_id": null,
+          "event_index": null
+        }
+      },
+      "E5": {
+        "status": "record_match",
+        "reason": "Original record locator matched; source-video identity is a separate check.",
+        "package": "data/experiments/heldout_four_muse_comparison/ep005/evidence_grounded/package_snapshot.json",
+        "package_sha256": "3f74c36917acc02a62dbc30d7d02616a22b08e5110c5e62fa52649a234e4ecba",
+        "original_evidence_id": "E5",
+        "expected": {
+          "source": "proprio:main_gripper",
+          "kind": "measurement",
+          "status_context": "observed",
+          "frame_start": 1637,
+          "frame_end": 1638,
+          "t_start": 54.567,
+          "t_end": 54.567,
+          "summary": "Measured gripper opening (window anchor) at frame 1637 (54.567s); window score=3.1525. Opening alone is not a drop; holding is not detectable from this joint.",
+          "claims": [],
+          "track_id": null,
+          "event_index": null
+        }
+      },
+      "E6": {
+        "status": "record_match",
+        "reason": "Original record locator matched; source-video identity is a separate check.",
+        "package": "data/experiments/heldout_four_muse_comparison/ep005/evidence_grounded/package_snapshot.json",
+        "package_sha256": "3f74c36917acc02a62dbc30d7d02616a22b08e5110c5e62fa52649a234e4ecba",
+        "original_evidence_id": "E6",
+        "expected": {
+          "source": "sam:green plate (window 1392-1512)",
+          "kind": "derived",
+          "status_context": "uncertain",
+          "frame_start": 1392,
+          "frame_end": 1512,
+          "t_start": 46.4,
+          "t_end": 50.4,
+          "summary": "Window track coverage (not a failure event): green plate:0: n_frames=120 span=[1392, 1511]; green plate:1: n_frames=120 span=[1392, 1511]; green plate:2: n_frames=120 span=[1392, 1511]",
+          "claims": [],
+          "track_id": null,
+          "event_index": null
+        }
+      },
+      "E7": {
+        "status": "record_match",
+        "reason": "Original record locator matched; source-video identity is a separate check.",
+        "package": "data/experiments/heldout_four_muse_comparison/ep005/evidence_grounded/package_snapshot.json",
+        "package_sha256": "3f74c36917acc02a62dbc30d7d02616a22b08e5110c5e62fa52649a234e4ecba",
+        "original_evidence_id": "E7",
+        "expected": {
+          "source": "sam:green plate (window 1607-1727)",
+          "kind": "derived",
+          "status_context": "uncertain",
+          "frame_start": 1607,
+          "frame_end": 1727,
+          "t_start": 53.567,
+          "t_end": 57.567,
+          "summary": "Window track coverage (not a failure event): green plate:0: n_frames=120 span=[1607, 1726]; green plate:1: n_frames=120 span=[1607, 1726]; green plate:2: n_frames=120 span=[1607, 1726]",
+          "claims": [],
+          "track_id": null,
+          "event_index": null
+        }
+      }
+    },
+    "scope": "Locator integrity only; not independent verification of physical claims."
+  },
+  "ep006": {
+    "schema": "demodoctor.citation-bindings/v1",
+    "records": {
+      "E0": {
+        "status": "record_match",
+        "reason": "Original record locator matched; source-video identity is a separate check.",
+        "package": "data/experiments/heldout_four_muse_comparison/ep006/evidence_grounded/package_snapshot.json",
+        "package_sha256": "9a96df9cbdccbe5661f1bbcd39e95f08d89bbdcb099f7f6921a30d3157608a07",
+        "original_evidence_id": "E0",
+        "expected": {
+          "source": "pipeline:report",
+          "kind": "derived",
+          "status_context": "uncertain",
+          "frame_start": null,
+          "frame_end": null,
+          "t_start": null,
+          "t_end": null,
+          "summary": "Gripper reading cannot show whether an object is held (In ep000 the gripper visibly holds a green plate at ~48 s while observation.state[main_gripper] reads 0.4, the same as an empty closure (0.4-0.6 measured vs commanded ~-0.2); a thin plate does not change the closed reading. Larger measured values mean more open (open_sign=+1). Closed-plateau |frame-diff| p95 on ep000 is ~1.8 on a span of ~86; open_rise_frac=0.15 and noise_mult=5 keep the rise threshold at 0.15*span (noise term does not domin",
+          "claims": [],
+          "track_id": null,
+          "event_index": null
+        }
+      },
+      "E1": {
+        "status": "record_match",
+        "reason": "Original record locator matched; source-video identity is a separate check.",
+        "package": "data/experiments/heldout_four_muse_comparison/ep006/evidence_grounded/package_snapshot.json",
+        "package_sha256": "9a96df9cbdccbe5661f1bbcd39e95f08d89bbdcb099f7f6921a30d3157608a07",
+        "original_evidence_id": "E1",
+        "expected": {
+          "source": "pipeline:report",
+          "kind": "derived",
+          "status_context": "uncertain",
+          "frame_start": null,
+          "frame_end": null,
+          "t_start": null,
+          "t_end": null,
+          "summary": "Not every expected object has an established final position: green plate: 0/? established inside.",
+          "claims": [],
+          "track_id": null,
+          "event_index": null
+        }
+      },
+      "E2": {
+        "status": "record_match",
+        "reason": "Original record locator matched; source-video identity is a separate check.",
+        "package": "data/experiments/heldout_four_muse_comparison/ep006/evidence_grounded/package_snapshot.json",
+        "package_sha256": "9a96df9cbdccbe5661f1bbcd39e95f08d89bbdcb099f7f6921a30d3157608a07",
+        "original_evidence_id": "E2",
+        "expected": {
+          "source": "pipeline:report",
+          "kind": "derived",
+          "status_context": "uncertain",
+          "frame_start": null,
+          "frame_end": null,
+          "t_start": null,
+          "t_end": null,
+          "summary": "Episode prediction basis=insufficient_inside_or_outside; latest_window_verdict=uncertain; end_state_verdict=uncertain.",
+          "claims": [],
+          "track_id": null,
+          "event_index": null
+        }
+      },
+      "E3": {
+        "status": "record_match",
+        "reason": "Original record locator matched; source-video identity is a separate check.",
+        "package": "data/experiments/heldout_four_muse_comparison/ep006/evidence_grounded/package_snapshot.json",
+        "package_sha256": "9a96df9cbdccbe5661f1bbcd39e95f08d89bbdcb099f7f6921a30d3157608a07",
+        "original_evidence_id": "E3",
+        "expected": {
+          "source": "pipeline:report",
+          "kind": "derived",
+          "status_context": "uncertain",
+          "frame_start": null,
+          "frame_end": null,
+          "t_start": null,
+          "t_end": null,
+          "summary": "2D containment ≠ verified upright orientation; orientation failures may remain uncertain.",
+          "claims": [],
+          "track_id": null,
+          "event_index": null
+        }
+      },
+      "E4": {
+        "status": "record_match",
+        "reason": "Original record locator matched; source-video identity is a separate check.",
+        "package": "data/experiments/heldout_four_muse_comparison/ep006/evidence_grounded/package_snapshot.json",
+        "package_sha256": "9a96df9cbdccbe5661f1bbcd39e95f08d89bbdcb099f7f6921a30d3157608a07",
+        "original_evidence_id": "E4",
+        "expected": {
+          "source": "sam:green plate (end keyframe)",
+          "kind": "detection",
+          "status_context": "uncertain",
+          "frame_start": 2075,
+          "frame_end": 2076,
+          "t_start": 69.16666666666667,
+          "t_end": 69.2,
+          "summary": "End-of-episode plate observations: green plate:0: region=unknown conf=0.9609756469726562; green plate:1: region=unknown conf=0.9259259104728699; green plate:2: region=inside conf=0.96875",
+          "claims": [],
+          "track_id": null,
+          "event_index": null
+        }
+      },
+      "E5": {
+        "status": "record_match",
+        "reason": "Original record locator matched; source-video identity is a separate check.",
+        "package": "data/experiments/heldout_four_muse_comparison/ep006/evidence_grounded/package_snapshot.json",
+        "package_sha256": "9a96df9cbdccbe5661f1bbcd39e95f08d89bbdcb099f7f6921a30d3157608a07",
+        "original_evidence_id": "E5",
+        "expected": {
+          "source": "proprio:main_gripper",
+          "kind": "measurement",
+          "status_context": "observed",
+          "frame_start": 1530,
+          "frame_end": 1531,
+          "t_start": 51.0,
+          "t_end": 51.0,
+          "summary": "Measured gripper opening (window anchor) at frame 1530 (51.000s); window score=3.1578. Opening alone is not a drop; holding is not detectable from this joint.",
+          "claims": [],
+          "track_id": null,
+          "event_index": null
+        }
+      },
+      "E6": {
+        "status": "record_match",
+        "reason": "Original record locator matched; source-video identity is a separate check.",
+        "package": "data/experiments/heldout_four_muse_comparison/ep006/evidence_grounded/package_snapshot.json",
+        "package_sha256": "9a96df9cbdccbe5661f1bbcd39e95f08d89bbdcb099f7f6921a30d3157608a07",
+        "original_evidence_id": "E6",
+        "expected": {
+          "source": "sam:green plate (window 1285-1405)",
+          "kind": "derived",
+          "status_context": "uncertain",
+          "frame_start": 1285,
+          "frame_end": 1405,
+          "t_start": 42.833,
+          "t_end": 46.833,
+          "summary": "Window track coverage (not a failure event): green plate:0: n_frames=120 span=[1285, 1404]; green plate:1: n_frames=120 span=[1285, 1404]; green plate:2: n_frames=120 span=[1285, 1404]",
+          "claims": [],
+          "track_id": null,
+          "event_index": null
+        }
+      },
+      "E7": {
+        "status": "record_match",
+        "reason": "Original record locator matched; source-video identity is a separate check.",
+        "package": "data/experiments/heldout_four_muse_comparison/ep006/evidence_grounded/package_snapshot.json",
+        "package_sha256": "9a96df9cbdccbe5661f1bbcd39e95f08d89bbdcb099f7f6921a30d3157608a07",
+        "original_evidence_id": "E7",
+        "expected": {
+          "source": "sam:green plate (window 1500-1620)",
+          "kind": "derived",
+          "status_context": "uncertain",
+          "frame_start": 1500,
+          "frame_end": 1620,
+          "t_start": 50.0,
+          "t_end": 54.0,
+          "summary": "Window track coverage (not a failure event): green plate:0: n_frames=120 span=[1500, 1619]; green plate:1: n_frames=120 span=[1500, 1619]; green plate:2: n_frames=120 span=[1500, 1619]",
+          "claims": [],
+          "track_id": null,
+          "event_index": null
+        }
+      }
+    },
+    "scope": "Locator integrity only; not independent verification of physical claims."
+  },
+  "ep013": {
+    "schema": "demodoctor.citation-bindings/v1",
+    "records": {
+      "E0": {
+        "status": "record_match",
+        "reason": "Original record locator matched; source-video identity is a separate check.",
+        "package": "data/experiments/heldout_four_muse_comparison/ep013/evidence_grounded/package_snapshot.json",
+        "package_sha256": "fc41e154fc4e921ebaeb2b5a13ea742c129ad5936d49f3174c848e4a7e4ed4af",
+        "original_evidence_id": "E0",
+        "expected": {
+          "source": "pipeline:report",
+          "kind": "derived",
+          "status_context": "uncertain",
+          "frame_start": null,
+          "frame_end": null,
+          "t_start": null,
+          "t_end": null,
+          "summary": "Gripper reading cannot show whether an object is held (In ep000 the gripper visibly holds a green plate at ~48 s while observation.state[main_gripper] reads 0.4, the same as an empty closure (0.4-0.6 measured vs commanded ~-0.2); a thin plate does not change the closed reading. Larger measured values mean more open (open_sign=+1). Closed-plateau |frame-diff| p95 on ep000 is ~1.8 on a span of ~86; open_rise_frac=0.15 and noise_mult=5 keep the rise threshold at 0.15*span (noise term does not domin",
+          "claims": [],
+          "track_id": null,
+          "event_index": null
+        }
+      },
+      "E1": {
+        "status": "record_match",
+        "reason": "Original record locator matched; source-video identity is a separate check.",
+        "package": "data/experiments/heldout_four_muse_comparison/ep013/evidence_grounded/package_snapshot.json",
+        "package_sha256": "fc41e154fc4e921ebaeb2b5a13ea742c129ad5936d49f3174c848e4a7e4ed4af",
+        "original_evidence_id": "E1",
+        "expected": {
+          "source": "pipeline:report",
+          "kind": "derived",
+          "status_context": "uncertain",
+          "frame_start": null,
+          "frame_end": null,
+          "t_start": null,
+          "t_end": null,
+          "summary": "Not every expected object has an established final position: green plate: 0/? established inside.",
+          "claims": [],
+          "track_id": null,
+          "event_index": null
+        }
+      },
+      "E2": {
+        "status": "record_match",
+        "reason": "Original record locator matched; source-video identity is a separate check.",
+        "package": "data/experiments/heldout_four_muse_comparison/ep013/evidence_grounded/package_snapshot.json",
+        "package_sha256": "fc41e154fc4e921ebaeb2b5a13ea742c129ad5936d49f3174c848e4a7e4ed4af",
+        "original_evidence_id": "E2",
+        "expected": {
+          "source": "pipeline:report",
+          "kind": "derived",
+          "status_context": "uncertain",
+          "frame_start": null,
+          "frame_end": null,
+          "t_start": null,
+          "t_end": null,
+          "summary": "Episode prediction basis=end_state_outside; latest_window_verdict=uncertain; end_state_verdict=failure.",
+          "claims": [],
+          "track_id": null,
+          "event_index": null
+        }
+      },
+      "E3": {
+        "status": "record_match",
+        "reason": "Original record locator matched; source-video identity is a separate check.",
+        "package": "data/experiments/heldout_four_muse_comparison/ep013/evidence_grounded/package_snapshot.json",
+        "package_sha256": "fc41e154fc4e921ebaeb2b5a13ea742c129ad5936d49f3174c848e4a7e4ed4af",
+        "original_evidence_id": "E3",
+        "expected": {
+          "source": "pipeline:report",
+          "kind": "derived",
+          "status_context": "uncertain",
+          "frame_start": null,
+          "frame_end": null,
+          "t_start": null,
+          "t_end": null,
+          "summary": "2D containment ≠ verified upright orientation; orientation failures may remain uncertain.",
+          "claims": [],
+          "track_id": null,
+          "event_index": null
+        }
+      },
+      "E4": {
+        "status": "record_match",
+        "reason": "Original record locator matched; source-video identity is a separate check.",
+        "package": "data/experiments/heldout_four_muse_comparison/ep013/evidence_grounded/package_snapshot.json",
+        "package_sha256": "fc41e154fc4e921ebaeb2b5a13ea742c129ad5936d49f3174c848e4a7e4ed4af",
+        "original_evidence_id": "E4",
+        "expected": {
+          "source": "sam:green plate (end keyframe)",
+          "kind": "detection",
+          "status_context": "uncertain",
+          "frame_start": 2075,
+          "frame_end": 2076,
+          "t_start": 69.16666666666667,
+          "t_end": 69.2,
+          "summary": "End-of-episode plate observations: green plate:0: region=unknown conf=0.9609756469726562; green plate:1: region=inside conf=0.9569892287254333; green plate:2: region=outside conf=0.976608157157898",
+          "claims": [],
+          "track_id": null,
+          "event_index": null
+        }
+      },
+      "E5": {
+        "status": "record_match",
+        "reason": "Original record locator matched; source-video identity is a separate check.",
+        "package": "data/experiments/heldout_four_muse_comparison/ep013/evidence_grounded/package_snapshot.json",
+        "package_sha256": "fc41e154fc4e921ebaeb2b5a13ea742c129ad5936d49f3174c848e4a7e4ed4af",
+        "original_evidence_id": "E5",
+        "expected": {
+          "source": "proprio:main_gripper",
+          "kind": "measurement",
+          "status_context": "observed",
+          "frame_start": 1528,
+          "frame_end": 1529,
+          "t_start": 50.933,
+          "t_end": 50.933,
+          "summary": "Measured gripper opening (window anchor) at frame 1528 (50.933s); window score=3.1744. Opening alone is not a drop; holding is not detectable from this joint.",
+          "claims": [],
+          "track_id": null,
+          "event_index": null
+        }
+      },
+      "E6": {
+        "status": "record_match",
+        "reason": "Original record locator matched; source-video identity is a separate check.",
+        "package": "data/experiments/heldout_four_muse_comparison/ep013/evidence_grounded/package_snapshot.json",
+        "package_sha256": "fc41e154fc4e921ebaeb2b5a13ea742c129ad5936d49f3174c848e4a7e4ed4af",
+        "original_evidence_id": "E6",
+        "expected": {
+          "source": "sam:green plate (window 1498-1618)",
+          "kind": "derived",
+          "status_context": "uncertain",
+          "frame_start": 1498,
+          "frame_end": 1618,
+          "t_start": 49.933,
+          "t_end": 53.933,
+          "summary": "Window track coverage (not a failure event): green plate:0: n_frames=120 span=[1498, 1617]; green plate:1: n_frames=120 span=[1498, 1617]; green plate:2: n_frames=120 span=[1498, 1617]",
+          "claims": [],
+          "track_id": null,
+          "event_index": null
+        }
+      }
+    },
+    "scope": "Locator integrity only; not independent verification of physical claims."
+  },
+  "pilot": {
+    "schema": "demodoctor.citation-bindings/v1",
+    "records": {
+      "E0": {
+        "status": "record_match",
+        "reason": "Original record locator matched; source-video identity is a separate check.",
+        "package": "data/submission_demo/pilot/audit/after/evidence_package.json",
+        "package_sha256": "174efe9beeef23d2fc47ba719f4a247bf198d0be40cd2f4060d6cf64c4433825",
+        "original_evidence_id": "E0",
+        "expected": {
+          "source": "sam:screwdriver",
+          "kind": "detection",
+          "status_context": "observed",
+          "frame_start": 0,
+          "frame_end": 737,
+          "t_start": 0.0,
+          "t_end": 24.567,
+          "summary": "The box center for SAM track screwdriver:0 differs by 609.01px between observed frames 0 and 736; endpoint comparison only.",
+          "claims": [
+            {
+              "type": "displacement",
+              "track_id": "screwdriver:0",
+              "from_frame": 0,
+              "to_frame": 736,
+              "value_px": 609.01
+            }
+          ],
+          "track_id": "screwdriver:0",
+          "event_index": 0
+        }
+      },
+      "E1": {
+        "status": "record_match",
+        "reason": "Original record locator matched; source-video identity is a separate check.",
+        "package": "data/submission_demo/pilot/audit/after/evidence_package.json",
+        "package_sha256": "174efe9beeef23d2fc47ba719f4a247bf198d0be40cd2f4060d6cf64c4433825",
+        "original_evidence_id": "E1",
+        "expected": {
+          "source": "sam:screwdriver",
+          "kind": "comparison",
+          "status_context": "observed",
+          "frame_start": 0,
+          "frame_end": 737,
+          "t_start": 0.0,
+          "t_end": 24.567,
+          "summary": "632 of 737 frames have returned detections; 105 frames unobserved. No interpolation.",
+          "claims": [
+            {
+              "type": "observation_coverage",
+              "track_id": "screwdriver:0",
+              "frame_start": 0,
+              "frame_end": 737,
+              "frames_with_detections": 632,
+              "missing_frames": 105,
+              "missing_ranges": [
+                {
+                  "frame_start": 433,
+                  "frame_end": 538
+                }
+              ]
+            }
+          ],
+          "track_id": "screwdriver:0",
+          "event_index": 0
+        }
+      },
+      "E2": {
+        "status": "record_match",
+        "reason": "Original record locator matched; source-video identity is a separate check.",
+        "package": "data/submission_demo/pilot/audit/after/evidence_package.json",
+        "package_sha256": "174efe9beeef23d2fc47ba719f4a247bf198d0be40cd2f4060d6cf64c4433825",
+        "original_evidence_id": "E2",
+        "expected": {
+          "source": "pipeline:report",
+          "kind": "derived",
+          "status_context": "uncertain",
+          "frame_start": null,
+          "frame_end": null,
+          "t_start": null,
+          "t_end": null,
+          "summary": "No joint data: releases and grasps cannot be measured; conclusions are video-only.",
+          "claims": [],
+          "track_id": null,
+          "event_index": null
+        }
+      },
+      "E3": {
+        "status": "record_match",
+        "reason": "Original record locator matched; source-video identity is a separate check.",
+        "package": "data/submission_demo/pilot/audit/after/evidence_package.json",
+        "package_sha256": "174efe9beeef23d2fc47ba719f4a247bf198d0be40cd2f4060d6cf64c4433825",
+        "original_evidence_id": "E3",
+        "expected": {
+          "source": "pipeline:report",
+          "kind": "derived",
+          "status_context": "uncertain",
+          "frame_start": null,
+          "frame_end": null,
+          "t_start": null,
+          "t_end": null,
+          "summary": "Not every expected object has an established final position: screwdriver: 0/? established inside.",
+          "claims": [],
+          "track_id": null,
+          "event_index": null
+        }
+      },
+      "E4": {
+        "status": "record_match",
+        "reason": "Original record locator matched; source-video identity is a separate check.",
+        "package": "data/submission_demo/pilot/audit/after/evidence_package.json",
+        "package_sha256": "174efe9beeef23d2fc47ba719f4a247bf198d0be40cd2f4060d6cf64c4433825",
+        "original_evidence_id": "E4",
+        "expected": {
+          "source": "pipeline:report",
+          "kind": "derived",
+          "status_context": "uncertain",
+          "frame_start": null,
+          "frame_end": null,
+          "t_start": null,
+          "t_end": null,
+          "summary": "Target 'white tray' segmentation unavailable (empty_result); containment, placement and target-relative failure cannot be established.",
+          "claims": [],
+          "track_id": null,
+          "event_index": null
+        }
+      },
+      "E5": {
+        "status": "record_match",
+        "reason": "Original record locator matched; source-video identity is a separate check.",
+        "package": "data/submission_demo/pilot/audit/after/evidence_package.json",
+        "package_sha256": "174efe9beeef23d2fc47ba719f4a247bf198d0be40cd2f4060d6cf64c4433825",
+        "original_evidence_id": "E5",
+        "expected": {
+          "source": "sam:video",
+          "kind": "detection",
+          "status_context": "observed",
+          "frame_start": 0,
+          "frame_end": 737,
+          "t_start": 0.0,
+          "t_end": 24.533,
+          "summary": "SAM returned 632 2D detections for track screwdriver:0 at frames 0 through 736; this does not establish holding, gripper opening, or task completion.",
+          "claims": [],
+          "track_id": "screwdriver:0",
+          "event_index": null
+        }
+      }
+    },
+    "scope": "Locator integrity only; not independent verification of physical claims."
+  }
+}

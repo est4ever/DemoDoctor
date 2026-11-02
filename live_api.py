@@ -69,7 +69,10 @@ async def trusted_browser_request(request: Request, call_next):
     if ((origin is not None and origin not in TRUSTED_BROWSER_ORIGINS)
             or (origin is None and request.headers.get("sec-fetch-site") == "cross-site")):
         return JSONResponse({"detail": "Untrusted browser origin"}, status_code=403)
-    return await call_next(request)
+    response=await call_next(request)
+    if request.url.path.startswith(('/api/jobs','/live-data/')):
+        response.headers['Cache-Control']='no-store'
+    return response
 
 
 def _job_directory(job_id: str) -> Path:
@@ -88,6 +91,25 @@ def _job_file(job_id: str, name: str) -> Path:
     if not path.is_relative_to(directory):
         raise HTTPException(400, "Invalid artifact path")
     return path
+
+
+def _validated_camera_manifest(job_id: str, analysis=None):
+    directory=_job_directory(job_id)
+    from saved_provenance import validate, CitationBindingError
+    try:
+        analysis_path=_job_file(job_id,'analysis.json')
+        if analysis is None and analysis_path.is_file():
+            analysis=json.loads(analysis_path.read_text(encoding='utf-8'))
+        if not (directory/'multicamera.json').is_file() and not (analysis or {}).get('multicamera'):
+            if analysis is not None:
+                from saved_provenance import citation_authority
+                citation_authority(directory,analysis)
+            return None  # Original single-camera jobs have no composite/camera binding.
+        return validate(directory,analysis)
+    except CitationBindingError:
+        raise HTTPException(409,'Saved citation-to-evidence binding is invalid. The original package and saved results were not changed. No analysis was started.')
+    except (OSError,ValueError,KeyError,TypeError,IndexError,AttributeError):
+        raise HTTPException(409,'Saved source/camera/crop/frame provenance could not be validated. Media and context are quarantined; original results are unchanged. No inference was started.')
 
 
 def _require_run_allowed(dry_run: bool, cache_only: bool = False) -> None:
@@ -122,6 +144,8 @@ def recorded_pilot(name: str):
         }
         # This span compares observations; it is not a suspected manipulation interval.
         analysis["highlight_interval"] = None
+        from saved_provenance import single_authority, digest
+        analysis['citation_bindings']=single_authority(analysis,package,'recorded-pilot/after/evidence_package.json',digest(audit/'after/evidence_package.json'))
         return analysis
     paths = {"tracks.json": job / "tracks.json", "video.mp4": job / "video.mp4",
              "historical-analysis.json": audit / "before/analysis.json",
@@ -195,7 +219,8 @@ def reopen_job(job_id: str) -> dict[str, Any]:
     analysis=get_analysis(job_id)
     if analysis.get('task_coverage_error'):
         raise HTTPException(409,analysis['task_coverage_error'])
-    return {'job_id':job_id,'analysis':analysis,'tracks':saved_jobs.read(directory,'tracks.json')}
+    tracks=get_tracks(job_id) if (directory/'tracks.json').is_file() else None
+    return {'job_id':job_id,'analysis':analysis,'tracks':tracks}
 
 
 @app.get("/api/jobs/{job_id}")
@@ -221,6 +246,16 @@ def get_analysis(job_id: str) -> dict[str, Any]:
     if not path.is_file():
         raise HTTPException(404, "analysis not ready")
     analysis = json.loads(path.read_text(encoding="utf-8"))
+    manifest = _validated_camera_manifest(job_id,analysis)
+    if manifest is not None:
+        analysis={**analysis,'multicamera':manifest}
+    from saved_provenance import citation_authority, CitationBindingError
+    try:analysis={**analysis,'citation_bindings':citation_authority(path.parent,analysis,manifest)}
+    except CitationBindingError:
+        raise HTTPException(409,'Saved citation-to-evidence binding is invalid. Original artifacts are unchanged. No analysis was started.')
+    if (analysis.get('criteria') or {}).get('temporal_evidence') and not (manifest is not None and analysis.get('dry_run') is False):
+        analysis={**analysis,'criteria':{k:v for k,v in analysis['criteria'].items() if k!='temporal_evidence'},
+            'temporal_evidence_error':'Cached temporal evidence withheld: no validated real camera-analysis binding is available. Original results are unchanged.'}
     # Older camera jobs gain explicit task coverage on read, not by mutating
     # their recorded analysis, provider output, verdict or citation package.
     if analysis.get('multicamera') and analysis.get('dry_run') is False and not (analysis.get('criteria') or {}).get('task_text'):
@@ -231,6 +266,16 @@ def get_analysis(job_id: str) -> dict[str, Any]:
         except (OSError, ValueError, KeyError, TypeError, IndexError):
             analysis.pop('criteria', None)
             analysis['task_coverage_error'] = 'Task reassessment unavailable: approved camera/source provenance could not be verified. Original results remain available; no new inference was run.'
+    # New local temporal selections are separate from original Muse inputs and
+    # saved criteria. Existing results survive an unavailable context artifact.
+    if manifest is not None and analysis.get('dry_run') is False and analysis.get('criteria'):
+        try:
+            from task_coverage import build_assessment
+            updated, _ = build_assessment(path.parent)
+            analysis = {**analysis, 'criteria': {**analysis['criteria'], **{k:updated[k] for k in ('temporal_evidence','coverage','context_frames')}}}
+        except (OSError, ValueError, KeyError, TypeError, IndexError):
+            criteria={k:v for k,v in analysis['criteria'].items() if k not in ('temporal_evidence','context_frames','coverage')}
+            analysis = {**analysis, 'criteria':criteria,'temporal_evidence_error': 'Local temporal evidence unavailable: original camera/observation provenance could not be validated. Cached context was withheld; saved results remain unchanged.'}
     return analysis
 
 
@@ -239,7 +284,13 @@ def get_tracks(job_id: str) -> dict[str, Any]:
     path = _job_file(job_id, "tracks.json")
     if not path.is_file():
         raise HTTPException(404, "tracks not ready")
-    return json.loads(path.read_text(encoding="utf-8"))
+    manifest=_validated_camera_manifest(job_id)
+    tracks=json.loads(path.read_text(encoding="utf-8"))
+    if manifest is not None and tracks.get('camera_id'):
+        from saved_provenance import validate_artifact
+        try:validate_artifact(path.parent,manifest,tracks['camera_id'],'tracks.json',tracks)
+        except (OSError,ValueError,KeyError,TypeError):raise HTTPException(409,'Saved track camera/source binding is invalid')
+    return tracks
 
 
 @app.get("/api/jobs/{job_id}/files/{name}")
@@ -252,6 +303,11 @@ def get_file(job_id: str, name: str) -> FileResponse:
     path = _job_file(job_id, name)
     if not path.is_file():
         raise HTTPException(404, "missing")
+    manifest=_validated_camera_manifest(job_id)
+    if name=='analysis.json':
+        return get_analysis(job_id)  # Never expose an unchecked cached T report through the raw-file alias.
+    if manifest is not None and name=='tracks.json':
+        return get_tracks(job_id)
     media = "video/mp4" if name.endswith(".mp4") else "application/json"
     return FileResponse(path, media_type=media)
 

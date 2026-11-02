@@ -91,9 +91,12 @@ it("uses camera-local frame measurements and offsets, ignoring late responses fr
   const track=(x:number)=>({image_size:[96,64],source:`camera-${x}`,frames:{},tracks:{item:{n_observations:1,points:[{frame_index:8,bbox:[x,0,x+4,4]}]}}});
   vi.stubGlobal("fetch",vi.fn((url:string)=>url.includes('/cam1/')?new Promise<Response>(r=>{finishFirst=r;}):Promise.resolve(Response.json(track(40)))));
   const a={multicamera:{cameras:[{camera_id:"cam1",fps:10,playback_offset_s:0},{camera_id:"cam2",fps:10,playback_offset_s:.2}]}} as AnalysisBundle;
-  const item:EvidenceItem={evidence_id:"E1",original_evidence_id:"E0",camera_id:"cam1",camera_name:"First",source_video_id:"source1",source:"sam:video",kind:"detection",track_id:"item",frame_start:8,summary:"Original observation"};
-  await act(async()=>root.render(<EvidenceSource item={item} analysis={a} seek={seek} fps={30} jobId="multi-job"/>));
-  await act(async()=>root.render(<EvidenceSource item={{...item,camera_id:"cam2",camera_name:"Second"}} analysis={a} seek={seek} fps={30} jobId="multi-job"/>));
+  const item:EvidenceItem={evidence_id:"E1",original_evidence_id:"E0",camera_id:"cam1",camera_name:"First",source_video_id:"source1",source:"sam:video",kind:"detection",track_id:"item",frame_start:8,frame_end:9,summary:"Original observation"};
+  // Mirror the backend's original-record binding; raw catalog data alone is not authority.
+  const bound=(row:EvidenceItem):AnalysisBundle=>({...a,citation_bindings:{schema:'demodoctor.citation-bindings/v1',records:{E1:{status:'record_match',reason:'Synthetic original record',camera_id:row.camera_id,source_video_id:row.source_video_id,original_evidence_id:'E0',expected:{source:row.source,kind:row.kind,track_id:row.track_id,frame_start:8,frame_end:9,summary:row.summary}}}}});
+  const second={...item,camera_id:"cam2",camera_name:"Second"};
+  await act(async()=>root.render(<EvidenceSource item={item} analysis={bound(item)} seek={seek} fps={30} jobId="multi-job"/>));
+  await act(async()=>root.render(<EvidenceSource item={second} analysis={bound(second)} seek={seek} fps={30} jobId="multi-job"/>));
   await act(async()=>finishFirst(Response.json(track(10))));
   expect(host.textContent).toContain("Second");expect(host.textContent).toContain("camera-40");expect(host.textContent).not.toContain("camera-10");
   expect(host.querySelectorAll('.source-measurements tbody tr')).toHaveLength(1);

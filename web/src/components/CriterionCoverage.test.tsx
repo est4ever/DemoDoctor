@@ -20,6 +20,30 @@ async function render(ep: string) {
   await act(async () => root.render(<DiagnosticDetails analysis={a} inspectEvidence={inspect} seek={seek} />));
   return { a, inspect, seek };
 }
+it('keeps new visual box context separate from physical action states and seeks the bound camera',async()=>{
+ const a=bindCriteria(saved('ep005'),criteria('ep005')),inspectFrame=vi.fn();
+ a.criteria!.assessments=[{...a.criteria!.assessments[0],kind:'action',name:'Pick up block',state:'unverified'}];
+ const frame={frame_ref:'T_cam1_3',camera_id:'cam1',source_video_id:'source1',original_frame:3,original_timestamp_s:.3,shared_timestamp_s:.3,scope:'Local context',sam_observation_available:false,camera_sha256:'a'.repeat(64),source_sha256:'b'.repeat(64),crop:null};
+ a.multicamera={duration_s:2,cameras:[{camera_id:'cam1',source_video_id:'source1',fps:10,frame_start:0,frame_end:20,playback_offset_s:0,sha256:frame.camera_sha256,source_sha256:frame.source_sha256,crop:null}]} as AnalysisBundle['multicamera'];
+ a.criteria!.coverage=[{camera_id:'cam1',source_video_id:'source1',sha256:frame.camera_sha256,source_sha256:frame.source_sha256,crop:null,fps:10,n_frames:20,frame_start:0,frame_end:20,returned_observations:0,observed_ranges:[],missing_ranges:[[0,20]],outside_analysis:[]}];
+ a.criteria!.temporal_evidence=[{camera_id:'cam1',source_video_id:'source1',camera_motion:'static',full_source_final_frame_assessed:false,limitations:[],frames:[frame],adjacent_box_steps:[{object_id:'block:0',frames:[1,2],delta_xy_px:[3,4],distance_px:5,scope:'Image coordinates only'}]}];
+ await act(async()=>root.render(<DiagnosticDetails analysis={a} inspectEvidence={vi.fn()} seek={vi.fn()} inspectFrame={inspectFrame}/>));
+ expect(host.querySelector('[data-criterion=action] .provenance')?.textContent).toBe('Unverified');
+ expect(host.textContent).toContain('5.00 px');expect(host.textContent).toContain('full source final frame is outside analysis');
+ await act(async()=>host.querySelector<HTMLButtonElement>('[aria-label="Inspect temporal cam1 frame 3"]')!.click());
+ expect(inspectFrame).toHaveBeenCalledWith(frame);
+});
+it('withholds mismatched temporal measurements and source buttons with a visible provenance error',async()=>{
+ const a=bindCriteria(saved('ep005'),criteria('ep005'));
+ a.criteria!.assessments=[{...a.criteria!.assessments[0],kind:'action',name:'Pick up block',state:'unverified'}];
+ a.multicamera={duration_s:2,cameras:[{camera_id:'cam1',source_video_id:'source1',fps:10,frame_start:0,frame_end:20,playback_offset_s:0,sha256:'a'.repeat(64),source_sha256:'b'.repeat(64),crop:null}]} as AnalysisBundle['multicamera'];
+ a.criteria!.temporal_evidence=[{camera_id:'cam1',source_video_id:'source1',camera_motion:'static',frames:[{frame_ref:'T_cam1_3',camera_id:'cam1',source_video_id:'source1',original_frame:3,original_timestamp_s:.3,shared_timestamp_s:.3,scope:'Local',camera_sha256:'f'.repeat(64),source_sha256:'b'.repeat(64),crop:null}],adjacent_box_steps:[{object_id:'block:0',frames:[1,2],delta_xy_px:[3,4],distance_px:5,scope:'Image coordinates only'}],full_source_final_frame_assessed:false,limitations:[]}];
+ await act(async()=>root.render(<DiagnosticDetails analysis={a} inspectEvidence={vi.fn()} seek={vi.fn()} inspectFrame={vi.fn()}/>));
+ expect(host.querySelector('[role=alert]')?.textContent).toContain('context withheld');
+ expect(host.querySelector('[aria-label^="Inspect temporal"]')).toBeNull();
+ expect(host.textContent).not.toContain('5.00 px');
+ expect(host.querySelector('[data-criterion=action] .provenance')?.textContent).toBe('Unverified');
+});
 it.each(["ep003", "ep005", "ep006", "ep010", "ep013"])("shows computed %s criteria with original scoped sources", async ep => {
   const { a } = await render(ep);
   expect(a.criteria).toBeDefined();

@@ -39,7 +39,8 @@ export function DiagnosticDetails({ analysis: a, inspectEvidence, seek, inspectF
 
   return <>
     {a.task_coverage_error && <p role="alert">{a.task_coverage_error}</p>}
-    {a.criteria && <CriterionCoverage criteria={a.criteria} citations={citations} inspectFrame={inspectFrame} />}
+    {a.temporal_evidence_error && <p role="alert">{a.temporal_evidence_error}</p>}
+    {a.criteria && <CriterionCoverage criteria={a.criteria} citations={citations} inspectFrame={inspectFrame} manifest={a.multicamera} />}
     {videoSrc && <TemporalContext analysis={a} videoSrc={videoSrc} fps={fps} duration={duration} jobId={jobId} inspectFrame={inspectFrame} seek={seek}/>}
     <section className="diagnostic-hypotheses" aria-label="Diagnostic hypotheses">
       <h3>Diagnostic hypotheses</h3>

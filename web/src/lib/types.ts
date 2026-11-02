@@ -15,6 +15,8 @@ export type JointsBundle = {
 };
 
 export type EvidenceItem = {
+  package?: string;
+  event_index?: number | null;
   camera_id?: string;
   camera_name?: string;
   original_evidence_id?: string;
@@ -52,6 +54,11 @@ export type HighlightInterval = {
 export type CriterionContextFrame = {
   frame_ref: string; camera_id: string; source_video_id: string; original_frame: number;
   original_timestamp_s: number; shared_timestamp_s: number; scope: string;
+  selection_reasons?: string[];
+  sam_observation_available?: boolean;
+  camera_sha256?: string;
+  source_sha256?: string;
+  crop?: number[] | null;
 };
 
 export type CriteriaBundle = {
@@ -63,6 +70,9 @@ export type CriteriaBundle = {
   abstention_explanation: string | null;
   task_text?: string;
   context_frames?: CriterionContextFrame[];
+  temporal_evidence?: Array<{camera_id:string; source_video_id:string; frames:CriterionContextFrame[];
+    adjacent_box_steps:Array<{object_id:string;frames:number[];delta_xy_px:number[];distance_px:number;scope:string}>;
+    camera_motion:string;full_source_final_frame_assessed:boolean;limitations:string[]}>;
   coverage?: Array<{camera_id: string; source_video_id: string; crop: number[] | null; sha256: string; source_sha256: string; fps: number; n_frames: number;
     frame_start: number; frame_end: number; returned_observations: number; observed_ranges: number[][]; missing_ranges: number[][]; outside_analysis: number[][]}>;
   catalog_binding?: Array<Pick<EvidenceItem, "evidence_id" | "source" | "frame_start" | "frame_end" | "summary">>;
@@ -79,6 +89,8 @@ export type CriteriaBundle = {
 };
 
 export type AnalysisBundle = {
+  citation_bindings?: import('./citationIntegrity').CitationBindings;
+  temporal_evidence_error?: string;
   task_coverage_error?: string;
   criteria?: CriteriaBundle;
   multicamera?: MultiCameraManifest;
@@ -205,7 +217,7 @@ export type MultiCameraManifest = {
   limitations: string[];
   cameras: Array<{camera_id: string; name: string; motion: string; source_video_id: string;
     playback_offset_s: number; offset_s: number; fps: number; width: number; height: number;
-    frame_start: number; frame_end: number; sha256: string; crop: number[] | null}>;
+    frame_start: number; frame_end: number; sha256: string; source_sha256?: string; crop: number[] | null}>;
 };
 
 export type MappingBundle = {

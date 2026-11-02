@@ -15,6 +15,7 @@ import { loadOptionalJson } from "./lib/loadOptionalJson";
 import { bindCriteria } from "./lib/criteria";
 import { criterionContextTime } from "./lib/criterionContext";
 import { loadSavedInvestigation } from "./lib/savedInvestigations";
+import { citationTime, validateCitations } from './lib/citationIntegrity';
 import type { CriteriaBundle, CriterionContextFrame } from "./lib/types";
 import { VideoPane, type VideoViewMode } from "./components/VideoPane";
 import { Button } from "./components/ui";
@@ -180,6 +181,7 @@ export default function App() {
     source
       .then(([j, a, tr, criteria]) => {
         if (cancelled) return;
+        validateCitations(a, !!requestedJobId);
         setJoints(j);
         setAnalysis(requestedJobId ? a : bindCriteria(a, criteria));
         if (requestedJobId) {
@@ -217,6 +219,7 @@ export default function App() {
       analysis: AnalysisBundle;
       tracks: TracksBundle | null;
     }) => {
+      validateCitations(args.analysis, true);
       liveModeRef.current = true;
       setLiveMode(true);
       setLiveJobId(args.jobId);
@@ -303,22 +306,16 @@ export default function App() {
       setCriterionCamera(undefined);
       setActiveEvidenceId(id);
       const item = analysis?.evidence_catalog.find((e) => e.evidence_id === id);
-      let seekT: number | null = null;
-      if (item?.t_start != null) {
-        seekT = item.t_start;
-      } else if (item?.frame_start != null && fps > 0) {
-        seekT = item.frame_start / fps;
-      }
+      const seekT = analysis && item ? citationTime(analysis,item,liveMode) : null;
       if (seekT != null) {
         playback.setT(seekT, { pause: true });
       }
     },
-    [analysis, fps, playback],
+    [analysis, liveMode, playback],
   );
 
   const selectMarker = useCallback(
     (marker: TimelineMarker) => {
-      playback.setT(marker.t, { pause: true });
       // Prefer evidence whose timestamp is closest to the marker (not always ids[0]).
       let best: string | null = marker.evidence_ids[0] ?? null;
       let bestDist = Number.POSITIVE_INFINITY;
@@ -327,9 +324,7 @@ export default function App() {
           (e) => e.evidence_id === eid,
         );
         if (!item) continue;
-        const et =
-          item.t_start ??
-          (item.frame_start != null ? item.frame_start / fps : null);
+        const et = analysis ? citationTime(analysis,item,liveMode) : null;
         if (et == null) continue;
         const dist = Math.abs(et - marker.t);
         if (dist < bestDist) {
@@ -337,9 +332,14 @@ export default function App() {
           best = eid;
         }
       }
-      if (best) setActiveEvidenceId(best);
+      if (best) {
+        setActiveEvidenceId(best);
+        const item=analysis?.evidence_catalog.find(e=>e.evidence_id===best);
+        const t=analysis && item ? citationTime(analysis,item,liveMode) : null;
+        if (t!=null) playback.setT(t,{pause:true});
+      } else if (!marker.evidence_ids.length) playback.setT(marker.t,{pause:true});
     },
-    [analysis, fps, playback],
+    [analysis, liveMode, playback],
   );
 
   if (error) {

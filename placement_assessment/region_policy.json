@@ -1,0 +1,23 @@
+{
+  "version": "development-green-region-events-v1",
+  "scope": "Previously exposed BotFails development data, not held-out accuracy. Automatic full-frame green-region proposals require source inspection for plate identity. No object poses, attachment or destination geometry.",
+  "green_hsv_min": [35, 70, 50],
+  "green_hsv_max": [90, 255, 255],
+  "red_hue_max": 12,
+  "red_hue_min": 165,
+  "red_saturation_min": 90,
+  "red_value_min": 50,
+  "minimum_component_fraction": 0.001,
+  "maximum_component_fraction": 0.15,
+  "minimum_solidity": 0.75,
+  "association_max_normalized_distance": 1.0,
+  "association_area_ratio": [0.5, 2.0],
+  "association_ambiguity_margin": 0.20,
+  "gap_change_px": 10.0,
+  "downward_component_px": 10.0,
+  "jaw_context_s": 0.5,
+  "basis": "Broad color prior from the task concept green plate; engineering screens, not calibrated probabilities. Unchanged source-feature correspondence and .25/.5-second policy imported from unified_workflow. Association is camera-local only and ends on every missing/ambiguous match. Red mask is robot-colored context, NEVER a gripper pose. No event timestamp, outcome label, ROI or destination polygon input. Frozen before this detector's first replay; no post-result threshold fitting.",
+  "camera_motion": "unknown",
+  "absolute_localization_error_bound_px": null,
+  "failure_rule": "Propose possible_drop only when persistent source features show downward image displacement, green/red gap increases and measured jaw opening is nearby. This is an Unverified physical hypothesis; intentional placement, perspective, unrelated red parts and segmentation remain alternatives. No definitive failure without verified task criterion."
+}

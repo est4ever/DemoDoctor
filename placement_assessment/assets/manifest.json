@@ -1,0 +1,55 @@
+{
+  "schema": "demodoctor.portable-placement-assets/v1",
+  "dataset": "kantine/BotFails",
+  "revision": "3478e49d91e1737eb76dfee2d81bb22617039c13",
+  "license": "Apache-2.0",
+  "license_source": "https://huggingface.co/datasets/kantine/BotFails/blob/3478e49d91e1737eb76dfee2d81bb22617039c13/README.md",
+  "template": {
+    "reference_source_sha256": "8f61d8613e820992f7db8f9c9cb930fb067a8fa39497b852ebfc23202fbb349a",
+    "reference_frame": 1260,
+    "reference_frame_sha256": "80d7d99a8e4c8e8cf0aa35906674656e219f4327693045fec15d8a0bd5a3247d",
+    "reference_jpeg95_sha256": "767ab9d215cf265a7cb55f84bb571bc402c0d8d4ddf147cc410233a16f27d72c",
+    "destination_cache": "rack/27ae50fe53698423265d1ac9/summary.json",
+    "destination_cache_sha256": "95289fe1d800f05a26cc1a133d522723183c26de32388c6b5bf819c869e3b199"
+  },
+  "template_provenance": {
+    "original_record_sha256": "82d23f34ab6d6a04ce9e6cedfa0052efe803f9f4e8512d26b6a6cbe986234da7",
+    "modification": "Field-whitelisted distribution record. Private paths and unused diagnostics removed; observation list, mask RLE, bounding box, model, query, original request key and completed terminal status preserved. Not a new inference.",
+    "provider_terms": "https://dev.meta.ai/legal/terms-of-service",
+    "provider_terms_checked": "2026-11-04",
+    "provider_terms_basis": "Sections 1 and 4.1: incorporation of Outputs and customer ownership, subject to terms and third-party rights.",
+    "license": "Apache-2.0 for DemoDoctor distribution contribution; preserve BotFails and Meta output attribution."
+  },
+  "sources": {
+    "bf000": {
+      "sha256": "cea576db2d2a9b48ddf95c5cb6dbee38c032030459c28cb48f411f547bd54c99",
+      "label": "BF000 development recording",
+      "task_description": "Store the dishes in the rack.",
+      "task_criterion": "all_required_green_plates_in_rack",
+      "camera": "observation.images.logitech_1",
+      "filename": "episode_000000.mp4",
+      "url": "https://huggingface.co/datasets/kantine/BotFails/resolve/3478e49d91e1737eb76dfee2d81bb22617039c13/BotFails/test/domotic_dishTidyUp_anomaly/videos/chunk-000/observation.images.logitech_1/episode_000000.mp4",
+      "bytes": 31654216,
+      "n_frames": 2090,
+      "width": 640,
+      "height": 480,
+      "fps": 30.0,
+      "decoded_index_sha256": "b72a1a13d037f344ac71e5db886cea9f34b7a2219a7583b75fd0b0cca1cc875f"
+    },
+    "ep010": {
+      "sha256": "8f61d8613e820992f7db8f9c9cb930fb067a8fa39497b852ebfc23202fbb349a",
+      "label": "BF010 development recording",
+      "task_description": "Store the dishes in the rack.",
+      "task_criterion": "all_required_green_plates_in_rack",
+      "camera": "observation.images.logitech_1",
+      "filename": "episode_000010.mp4",
+      "url": "https://huggingface.co/datasets/kantine/BotFails/resolve/3478e49d91e1737eb76dfee2d81bb22617039c13/BotFails/test/domotic_dishTidyUp_anomaly/videos/chunk-000/observation.images.logitech_1/episode_000010.mp4",
+      "bytes": 31591660,
+      "n_frames": 2090,
+      "width": 640,
+      "height": 480,
+      "fps": 30.0,
+      "decoded_index_sha256": "656eae62e770d4837ac386647e6474683e7833671e3b6eb90a4c77f067089f6b"
+    }
+  }
+}

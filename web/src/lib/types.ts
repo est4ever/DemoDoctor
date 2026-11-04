@@ -90,6 +90,7 @@ export type CriteriaBundle = {
 };
 
 export type AnalysisBundle = {
+  placement_assessment?: boolean;
   citation_bindings?: import('./citationIntegrity').CitationBindings;
   temporal_evidence_error?: string;
   task_coverage_error?: string;

@@ -53,3 +53,9 @@ their original evidence package.
 The separately supplied final-video narration and music are not source-code
 assets and are not relicensed by LICENSE. Their permissions are handled
 separately. See docs/submission/VIDEO.md and docs/submission/THIRD_PARTY.md.
+
+The optional assisted final-placement feature provisions two unmodified BotFails
+originals directly from the publisher. Its small packaged SAM rack-mask record is
+explicitly sanitized, attributed AI output; no private paths or credentials are
+included. See placement_assessment/assets/NOTICE.md and its pinned manifest for
+source identity, modification and provider-output notices. No model is distributed.

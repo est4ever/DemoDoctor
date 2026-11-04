@@ -1,0 +1,21 @@
+{
+  "version": "source-feature-motion-v3",
+  "loss_policy": "Retain the longest supported prefix before first loss in each fixed .5s initialization bin, only if the unchanged .25s minimum is met. Remainder stays Unverified; never bridge or retry across a loss.",
+  "coherence_model": "Partial affine consistency of the same persistent source features permits image rotation/scale. No projected polygon or hidden boundary is created. Residual threshold unchanged. Independent rotating-texture control precedes real replay.",
+  "basis": "Feature/LK settings and minimum 3 retained features reuse one_real_case/tracking_plan.json. Window, motion/stability tolerances reuse visual_events/policy.json. Coherence residual 2px, 60% survival, 15% support hull and correlation .65 reuse assisted_end_effector_sprint/PLAN.json. Frozen before evaluating the new cube replay; not fit to task-outcome labels.",
+  "maxCorners": 50,
+  "qualityLevel": 0.01,
+  "minDistance": 5,
+  "blockSize": 7,
+  "window_px": 21,
+  "levels": 3,
+  "fb_limit_px": 1.0,
+  "minimum_features": 3,
+  "minimum_survival": 0.6,
+  "minimum_hull_fraction": 0.15,
+  "coherence_residual_px": 2.0,
+  "minimum_patch_correlation": 0.65,
+  "patch_size": 11,
+  "absolute_localization_error_bound_px": null,
+  "scope": "Feature correspondences inside SAM masks; not full-object anchors, fingertips, physical poses or absolute error bounds. Object identity inherits an unverified model query. Reinitialize only at fixed source-clock windows, never bridge unsupported frames. All semantic motion/stability candidates remain Inferred."
+}

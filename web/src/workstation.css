@@ -2127,6 +2127,13 @@ kbd,
 /* Investigation explanations first; raw records remain in explicit disclosures. */
 .investigation-page .investigation-overview { font-size: 15px; line-height: 1.55; }
 .investigation-overview h2 { font-size: 19px; font-weight: 650; margin: 0 0 10px; }
+.placement-assessment { font-family: inherit; font-size: 15px; line-height: 1.55; padding-bottom: 20px; margin-bottom: 20px; border-bottom: 1px solid var(--border); }
+.placement-assessment h2 { font-size: 19px; font-weight: 650; margin: 0 0 10px; }
+.placement-assessment h3 { font-size: 16px; font-weight: 650; margin: 20px 0 8px; }
+.placement-assessment p { margin: 8px 0 12px; color: #d7ddd8; }
+.placement-assessment button, .placement-assessment select { font-family: inherit; font-size: 14px; line-height: 1.4; margin: 6px 0; padding: 8px 10px; border: 1px solid var(--border); border-radius: 6px; max-width: 100%; }
+.placement-assessment label { display: flex; flex-direction: column; }
+.placement-assessment a { text-decoration: underline; }
 .investigation-overview h3 { font-size: 16px; font-weight: 650; margin: 20px 0 8px; }
 .investigation-overview p { margin: 8px 0 12px; color: #d7ddd8; }
 .investigation-overview .possible-mechanism { margin: 12px 0; padding-left: 12px; border-left: 2px solid var(--border); }

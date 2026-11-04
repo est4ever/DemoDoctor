@@ -37,6 +37,8 @@ Footage adapted from [ankithreddy/so101_pickplace_uno](https://huggingface.co/da
 
 ## The problem
 
+**Optional assisted final-placement assessment:** [portable setup and original-source download](docs/integration/PORTABLE_PLACEMENT_SETUP.md). Provision the two publisher originals once (63.25 MB), then compute and reopen source-linked findings offline. No API keys or private developer cache are required; the bundled re-encode is not substituted for measurement sources.
+
 A robot video shows motion. It rarely tells you whether a grasp held, a placement finished, or an occlusion hid the decisive moment. A plausible explanation can still be wrong.
 
 DemoDoctor brings the footage and its evidence into one workstation, so an investigator can inspect **what was observed, what was inferred, and what is still unknown**.

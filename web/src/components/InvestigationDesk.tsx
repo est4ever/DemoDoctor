@@ -7,6 +7,7 @@ import {readableEvidence} from '../lib/readableEvidence';
 import {investigationMode} from '../lib/investigationMode';
 import {InvestigationOverview} from './InvestigationOverview';
 import {CriterionCoverage} from './CriterionCoverage';
+import {PlacementAssessment} from './PlacementAssessment';
 import { RecordedEvidence } from "./RecordedEvidence";
 import { DiagnosticDetails } from "./DiagnosticDetails";
 import type { CSSProperties, ReactNode } from "react";
@@ -743,6 +744,7 @@ export function InvestigationDesk(p: Props) {
                     </>
                   ) : tab === "Findings" ? (
                     <div className="inspector-content">
+                      <PlacementAssessment key={p.liveJobId ?? p.episodeKey} jobId={a.placement_assessment?p.liveJobId:undefined} episodeKey={p.liveMode?'':p.episodeKey} seek={p.seek}/>
                       <InvestigationOverview analysis={a} tracks={p.tracks} joints={p.joints} savedJob={p.liveMode} inspectEvidence={id=>{inspectEvidence(id);setTab('Evidence');}}>
                       {a.criteria && <CriterionCoverage criteria={a.criteria} citations={ids=><div className="claim-links">{ids.map(id=><button key={id} aria-label={`Inspect diagnostic citation ${id}`} onClick={()=>{inspectEvidence(id);setTab('Evidence');}}>{readableEvidence(a.evidence_catalog.find(e=>e.evidence_id===id)??{evidence_id:id})} ↗</button>)}</div>} inspectFrame={p.inspectCriterionFrame} manifest={a.multicamera}/>}
                       </InvestigationOverview>

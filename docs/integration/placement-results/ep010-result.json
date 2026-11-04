@@ -1,0 +1,223 @@
+{
+  "schema": "demodoctor.placement-result/v1",
+  "job_id": "placement-183a5b3be9ee4c69",
+  "source_key": "ep010",
+  "source_sha256": "8f61d8613e820992f7db8f9c9cb930fb067a8fa39497b852ebfc23202fbb349a",
+  "source_label": "BF010 development recording",
+  "scope": "Assisted green-plate/rack final-state assessment; not autonomous arbitrary-object discovery.",
+  "failure_detected": true,
+  "failure_type": "required_plate_visibly_outside_target_at_recording_end",
+  "onset_frame": null,
+  "onset_time_seconds": null,
+  "time_interval": {
+    "start_frame": 2074,
+    "end_frame_exclusive": 2090,
+    "start_seconds": 69.13333333333334,
+    "last_frame_seconds": 69.63333333333334,
+    "role": "final_state_evidence_NOT_original_failure_onset"
+  },
+  "assessed_interval": {
+    "start_frame": 2074,
+    "end_frame_exclusive": 2090,
+    "start_seconds": 69.13333333333334,
+    "last_frame_seconds": 69.63333333333334,
+    "role": "final_state_evidence_NOT_original_failure_onset"
+  },
+  "observed_evidence": [
+    {
+      "evidence_id": "FINAL0",
+      "minimum_lateral_separation_px": 93,
+      "stable_features": 39,
+      "median_translation_diameter_px": 0.05837355554103851,
+      "text": "Persistent plate-like green region remains wholly beside the registered rack enclosure."
+    }
+  ],
+  "possible_causes": [],
+  "uncertainty": "Earlier failure onset: Unknown. Physical cause, grasp, release and 3D containment: Unverified. No failure finding does not establish success.",
+  "source_citations": [
+    {
+      "frame": 2074,
+      "timestamp_s": 69.13333333333334,
+      "native_pts": 1061888,
+      "time_base": "1/15360",
+      "frame_sha256": "e2901f4b06dfbbefd78db8caca0f42c09f671799fa9b99308308979e53caed3d",
+      "source_sha256": "8f61d8613e820992f7db8f9c9cb930fb067a8fa39497b852ebfc23202fbb349a",
+      "source_video_id": "source1",
+      "camera_id": "cam1",
+      "crop": null
+    },
+    {
+      "frame": 2075,
+      "timestamp_s": 69.16666666666667,
+      "native_pts": 1062400,
+      "time_base": "1/15360",
+      "frame_sha256": "e20b5332d3524f3de909fcd2e0cc707c475602d64c4c168f688e35a7de704f80",
+      "source_sha256": "8f61d8613e820992f7db8f9c9cb930fb067a8fa39497b852ebfc23202fbb349a",
+      "source_video_id": "source1",
+      "camera_id": "cam1",
+      "crop": null
+    },
+    {
+      "frame": 2076,
+      "timestamp_s": 69.2,
+      "native_pts": 1062912,
+      "time_base": "1/15360",
+      "frame_sha256": "6bceed2ef4ab3ce86e80c6e7077c552e36a7e2caf12008efcad5594702bb516c",
+      "source_sha256": "8f61d8613e820992f7db8f9c9cb930fb067a8fa39497b852ebfc23202fbb349a",
+      "source_video_id": "source1",
+      "camera_id": "cam1",
+      "crop": null
+    },
+    {
+      "frame": 2077,
+      "timestamp_s": 69.23333333333333,
+      "native_pts": 1063424,
+      "time_base": "1/15360",
+      "frame_sha256": "2f12d0142e7b517b91bc30d84deca0083742b3b94b9b19b247f5b72dc3293045",
+      "source_sha256": "8f61d8613e820992f7db8f9c9cb930fb067a8fa39497b852ebfc23202fbb349a",
+      "source_video_id": "source1",
+      "camera_id": "cam1",
+      "crop": null
+    },
+    {
+      "frame": 2078,
+      "timestamp_s": 69.26666666666667,
+      "native_pts": 1063936,
+      "time_base": "1/15360",
+      "frame_sha256": "90f2660973c25c340a2970d9cd2db00e17ddd019d3325e75660b69c82e105f14",
+      "source_sha256": "8f61d8613e820992f7db8f9c9cb930fb067a8fa39497b852ebfc23202fbb349a",
+      "source_video_id": "source1",
+      "camera_id": "cam1",
+      "crop": null
+    },
+    {
+      "frame": 2079,
+      "timestamp_s": 69.3,
+      "native_pts": 1064448,
+      "time_base": "1/15360",
+      "frame_sha256": "429f82b1f92927048b5a6caa5a1bd15c3638c6dbc593267a51e8678b5c8782be",
+      "source_sha256": "8f61d8613e820992f7db8f9c9cb930fb067a8fa39497b852ebfc23202fbb349a",
+      "source_video_id": "source1",
+      "camera_id": "cam1",
+      "crop": null
+    },
+    {
+      "frame": 2080,
+      "timestamp_s": 69.33333333333333,
+      "native_pts": 1064960,
+      "time_base": "1/15360",
+      "frame_sha256": "ab057423042f019ad04d08646b329d17b31203512f6119365bb64acd7180fe21",
+      "source_sha256": "8f61d8613e820992f7db8f9c9cb930fb067a8fa39497b852ebfc23202fbb349a",
+      "source_video_id": "source1",
+      "camera_id": "cam1",
+      "crop": null
+    },
+    {
+      "frame": 2081,
+      "timestamp_s": 69.36666666666666,
+      "native_pts": 1065472,
+      "time_base": "1/15360",
+      "frame_sha256": "423b5b7abe690227bc39078e4071ae0b420ce999724bbc8465c779ba2d28b5a1",
+      "source_sha256": "8f61d8613e820992f7db8f9c9cb930fb067a8fa39497b852ebfc23202fbb349a",
+      "source_video_id": "source1",
+      "camera_id": "cam1",
+      "crop": null
+    },
+    {
+      "frame": 2082,
+      "timestamp_s": 69.4,
+      "native_pts": 1065984,
+      "time_base": "1/15360",
+      "frame_sha256": "cdee888bc9e262347aa316618b5ed1e578abebf0cd6398ff7dbdaa282a6dc207",
+      "source_sha256": "8f61d8613e820992f7db8f9c9cb930fb067a8fa39497b852ebfc23202fbb349a",
+      "source_video_id": "source1",
+      "camera_id": "cam1",
+      "crop": null
+    },
+    {
+      "frame": 2083,
+      "timestamp_s": 69.43333333333334,
+      "native_pts": 1066496,
+      "time_base": "1/15360",
+      "frame_sha256": "6d0ab1f670771f471060b3a9dca44f0e5397005eb80455f1ae1e3ffee87ea1be",
+      "source_sha256": "8f61d8613e820992f7db8f9c9cb930fb067a8fa39497b852ebfc23202fbb349a",
+      "source_video_id": "source1",
+      "camera_id": "cam1",
+      "crop": null
+    },
+    {
+      "frame": 2084,
+      "timestamp_s": 69.46666666666667,
+      "native_pts": 1067008,
+      "time_base": "1/15360",
+      "frame_sha256": "aa36d0eac4ee52bbf69ed8900067ddb80019bf12e73fa33ab33134b23490736b",
+      "source_sha256": "8f61d8613e820992f7db8f9c9cb930fb067a8fa39497b852ebfc23202fbb349a",
+      "source_video_id": "source1",
+      "camera_id": "cam1",
+      "crop": null
+    },
+    {
+      "frame": 2085,
+      "timestamp_s": 69.5,
+      "native_pts": 1067520,
+      "time_base": "1/15360",
+      "frame_sha256": "a7016a46d95758f000d84feabc78923139cfae92a9ddc9932c1deb99ee0f3e27",
+      "source_sha256": "8f61d8613e820992f7db8f9c9cb930fb067a8fa39497b852ebfc23202fbb349a",
+      "source_video_id": "source1",
+      "camera_id": "cam1",
+      "crop": null
+    },
+    {
+      "frame": 2086,
+      "timestamp_s": 69.53333333333333,
+      "native_pts": 1068032,
+      "time_base": "1/15360",
+      "frame_sha256": "c27b656e0dcee702f0c95f7ac744e53672722196e8a2dc8de9085c3697f3f678",
+      "source_sha256": "8f61d8613e820992f7db8f9c9cb930fb067a8fa39497b852ebfc23202fbb349a",
+      "source_video_id": "source1",
+      "camera_id": "cam1",
+      "crop": null
+    },
+    {
+      "frame": 2087,
+      "timestamp_s": 69.56666666666666,
+      "native_pts": 1068544,
+      "time_base": "1/15360",
+      "frame_sha256": "b999796a8a1ccd0fad6723c1280360440f96bf6ca343764e8fbf5021c825081d",
+      "source_sha256": "8f61d8613e820992f7db8f9c9cb930fb067a8fa39497b852ebfc23202fbb349a",
+      "source_video_id": "source1",
+      "camera_id": "cam1",
+      "crop": null
+    },
+    {
+      "frame": 2088,
+      "timestamp_s": 69.6,
+      "native_pts": 1069056,
+      "time_base": "1/15360",
+      "frame_sha256": "9b0280916e212832e617e5d7ee0b6668868d593d1724ae3e38d358f8eaf04180",
+      "source_sha256": "8f61d8613e820992f7db8f9c9cb930fb067a8fa39497b852ebfc23202fbb349a",
+      "source_video_id": "source1",
+      "camera_id": "cam1",
+      "crop": null
+    },
+    {
+      "frame": 2089,
+      "timestamp_s": 69.63333333333334,
+      "native_pts": 1069568,
+      "time_base": "1/15360",
+      "frame_sha256": "2066712ddaf79e174600fc2ab879627c3d351f24361242b4b9e6cac258aa7f48",
+      "source_sha256": "8f61d8613e820992f7db8f9c9cb930fb067a8fa39497b852ebfc23202fbb349a",
+      "source_video_id": "source1",
+      "camera_id": "cam1",
+      "crop": null
+    }
+  ],
+  "absolute_error_bound_px": null,
+  "physical_events": [],
+  "muse_status": "provider_skipped",
+  "muse_note": "No Muse request. These newly computed observations were not supplied to historical Muse responses.",
+  "paid_calls": 0,
+  "ground_truth_consumed": false,
+  "rejected_frames": [],
+  "verification_status": "Supported visual criterion / inferred plate class"
+}

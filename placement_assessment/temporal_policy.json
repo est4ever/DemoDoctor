@@ -1,0 +1,18 @@
+{
+  "version": "visual-events-dev-v1",
+  "scope": "Camera-local visual predicates only; no contact, attachment, release,3D placement or physical task completion",
+  "window_s": 0.5,
+  "minimum_interval_s": 0.25,
+  "final_stability_s": 0.5,
+  "resolved_motion_margin_px": 2.0,
+  "relative_transform_tolerance_px": 2.0,
+  "proximity_radius_px": 20.0,
+  "stability_tolerance_px": 2.0,
+  "geometry_margin_px": 2.0,
+  "parameter_basis": "Explicit engineering image tolerances fixed before real event replay; durations reuse previous prototype policy. Not calibrated probabilities, not fitted to SO101 AI intervals. Independent position error bounds are added, never replaced by these thresholds.",
+  "unknown_error_policy": "Abstain; FB/NCC/reprojection residuals are not absolute localization error radii",
+  "identity_policy": "Same reviewed semantic anchor and segment throughout interval; no cross-seed or occlusion bridging",
+  "camera_policy": "Unknown camera motion permits image-relative observations only, never world/background-relative conclusions",
+  "tray_policy": "Require independently reviewed whole-object projected enclosure and convex tray interior with explicit image error bounds. A feature hull or object anchor cannot establish full projected containment.",
+  "reference_policy": "Frozen AI reviews may be read only after predictions are frozen; provisional development agreement only"
+}

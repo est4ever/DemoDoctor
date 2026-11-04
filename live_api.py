@@ -70,7 +70,7 @@ async def trusted_browser_request(request: Request, call_next):
             or (origin is None and request.headers.get("sec-fetch-site") == "cross-site")):
         return JSONResponse({"detail": "Untrusted browser origin"}, status_code=403)
     response=await call_next(request)
-    if request.url.path.startswith(('/api/jobs','/live-data/')):
+    if request.url.path.startswith(('/api/jobs','/live-data/','/api/placement/')):
         response.headers['Cache-Control']='no-store'
     return response
 
@@ -95,6 +95,11 @@ def _job_file(job_id: str, name: str) -> Path:
 
 def _validated_camera_manifest(job_id: str, analysis=None):
     directory=_job_directory(job_id)
+    if job_id.startswith('placement-'):
+        from placement_assessment.service import verify
+        try: verify(directory)
+        except (OSError, ValueError, KeyError, TypeError):
+            raise HTTPException(409, 'Placement evidence quarantined: missing, altered or unauthorized artifacts. No inference was started.')
     from saved_provenance import validate, CitationBindingError
     try:
         analysis_path=_job_file(job_id,'analysis.json')
@@ -117,6 +122,8 @@ def _require_run_allowed(dry_run: bool, cache_only: bool = False) -> None:
         raise HTTPException(403, "DemoDoctor launcher is offline: use dry_run or cache_only.")
 
 JOBS_ROOT.mkdir(parents=True, exist_ok=True)
+from placement_assessment.service import register as register_placement
+register_placement(app, JOBS_ROOT)
 _jobs_lock = threading.Lock()
 _running: dict[str, threading.Thread] = {}
 
@@ -246,6 +253,8 @@ def get_analysis(job_id: str) -> dict[str, Any]:
     if not path.is_file():
         raise HTTPException(404, "analysis not ready")
     analysis = json.loads(path.read_text(encoding="utf-8"))
+    if analysis.get('placement_assessment') and not job_id.startswith('placement-'):
+        raise HTTPException(409, 'Unregistered placement assessment')
     manifest = _validated_camera_manifest(job_id,analysis)
     if manifest is not None:
         analysis={**analysis,'multicamera':manifest}

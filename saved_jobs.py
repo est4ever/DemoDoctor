@@ -117,6 +117,9 @@ def execution_summary(directory: Path) -> dict:
 
 
 def describe(directory: Path) -> dict:
+    if directory.name.startswith('placement-'):
+        from placement_assessment.service import verify
+        verify(directory)  # Do not expose forged outcomes even in the history list.
     status=read(directory,'status.json') or {}
     analysis=read(directory,'analysis.json') or {}
     manifest=read(directory,'multicamera.json') or analysis.get('multicamera') or {}

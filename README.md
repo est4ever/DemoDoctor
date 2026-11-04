@@ -19,6 +19,18 @@ Investigate robot demonstrations with synchronized video, SAM observations,<br/>
 
 </div>
 
+## 75-Second Research Walkthrough
+
+[![Watch the 75-second AI-assisted SO-101 research walkthrough](https://github.com/user-attachments/assets/861008c6-6090-4996-a1ad-3ff30ef451e7)](https://github.com/user-attachments/assets/a71181fa-8b83-4ede-8447-849f3c58f9e3)
+
+**[▶ Watch the 75-second research walkthrough](https://github.com/user-attachments/assets/a71181fa-8b83-4ede-8447-849f3c58f9e3)** · [GitHub player and media credits](https://github.com/est4ever/DemoDoctor/issues/3)
+
+This 75-second walkthrough demonstrates DemoDoctor's evidence-grounded investigation workflow on real SO-101 robot manipulation footage, including source-linked visual observations, timestamped evidence, and explicit uncertainty handling. The demonstrated visual analysis is AI-assisted; autonomous physical grasp and task-completion verification remain under development.
+
+*Silent, captioned source-frame explainer—not autonomous gripper recognition. Nine original frames support a narrow 2D visible-region measurement; grasp, attachment, release and task completion remain unverified. This uses the SO-101 development recording, not the fresh Episode 2 experiment.*
+
+Footage adapted from [ankithreddy/so101_pickplace_uno](https://huggingface.co/datasets/ankithreddy/so101_pickplace_uno), publisher-declared Apache-2.0; source card credits LeRobot. [License and notices](docs/submission/THIRD_PARTY.md) · [Transformations, provenance and video hash](https://github.com/est4ever/DemoDoctor/issues/3). The [main three-minute hackathon demo](https://youtu.be/MLNE2nCu_6I) remains the primary submission video.
+
 ![DemoDoctor's real EP010 investigation: annotated camera footage, synchronized timeline and expandable source calculations. The recorded outcome remains Uncertain.](docs/media/workstation.webp)
 
 *Actual application capture from the bundled EP010 replay. Annotations and calculations are recorded evidence; an inferred event is not proof of physical release or placement.*

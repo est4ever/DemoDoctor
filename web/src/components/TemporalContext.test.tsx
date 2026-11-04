@@ -8,6 +8,16 @@ let root:Root,host:HTMLDivElement;
 beforeEach(()=>{vi.stubGlobal('IS_REACT_ACT_ENVIRONMENT',true);vi.spyOn(HTMLMediaElement.prototype,'load').mockImplementation(()=>{});vi.spyOn(HTMLMediaElement.prototype,'pause').mockImplementation(()=>{});host=document.createElement('div');document.body.append(host);root=createRoot(host);});
 afterEach(async()=>{await act(async()=>root.unmount());host.remove();vi.restoreAllMocks();vi.unstubAllGlobals();});
 const a=()=>JSON.parse(readFileSync('public/data/ep005/analysis.json','utf8')) as AnalysisBundle;
+it('defers video initialization until previews are explicitly enabled without removing original frame references',async()=>{
+ const analysis=a(),seek=vi.fn();
+ await act(async()=>root.render(<TemporalContext analysis={analysis} videoSrc="/video" fps={30} duration={100} seek={seek} previewsEnabled={false}/>));
+ expect(HTMLMediaElement.prototype.load).not.toHaveBeenCalled();
+ expect(host.querySelector('[aria-label="Inspect original primary frame 1607"]')).not.toBeNull();
+ await act(async()=>root.render(<TemporalContext analysis={analysis} videoSrc="/video" fps={30} duration={100} seek={seek} previewsEnabled/>));
+ expect(HTMLMediaElement.prototype.load).toHaveBeenCalled();
+ await act(async()=>root.render(<TemporalContext analysis={analysis} videoSrc="/video" fps={30} duration={100} seek={seek} previewsEnabled={false}/>));
+ expect(HTMLMediaElement.prototype.pause).toHaveBeenCalled();
+});
 it('shows saved native frames, seeks original time and keeps original analysis unchanged',async()=>{
  const analysis=a(),before=JSON.stringify(analysis),seek=vi.fn();
  await act(async()=>root.render(<TemporalContext analysis={analysis} videoSrc="/replays/ep005/video.mp4" fps={30} duration={100} seek={seek}/>));
@@ -29,10 +39,10 @@ it('treats a missing optional review or SPA fallback as absent, without inventin
 });
 it('keeps a matching analyst interpretation Unverified and seeks only its bound camera frame',async()=>{
  const analysis=a(),before=JSON.stringify(analysis),inspect=vi.fn(),seek=vi.fn();
- analysis.multicamera={duration_s:2,cameras:[{camera_id:'cam1',source_video_id:'source1',fps:10,frame_start:0,frame_end:20,playback_offset_s:0}]} as AnalysisBundle['multicamera'];
- analysis.criteria={...JSON.parse(readFileSync('public/criteria/ep005.json','utf8')),context_frames:[{frame_ref:'C1',camera_id:'cam1',source_video_id:'source1',original_frame:19,original_timestamp_s:1.9,shared_timestamp_s:1.9,scope:'Local context'}],coverage:[{camera_id:'cam1',source_video_id:'source1',sha256:'camera',source_sha256:'source',fps:10,frame_start:0,frame_end:20,observed_ranges:[]}]};
+ analysis.multicamera={duration_s:2,cameras:[{camera_id:'cam1',source_video_id:'source1',fps:10,frame_start:0,frame_end:20,playback_offset_s:0,sha256:'a'.repeat(64),source_sha256:'b'.repeat(64),crop:null}]} as AnalysisBundle['multicamera'];
+ analysis.criteria={...JSON.parse(readFileSync('public/criteria/ep005.json','utf8')),context_frames:[{frame_ref:'C1',camera_id:'cam1',source_video_id:'source1',original_frame:19,original_timestamp_s:1.9,shared_timestamp_s:1.9,scope:'Local context'}],coverage:[{camera_id:'cam1',source_video_id:'source1',sha256:'a'.repeat(64),source_sha256:'b'.repeat(64),crop:null,fps:10,frame_start:0,frame_end:20,observed_ranges:[]}]};
  const snapshot=JSON.stringify(analysis);
- vi.stubGlobal('fetch',vi.fn(async()=>Response.json({schema:'demodoctor.local-visual-review/v1',job_id:'job',reviewer:'Analyst',method:'Manual review',observations:[{text:'Visually consistent with closed',limitation:'Not independently verified mechanical closure',camera_id:'cam1',source_video_id:'source1',camera_sha256:'camera',source_sha256:'source',frame:19,original_timestamp_s:1.9,state:'supported'}]})));
+ vi.stubGlobal('fetch',vi.fn(async()=>Response.json({schema:'demodoctor.local-visual-review/v1',job_id:'job',reviewer:'Analyst',method:'Manual review',observations:[{text:'Visually consistent with closed',limitation:'Not independently verified mechanical closure',camera_id:'cam1',source_video_id:'source1',camera_sha256:'a'.repeat(64),source_sha256:'b'.repeat(64),frame:19,original_timestamp_s:1.9,state:'supported'}]})));
  await act(async()=>root.render(<TemporalContext analysis={analysis} videoSrc="/video" fps={10} duration={2} jobId="job" inspectFrame={inspect} seek={seek}/>));
  const note=host.querySelector('[aria-label="Local analyst visual review"]')!;
  expect(note.textContent).toContain('Unverified · analyst interpretation');expect(note.textContent).toContain('Not independently verified mechanical closure');

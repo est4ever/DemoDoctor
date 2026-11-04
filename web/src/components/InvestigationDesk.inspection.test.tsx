@@ -17,6 +17,7 @@ let root: Root;
 let host: HTMLDivElement;
 
 beforeEach(() => {
+  sessionStorage.clear();
   vi.stubGlobal("IS_REACT_ACT_ENVIRONMENT", true);
   host = document.createElement("div");
   document.body.append(host);
@@ -28,8 +29,8 @@ afterEach(async () => {
   vi.unstubAllGlobals();
 });
 
-async function load(episode = "pilot", missingTracks = false, computedCriteria = false) {
-  window.history.replaceState({}, "", `/#${episode}`);
+async function load(episode = "pilot", missingTracks = false, computedCriteria = false, intentionalTime:number|null=12) {
+  window.history.replaceState({}, "", `/#${episode}${intentionalTime==null?'':`?t=${intentionalTime}`}`);
   vi.stubGlobal("fetch", vi.fn(async (url: string) => {
     const requestedEpisode = /\/data\/(ep\d+)\//.exec(url)?.[1] ?? (url.includes("recorded-pilot") ? "pilot" : episode);
     const suffix = url.split("/").pop();
@@ -50,7 +51,7 @@ async function load(episode = "pilot", missingTracks = false, computedCriteria =
     });
   }));
   await act(async () => { root.render(<App />); });
-  if (!computedCriteria) expect(host.querySelector(".evidence-list"), host.textContent ?? "").not.toBeNull();
+  if (!computedCriteria) await act(async()=>host.querySelector<HTMLButtonElement>('#inspector-tab-Evidence')!.click());
 }
 it('opens completed criterion assessments by default and retains expandable sources and Evidence navigation', async()=>{
   await load('ep003', false, true);
@@ -61,6 +62,34 @@ it('opens completed criterion assessments by default and retains expandable sour
   expect(row.querySelector<HTMLDetailsElement>('details')!.open).toBe(false);
   await act(async()=>host.querySelector<HTMLButtonElement>('#inspector-tab-Evidence')!.click());
   expect(host.querySelector('.evidence-list')).not.toBeNull();
+});
+it('opens a fresh investigation at one second paused, with readable Findings and technical details closed',async()=>{
+  await load('ep005',false,true,null);
+  expect(time()).toBe(1);
+  expect(host.querySelector('[aria-label="Play"]')).not.toBeNull();
+  expect(host.querySelector('#inspector-tab-Findings')?.getAttribute('aria-selected')).toBe('true');
+  expect(host.querySelector('.investigation-overview')!.textContent).toContain('incorrectly oriented flat');
+  expect(host.querySelector('.possible-mechanism .provenance')!.textContent).toContain('Unverified');
+  expect(host.querySelector<HTMLDetailsElement>('.findings-technical')!.open).toBe(false);
+  expect(host.querySelector('[data-testid="task-outcome"]')!.textContent?.toLowerCase()).toContain('uncertain');
+});
+it('EP013 marker 3 seeks its source frame and opens associated evidence, not the start of the citation span',async()=>{
+  await load('ep013',false,true,null);
+  await act(async()=>host.querySelectorAll<HTMLButtonElement>('.timeline-marker')[2].click());
+  expect(time()).toBe(53.9);
+  expect(host.querySelector('#inspector-tab-Evidence')?.getAttribute('aria-selected')).toBe('true');
+  expect(host.querySelector('[aria-label="Selected evidence"]')!.textContent).toContain('E6');
+  expect([...host.querySelectorAll('.timeline-marker')].map(b=>b.getAttribute('aria-pressed'))).toEqual(['false','false','true','false']);
+});
+it('honors explicit evidence links and preserves the current clock for an untimed source link',async()=>{
+  await load('pilot',false,true,null);
+  await act(async()=>{window.history.replaceState({},'','/#pilot?evidence=E0');window.dispatchEvent(new HashChangeEvent('hashchange'));});
+  expect(time()).toBe(0);expect(source().open).toBe(true);
+  expect(host.querySelector('#inspector-tab-Evidence')?.getAttribute('aria-selected')).toBe('true');
+  await act(async()=>{window.history.replaceState({},'','/#pilot?t=12');window.dispatchEvent(new HashChangeEvent('hashchange'));});
+  expect(time()).toBe(12);
+  await act(async()=>{window.history.replaceState({},'','/#pilot?evidence=E2');window.dispatchEvent(new HashChangeEvent('hashchange'));});
+  expect(time()).toBe(12);expect(source().open).toBe(true);expect(source().textContent).toContain('Joint/gripper measurements unavailable');
 });
 async function inspect(id: string) {
   const button = [...host.querySelectorAll<HTMLButtonElement>(".evidence-list button")]
@@ -95,7 +124,9 @@ describe("Inspect source interaction", () => {
     expect(host.querySelector(".saved-note-context")!.textContent).toContain("curator/reference context");
     expect(host.querySelector('[data-testid="task-outcome"]')!.textContent?.toLowerCase()).toContain("uncertain");
     await act(async () => host.querySelector<HTMLButtonElement>("#inspector-tab-Findings")!.click());
-    expect(host.querySelector(".inspector-content")!.textContent).not.toContain("Orientation failure is the visual ground truth");
+    expect(host.querySelector(".investigation-overview")!.textContent).not.toContain("Orientation failure is the visual ground truth");
+    expect(host.querySelector<HTMLDetailsElement>('.findings-technical')!.open).toBe(false);
+    expect(host.querySelector('.findings-technical')!.textContent).toContain('curator/reference commentary');
   });
   it.each(["E0", "E1", "E2", "E3", "E4", "E5"])("opens the real PILOT %s source and preserves untimed playback", async id => {
     await load();

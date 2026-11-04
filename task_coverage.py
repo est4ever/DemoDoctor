@@ -25,22 +25,16 @@ def build_assessment(job):
         p=(job/name).resolve()
         if not p.is_relative_to(job):raise ValueError('Artifact outside original job')
         return p
-    manifest=read(file('multicamera.json'))
-    if digest(file('multicamera.json')) != read(file('prepared-multicamera.json'))['manifest_sha256']:
-        raise ValueError('Manifest differs from the approved preparation')
-    analysis=read(file('analysis.json'));coverage=[];context=[]
-    if not 1<=len(manifest['cameras'])<=3:raise ValueError('Invalid camera count')
-    for s in manifest['sources']:
-        if s['source_video_id'] not in {'source1','source2','source3'}:raise ValueError('Invalid source ID')
-        if digest(file(s['source_video_id']+'.mp4')) != s['sha256']:raise ValueError('Original source hash mismatch')
+    from saved_provenance import validate, validate_artifact
+    analysis=read(file('analysis.json'));manifest=validate(job,analysis);coverage=[];context=[];temporal=[]
     for c in manifest['cameras']:
-        if c['camera_id'] not in {'cam1','cam2','cam3'}:raise ValueError('Invalid camera ID')
-        if digest(file(c['camera_id']+'/video.mp4')) != c['sha256']:raise ValueError('Derived camera hash mismatch')
-        provenance=read(file(c['camera_id']+'/provenance.json'))
-        if any(provenance[k]!=c[k] for k in ('crop','sha256','source_sha256','frame_start','frame_end')):
-            raise ValueError('Camera provenance differs from approved plan')
+        validate_artifact(job,manifest,c['camera_id'],'provider_observations.json')
         obs=read(file(c['camera_id']+'/provider_observations.json'))['observations']
         coverage.append(A.camera_coverage(c,obs))
+        from temporal_evidence import select
+        selected=select(c,obs,max(4,12//len(manifest['cameras'])))
+        selected['provider_observations_sha256']=digest(file(c['camera_id']+'/provider_observations.json'))
+        temporal.append(selected)
         for frame in A.select_context_frames(c,obs,6//len(manifest['cameras'])):
             source_time=c['timestamps_s'][frame]
             context.append({'frame_ref':f'C{len(context)}','camera_id':c['camera_id'],'source_video_id':c['source_video_id'],
@@ -54,4 +48,5 @@ def build_assessment(job):
         'original_muse_sha256':digest(file('muse_result.json')),'original_package_sha256':digest(file('evidence_package.json')),
         'method':'Read-only task presentation from original structured evidence; no new inference or image-derived predicates',
         'approved_provenance_verified':True}
+    criteria['temporal_evidence']=temporal
     return criteria,a

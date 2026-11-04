@@ -1,0 +1,418 @@
+{
+  "ep010": {
+    "analysis_path": "web/public/data/ep010/analysis.json",
+    "analysis_sha256": "e46a0401c13e4be9f22d8050f766952ae4ce7637f151ef1cab92062df444411b",
+    "video_rel": "eval_videos/botfails/botfails_dish_test_ep010.mp4",
+    "markers": [
+      {
+        "id": "interval_start",
+        "label": "Suspected event interval begins",
+        "t": 43.1,
+        "kind": "inferred_event",
+        "evidence_ids": [
+          "E0"
+        ]
+      },
+      {
+        "id": "gripper_open",
+        "label": "Measured gripper open",
+        "t": 44.5,
+        "kind": "observed_measurement",
+        "evidence_ids": [
+          "E2"
+        ]
+      },
+      {
+        "id": "interval_end",
+        "label": "Rest outside target",
+        "t": 45.033,
+        "kind": "inferred_event",
+        "evidence_ids": [
+          "E1",
+          "E0"
+        ]
+      }
+    ],
+    "frames": []
+  },
+  "ep005": {
+    "analysis_path": "web/public/data/ep005/analysis.json",
+    "analysis_sha256": "c18b2051a242badb27d374bc784facd0e65734958abf76c11d2e70507ba14c71",
+    "video_rel": "eval_videos/botfails/botfails_dish_test_ep005.mp4",
+    "markers": [
+      {
+        "id": "F0",
+        "label": "Analysis window starts",
+        "t": 53.567,
+        "kind": "analysis_frame",
+        "evidence_ids": [
+          "E7"
+        ]
+      },
+      {
+        "id": "F1",
+        "label": "Measured gripper open",
+        "t": 54.567,
+        "kind": "observed_measurement",
+        "evidence_ids": [
+          "E5",
+          "E7"
+        ]
+      },
+      {
+        "id": "F2",
+        "label": "Analysis window ends",
+        "t": 57.533,
+        "kind": "analysis_frame",
+        "evidence_ids": [
+          "E7"
+        ]
+      },
+      {
+        "id": "F3",
+        "label": "End-state snapshot",
+        "t": 69.167,
+        "kind": "analysis_frame",
+        "evidence_ids": [
+          "E4"
+        ]
+      }
+    ],
+    "frames": [
+      {
+        "frame_ref": "F0",
+        "frame_index": 1607,
+        "timestamp_s": 53.567,
+        "tied_evidence_ids": [
+          "E7"
+        ],
+        "role": "window_start"
+      },
+      {
+        "frame_ref": "F1",
+        "frame_index": 1637,
+        "timestamp_s": 54.567,
+        "tied_evidence_ids": [
+          "E5",
+          "E7"
+        ],
+        "role": "gripper_open_measured"
+      },
+      {
+        "frame_ref": "F2",
+        "frame_index": 1726,
+        "timestamp_s": 57.533,
+        "tied_evidence_ids": [
+          "E7"
+        ],
+        "role": "window_end_last_obs"
+      },
+      {
+        "frame_ref": "F3",
+        "frame_index": 2075,
+        "timestamp_s": 69.167,
+        "tied_evidence_ids": [
+          "E4"
+        ],
+        "role": "end_state"
+      }
+    ]
+  },
+  "ep003": {
+    "analysis_path": "web/public/data/ep003/analysis.json",
+    "analysis_sha256": "7ef7406367c5093223cad07990d31355fee79e2051a84e39b57dd587246e5593",
+    "video_rel": "eval_videos/botfails/botfails_dish_test_ep003.mp4",
+    "markers": [
+      {
+        "id": "F0",
+        "label": "Analysis window starts",
+        "t": 61.5,
+        "kind": "analysis_frame",
+        "evidence_ids": [
+          "E7"
+        ]
+      },
+      {
+        "id": "F1",
+        "label": "Measured gripper open",
+        "t": 62.5,
+        "kind": "observed_measurement",
+        "evidence_ids": [
+          "E5",
+          "E7"
+        ]
+      },
+      {
+        "id": "F2",
+        "label": "Analysis window ends",
+        "t": 65.467,
+        "kind": "analysis_frame",
+        "evidence_ids": [
+          "E7"
+        ]
+      },
+      {
+        "id": "F3",
+        "label": "End-state snapshot",
+        "t": 69.167,
+        "kind": "analysis_frame",
+        "evidence_ids": [
+          "E4"
+        ]
+      }
+    ],
+    "frames": [
+      {
+        "frame_ref": "F0",
+        "frame_index": 1845,
+        "timestamp_s": 61.5,
+        "tied_evidence_ids": [
+          "E7"
+        ],
+        "role": "window_start"
+      },
+      {
+        "frame_ref": "F1",
+        "frame_index": 1875,
+        "timestamp_s": 62.5,
+        "tied_evidence_ids": [
+          "E5",
+          "E7"
+        ],
+        "role": "gripper_open_measured"
+      },
+      {
+        "frame_ref": "F2",
+        "frame_index": 1964,
+        "timestamp_s": 65.467,
+        "tied_evidence_ids": [
+          "E7"
+        ],
+        "role": "window_end_last_obs"
+      },
+      {
+        "frame_ref": "F3",
+        "frame_index": 2075,
+        "timestamp_s": 69.167,
+        "tied_evidence_ids": [
+          "E4"
+        ],
+        "role": "end_state"
+      }
+    ]
+  },
+  "ep013": {
+    "analysis_path": "web/public/data/ep013/analysis.json",
+    "analysis_sha256": "bcb2d3346c17b164689b9667daa0365fae3bfa8b386900571465cc499ae93790",
+    "video_rel": "eval_videos/botfails/botfails_dish_test_ep013.mp4",
+    "markers": [
+      {
+        "id": "F0",
+        "label": "Analysis window starts",
+        "t": 49.933,
+        "kind": "analysis_frame",
+        "evidence_ids": [
+          "E6"
+        ]
+      },
+      {
+        "id": "F1",
+        "label": "Measured gripper open",
+        "t": 50.933,
+        "kind": "observed_measurement",
+        "evidence_ids": [
+          "E5",
+          "E6"
+        ]
+      },
+      {
+        "id": "F2",
+        "label": "Analysis window ends",
+        "t": 53.9,
+        "kind": "analysis_frame",
+        "evidence_ids": [
+          "E6"
+        ]
+      },
+      {
+        "id": "F3",
+        "label": "End-state snapshot",
+        "t": 69.167,
+        "kind": "analysis_frame",
+        "evidence_ids": [
+          "E4"
+        ]
+      }
+    ],
+    "frames": [
+      {
+        "frame_ref": "F0",
+        "frame_index": 1498,
+        "timestamp_s": 49.933,
+        "tied_evidence_ids": [
+          "E6"
+        ],
+        "role": "window_start"
+      },
+      {
+        "frame_ref": "F1",
+        "frame_index": 1528,
+        "timestamp_s": 50.933,
+        "tied_evidence_ids": [
+          "E5",
+          "E6"
+        ],
+        "role": "gripper_open_measured"
+      },
+      {
+        "frame_ref": "F2",
+        "frame_index": 1617,
+        "timestamp_s": 53.9,
+        "tied_evidence_ids": [
+          "E6"
+        ],
+        "role": "window_end_last_obs"
+      },
+      {
+        "frame_ref": "F3",
+        "frame_index": 2075,
+        "timestamp_s": 69.167,
+        "tied_evidence_ids": [
+          "E4"
+        ],
+        "role": "end_state"
+      }
+    ]
+  },
+  "ep006": {
+    "analysis_path": "web/public/data/ep006/analysis.json",
+    "analysis_sha256": "fa2a569a25d9276d7f30e7f22051ff606c7bc2cea525e245d2f58620ce10e253",
+    "video_rel": "eval_videos/botfails/botfails_dish_test_ep006.mp4",
+    "markers": [
+      {
+        "id": "F0",
+        "label": "Analysis window starts",
+        "t": 50.0,
+        "kind": "analysis_frame",
+        "evidence_ids": [
+          "E7"
+        ]
+      },
+      {
+        "id": "F1",
+        "label": "Measured gripper open",
+        "t": 51.0,
+        "kind": "observed_measurement",
+        "evidence_ids": [
+          "E5",
+          "E7"
+        ]
+      },
+      {
+        "id": "F2",
+        "label": "Analysis window ends",
+        "t": 53.967,
+        "kind": "analysis_frame",
+        "evidence_ids": [
+          "E7"
+        ]
+      },
+      {
+        "id": "F3",
+        "label": "End-state snapshot",
+        "t": 69.167,
+        "kind": "analysis_frame",
+        "evidence_ids": [
+          "E4"
+        ]
+      }
+    ],
+    "frames": [
+      {
+        "frame_ref": "F0",
+        "frame_index": 1500,
+        "timestamp_s": 50.0,
+        "tied_evidence_ids": [
+          "E7"
+        ],
+        "role": "window_start"
+      },
+      {
+        "frame_ref": "F1",
+        "frame_index": 1530,
+        "timestamp_s": 51.0,
+        "tied_evidence_ids": [
+          "E5",
+          "E7"
+        ],
+        "role": "gripper_open_measured"
+      },
+      {
+        "frame_ref": "F2",
+        "frame_index": 1619,
+        "timestamp_s": 53.967,
+        "tied_evidence_ids": [
+          "E7"
+        ],
+        "role": "window_end_last_obs"
+      },
+      {
+        "frame_ref": "F3",
+        "frame_index": 2075,
+        "timestamp_s": 69.167,
+        "tied_evidence_ids": [
+          "E4"
+        ],
+        "role": "end_state"
+      }
+    ]
+  },
+  "pilot": {
+    "analysis_path": "data/submission_demo/pilot/audit/after/analysis.json",
+    "analysis_sha256": "19dc84f79caf12ed9f7162151e14f15a93a5fe1376d1197016af5d0da530daad",
+    "video_rel": "recorded pilot camera",
+    "markers": [
+      {
+        "id": "event_0",
+        "label": "endpoint_displacement",
+        "t": 0.0,
+        "kind": "observed_measurement",
+        "evidence_ids": [
+          "E0",
+          "E1"
+        ]
+      }
+    ],
+    "frames": [
+      {
+        "frame_ref": "F0",
+        "frame_index": 0,
+        "timestamp_s": 0.0,
+        "tied_evidence_ids": [
+          "E0",
+          "E1",
+          "E5"
+        ],
+        "role": "event_start+observation_start"
+      },
+      {
+        "frame_ref": "F1",
+        "frame_index": 736,
+        "timestamp_s": 24.533,
+        "tied_evidence_ids": [
+          "E0",
+          "E1",
+          "E5"
+        ],
+        "role": "event_end+observation_end"
+      },
+      {
+        "frame_ref": "F2",
+        "frame_index": 368,
+        "timestamp_s": 12.266666666666667,
+        "tied_evidence_ids": [],
+        "role": "context"
+      }
+    ]
+  }
+}

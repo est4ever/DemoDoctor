@@ -307,3 +307,18 @@ def test_questions_and_unverified_layout_proposal_preserve_verifier_rules(setup)
     assert a['task_outcome']=='uncertain' and not a['physical_events']
     assert a['multicamera']['layout_proposal']['method']=='equal-panels'
     assert a['multicamera']['investigation_questions']==m['investigation_questions']
+@pytest.mark.parametrize('field',['offset_s','crop','window_start_s','window_end_s','preview_time_s'])
+@pytest.mark.parametrize('bad',[False,True,None,''])
+def test_manifest_numeric_types_are_not_coerced_from_boolean_or_empty(field,bad):
+    from pydantic import ValidationError
+    from multicamera import Manifest
+    plan={'source_mode':'composite','task_description':'Synthetic numeric contract','crops_confirmed':True,
+          'cameras':[{'name':'one','object_concept':'block','destination_concept':'drawer','offset_s':0,'crop':[0,0,64,64]}],
+          'window_start_s':0,'window_end_s':1}
+    if field in ('offset_s','crop'):
+        if field=='crop':plan['cameras'][0]['crop'][0]=bad
+        else:plan['cameras'][0][field]=bad
+    elif field=='preview_time_s':
+        plan['layout_proposal']={'method':'equal-panels','axis':'horizontal','rectangles':[[0,0,64,64]],'preview_time_s':bad,'note':'Synthetic suggested layout'}
+    else:plan[field]=bad
+    with pytest.raises(ValidationError):Manifest.model_validate(plan)

@@ -1,4 +1,5 @@
 import type { AnalysisBundle, TracksBundle } from "./types";
+import { validateCitations } from './citationIntegrity';
 
 export const isSavedJobId = (id: string) => /^[A-Za-z0-9_-]{1,128}$/.test(id);
 export function savedJobHref(id: string): string {
@@ -15,5 +16,6 @@ export async function loadSavedInvestigation(id: string, signal?: AbortSignal): 
   catch { throw new Error("Saved results unavailable. Check that the local backend is running. No analysis was started."); }
   if (!response.ok) throw new Error(typeof body.detail === "string" ? body.detail : `Saved results unavailable (${response.status}). No analysis was started.`);
   if (!body.analysis || (!body.tracks && body.analysis.dry_run !== true)) throw new Error("Saved result artifacts are incomplete. No analysis was started.");
+  validateCitations(body.analysis, true);
   return {analysis: body.analysis, tracks: body.tracks ?? null};
 }

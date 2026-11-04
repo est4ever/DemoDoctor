@@ -10,14 +10,18 @@ import {
   useState,
 } from "react";
 import { ImportFootage } from "./components/ImportFootage";
+import { useUploadDraftStore } from "./lib/uploadDraft";
 import { MultiCameraWorkspace } from "./components/MultiCameraWorkspace";
 import { loadOptionalJson } from "./lib/loadOptionalJson";
 import { bindCriteria } from "./lib/criteria";
 import { criterionContextTime } from "./lib/criterionContext";
 import { loadSavedInvestigation } from "./lib/savedInvestigations";
+import { citationTime, validateCitations } from './lib/citationIntegrity';
+import {markerTarget} from './lib/timelineNavigation';
+import {initialPlayback,routeIntent,savePlayback} from './lib/playbackIntent';
 import type { CriteriaBundle, CriterionContextFrame } from "./lib/types";
 import { VideoPane, type VideoViewMode } from "./components/VideoPane";
-import { Button } from "./components/ui";
+import { Button,NavigationLink } from "./components/ui";
 import { InvestigationDesk } from "./components/InvestigationDesk";
 import { useSharedPlayback } from "./lib/playback";
 import { RERUN_EP010_HASH, isRerunEp010Route } from "./lib/rerunEvidence";
@@ -27,7 +31,6 @@ const AdvancedRoboticsViewer = lazy(
   () => import("./components/AdvancedRoboticsViewer"),
 );
 import {
-  getHighlight,
   type AnalysisBundle,
   type JointsBundle,
   type TimelineMarker,
@@ -36,15 +39,15 @@ import {
 
 const DEFAULT_EPISODE = "ep010";
 const EPISODE_OPTIONS = [
-  { key: "pilot", label: "pilot — recorded SO-101 endpoint evidence" },
-  { key: "ep010", label: "ep010 — suspected release (dev)" },
+  { key: "pilot", label: "pilot — recorded video-only pilot" },
+  { key: "ep010", label: "ep010 — recorded investigation" },
   {
     key: "ep005",
-    label: "ep005 — Muse-only false success vs evidence uncertainty",
+    label: "ep005 — recorded investigation",
   },
-  { key: "ep003", label: "ep003 — evidence-supported success" },
-  { key: "ep013", label: "ep013 — evidence-supported failure" },
-  { key: "ep006", label: "ep006 — optional abstention example" },
+  { key: "ep003", label: "ep003 — recorded investigation" },
+  { key: "ep013", label: "ep013 — recorded investigation" },
+  { key: "ep006", label: "ep006 — recorded investigation" },
 ] as const;
 const EPISODE_KEYS = EPISODE_OPTIONS.map((e) => e.key);
 
@@ -52,7 +55,7 @@ function isEpisodeKey(value: string): boolean {
   return (EPISODE_KEYS as readonly string[]).includes(value);
 }
 
-const jobFromHash = () => /^#job\/([A-Za-z0-9_-]{1,128})$/.exec(window.location.hash)?.[1] ?? null;
+const jobFromHash = () => /^job\/([A-Za-z0-9_-]{1,128})$/.exec(routeIntent().route)?.[1] ?? null;
 
 class ViewerErrorBoundary extends Component<{children: ReactNode; onError: (message: string) => void}, {failed: boolean}> {
   state = {failed: false};
@@ -62,12 +65,13 @@ class ViewerErrorBoundary extends Component<{children: ReactNode; onError: (mess
 }
 
 export default function App() {
+  const uploadDraft = useUploadDraftStore();
   const [requestedJobId, setRequestedJobId] = useState(jobFromHash);
   const [rerunEp010, setRerunEp010] = useState(() =>
     isRerunEp010Route(window.location.hash),
   );
   const [episodeKey, setEpisodeKey] = useState<string>(() => {
-    const hash = window.location.hash.replace(/^#/, "");
+    const hash = routeIntent().route;
     if (isRerunEp010Route(hash)) return DEFAULT_EPISODE;
     return isEpisodeKey(hash) ? hash : DEFAULT_EPISODE;
   });
@@ -75,6 +79,8 @@ export default function App() {
   const [analysis, setAnalysis] = useState<AnalysisBundle | null>(null);
   const [tracks, setTracks] = useState<TracksBundle | null>(null);
   const [duration, setDuration] = useState(0);
+  const [routeToken,setRouteToken]=useState(window.location.hash);
+  const [navigationMessage,setNavigationMessage]=useState('');
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   const [activeEvidenceId, setActiveEvidenceId] = useState<string | null>(null);
@@ -86,9 +92,30 @@ export default function App() {
   const [liveMode, setLiveMode] = useState(false);
   const liveModeRef = useRef(false);
   const [dataEpoch, setDataEpoch] = useState(0);
+  const fps = joints?.fps ?? tracks?.fps ?? analysis?.multicamera?.cameras[0]?.fps ?? 30;
+  const playback = useSharedPlayback(duration, fps);
   /** True once the lazy Rerun viewer reports recording ready. */
   const [advancedViewerReady, setAdvancedViewerReady] = useState(false);
   const [advancedViewerError, setAdvancedViewerError] = useState<string | null>(null);
+  const advancedOverlay=useRef<HTMLDivElement>(null);
+  const advancedReturnFocus=useRef<HTMLElement|null>(null);
+  const advancedWasOpen=useRef(false);
+  useEffect(()=>{
+    if(error)document.title='Investigation unavailable · DemoDoctor';
+    else if(loading)document.title='Loading investigation · DemoDoctor';
+  },[error,loading]);
+  useEffect(()=>{
+    if(advancedViewerReady || rerunEp010&&advancedViewerError) {
+      (advancedOverlay.current?.querySelector<HTMLElement>('button,a[href]')??advancedOverlay.current)?.focus({preventScroll:true});
+    }
+  },[advancedViewerReady,advancedViewerError,rerunEp010]);
+  useEffect(()=>{
+    if(rerunEp010){advancedWasOpen.current=true;return;}
+    if(advancedWasOpen.current){
+      (advancedReturnFocus.current??document.querySelector<HTMLElement>('[data-testid="open-advanced-robotics-viewer"]')??document.getElementById('workspace-main'))?.focus({preventScroll:true});
+      advancedReturnFocus.current=null;advancedWasOpen.current=false;
+    }
+  },[rerunEp010]);
   const handleAdvancedViewerError = useCallback((message: string) => {
     setAdvancedViewerReady(false);
     setAdvancedViewerError(message);
@@ -102,6 +129,10 @@ export default function App() {
     liveModeRef.current = false;
     setLiveMode(false);
     setLiveJobId(null);
+    // Route intent and React state change in the same interaction. Waiting only
+    // for hashchange leaves the previous episode's sources visible for a task.
+    setEpisodeKey(next);
+    setRouteToken(`#${next}`);
     const desired = `#${next}`;
     if (window.location.hash !== desired) {
       // Prefer hash assignment so hashchange keeps URL and React state aligned.
@@ -115,7 +146,8 @@ export default function App() {
 
   useEffect(() => {
     const syncFromHash = () => {
-      const hash = window.location.hash.replace(/^#/, "");
+      const hash = routeIntent().route;
+      setRouteToken(window.location.hash);
       if (isRerunEp010Route(hash)) {
         setRerunEp010(true);
         return;
@@ -151,6 +183,7 @@ export default function App() {
   useEffect(() => {
     let cancelled = false;
     setLoading(true);
+    playback.setPlaying(false);
     setError(null);
     setJoints(null);
     setAnalysis(null);
@@ -180,6 +213,7 @@ export default function App() {
     source
       .then(([j, a, tr, criteria]) => {
         if (cancelled) return;
+        validateCitations(a, !!requestedJobId);
         setJoints(j);
         setAnalysis(requestedJobId ? a : bindCriteria(a, criteria));
         if (requestedJobId) {
@@ -209,14 +243,13 @@ export default function App() {
     };
   }, [episodeKey, dataEpoch, requestedJobId]);
 
-  const fps = joints?.fps ?? tracks?.fps ?? analysis?.multicamera?.cameras[0]?.fps ?? 30;
-  const playback = useSharedPlayback(duration, fps);
   const onLiveResult = useCallback(
     (args: {
       jobId: string;
       analysis: AnalysisBundle;
       tracks: TracksBundle | null;
     }) => {
+      validateCitations(args.analysis, true);
       liveModeRef.current = true;
       setLiveMode(true);
       setLiveJobId(args.jobId);
@@ -225,18 +258,6 @@ export default function App() {
       setJoints(null);
       setVideoMode(args.tracks ? "annotated" : "original");
       setDuration(args.analysis.video.duration_s ?? args.tracks?.t_end ?? 0);
-      setActiveEvidenceId(
-        args.analysis.initial_evidence_id ??
-          args.analysis.timeline_markers[0]?.evidence_ids?.[0] ??
-          args.analysis.evidence_catalog[0]?.evidence_id ??
-          null,
-      );
-      const seek =
-        args.analysis.initial_seek_s ??
-        getHighlight(args.analysis)?.t_start ??
-        args.analysis.timeline_markers[0]?.t ??
-        0;
-      playback.setT(seek, { pause: true });
       window.location.hash = `job/${args.jobId}`;
     },
     [playback.setT],
@@ -253,23 +274,30 @@ export default function App() {
         ? `/replays/${episodeKey}/overlay.mp4`
         : null;
 
-  // Initial seek / selection when episode analysis loads
+  const initialized=useRef<{analysis:AnalysisBundle;route:string;key:string;binding:string;target:number;settled:boolean}|null>(null);
+  const latestPlayback=useRef<{analysis:AnalysisBundle;key:string;binding:string;time:number;evidence:string|null}|null>(null);
+  // Exported initial_seek_s is an editorial highlight, not an explicit user seek.
   useEffect(() => {
-    if (!analysis) return;
-    const seek =
-      analysis.initial_seek_s ??
-      getHighlight(analysis)?.t_start ??
-      analysis.timeline_markers[0]?.t ??
-      0;
-    playback.setT(seek, { pause: true });
-    setActiveEvidenceId(
-      analysis.initial_evidence_id ??
-        analysis.timeline_markers[0]?.evidence_ids?.[0] ??
-        analysis.evidence_catalog[0]?.evidence_id ??
-        null,
-    );
-    // eslint-disable-next-line react-hooks/exhaustive-deps -- once per episode load
-  }, [analysis]);
+    if (!analysis || duration<=0 || liveMode && !requestedJobId || initialized.current?.analysis===analysis && initialized.current.route===routeToken) return;
+    const key=requestedJobId?`job/${requestedJobId}`:episodeKey;
+    const ownRoute=routeIntent().route;
+    if (ownRoute && ownRoute!==key && ownRoute!=='home' && ownRoute!=='upload') return;
+    const next=initialPlayback(analysis,key,duration,!!requestedJobId,fps);
+    const intent=routeIntent(),linked=analysis.evidence_catalog.find(e=>e.evidence_id===intent.evidence);
+    if(initialized.current?.analysis===analysis && intent.time==null && (!linked || citationTime(analysis,linked,!!requestedJobId)==null)) next.time=playback.t;
+    if(initialized.current?.analysis===analysis && !linked) next.evidenceId=activeEvidenceId??next.evidenceId;
+    initialized.current={analysis,route:routeToken,key,binding:next.binding,target:next.time,settled:false};
+    playback.setT(next.time,{pause:true});setActiveEvidenceId(next.evidenceId);setNavigationMessage('');
+  }, [analysis,duration,routeToken,episodeKey,requestedJobId,liveMode,fps,joints,playback.setT]);
+  useEffect(()=>{
+    const init=initialized.current;if(!analysis || init?.analysis!==analysis)return;
+    if(!init.settled && Math.abs(playback.t-init.target)>1e-6)return;init.settled=true;
+    const value={analysis,key:init.key,binding:init.binding,time:playback.t,evidence:activeEvidenceId};latestPlayback.current=value;
+    const timer=setTimeout(()=>savePlayback(value.key,value.binding,value.time,value.evidence),200);
+    return()=>clearTimeout(timer);
+  },[analysis,playback.t,activeEvidenceId]);
+  useEffect(()=>()=>{const v=latestPlayback.current;if(v?.analysis===analysis)savePlayback(v.key,v.binding,v.time,v.evidence);},[analysis]);
+  useEffect(()=>{const flush=()=>{const v=latestPlayback.current;if(v)savePlayback(v.key,v.binding,v.time,v.evidence);};window.addEventListener('pagehide',flush);return()=>{flush();window.removeEventListener('pagehide',flush);};},[]);
 
   const activeEvidence = useMemo(() => {
     if (!analysis || !activeEvidenceId) return null;
@@ -303,43 +331,24 @@ export default function App() {
       setCriterionCamera(undefined);
       setActiveEvidenceId(id);
       const item = analysis?.evidence_catalog.find((e) => e.evidence_id === id);
-      let seekT: number | null = null;
-      if (item?.t_start != null) {
-        seekT = item.t_start;
-      } else if (item?.frame_start != null && fps > 0) {
-        seekT = item.frame_start / fps;
-      }
+      const seekT = analysis && item ? citationTime(analysis,item,liveMode) : null;
       if (seekT != null) {
         playback.setT(seekT, { pause: true });
       }
+      setNavigationMessage(seekT==null?'This source has no validated seek time; the video position is unchanged.':'');
     },
-    [analysis, fps, playback],
+    [analysis, liveMode, playback],
   );
 
   const selectMarker = useCallback(
     (marker: TimelineMarker) => {
-      playback.setT(marker.t, { pause: true });
-      // Prefer evidence whose timestamp is closest to the marker (not always ids[0]).
-      let best: string | null = marker.evidence_ids[0] ?? null;
-      let bestDist = Number.POSITIVE_INFINITY;
-      for (const eid of marker.evidence_ids) {
-        const item = analysis?.evidence_catalog.find(
-          (e) => e.evidence_id === eid,
-        );
-        if (!item) continue;
-        const et =
-          item.t_start ??
-          (item.frame_start != null ? item.frame_start / fps : null);
-        if (et == null) continue;
-        const dist = Math.abs(et - marker.t);
-        if (dist < bestDist) {
-          bestDist = dist;
-          best = eid;
-        }
-      }
-      if (best) setActiveEvidenceId(best);
+      if(!analysis)return;
+      const target=markerTarget(analysis,marker,liveMode,duration);
+      if(target.evidenceId)setActiveEvidenceId(target.evidenceId);
+      if(target.time!=null)playback.setT(target.time,{pause:true});
+      setNavigationMessage(target.reason);
     },
-    [analysis, fps, playback],
+    [analysis, liveMode, playback,duration],
   );
 
   if (error) {
@@ -347,15 +356,15 @@ export default function App() {
       <div className="app-shell">
         <h1 className="brand text-3xl">DemoDoctor</h1>
         <p role="alert" className="mt-3 text-[var(--warn)]">{error}</p>
-        <Button onClick={() => {window.location.hash='upload';}}>Recent investigations / Import footage</Button>{" "}
-        <Button onClick={() => switchEpisode(DEFAULT_EPISODE)}>Open cached EP010 demonstration</Button>
+        <NavigationLink className="recovery-link" href="#upload" onNavigate={() => {window.location.hash='upload';}}>Recent investigations / Import footage</NavigationLink>{" "}
+        <NavigationLink className="recovery-link" href="#ep010" onNavigate={() => switchEpisode(DEFAULT_EPISODE)}>Open cached EP010 demonstration</NavigationLink>
       </div>
     );
   }
 
   if (loading || !analysis) {
     return (
-      <div className="flex min-h-screen items-center justify-center text-[1rem] text-[var(--muted)]">
+      <div role="status" aria-live="polite" className="flex min-h-screen items-center justify-center text-[1rem] text-[var(--muted)]">
         Loading {episodeKey} demonstration…
       </div>
     );
@@ -365,6 +374,7 @@ export default function App() {
   // primary investigation stays mounted while Wasm loads, and hash switches
   // never skip hooks (#rerun-ep010 ↔ #ep010 previously blanked the app).
   const openAdvancedRoboticsViewer = () => {
+    advancedReturnFocus.current=document.activeElement as HTMLElement;
     playback.setPlaying(false);
     window.location.hash = RERUN_EP010_HASH;
   };
@@ -392,6 +402,8 @@ export default function App() {
           activeEvidence={activeEvidence}
           selectEvidence={selectEvidence}
           selectMarker={selectMarker}
+          navigationMessage={navigationMessage}
+          interactionSuspended={advancedViewerReady}
           liveMode={liveMode}
           liveJobId={liveJobId}
           originalVideoSrc={videoSrc}
@@ -421,7 +433,7 @@ export default function App() {
               }}
             />
           }
-          upload={<ImportFootage onLiveResult={onLiveResult} />}
+          upload={<ImportFootage onLiveResult={onLiveResult} draftStore={uploadDraft} />}
           advanced={
             episodeKey === "ep010" && !liveMode ? (
               <Button
@@ -443,6 +455,19 @@ export default function App() {
       */}
       {rerunEp010 ? (
         <div
+          ref={advancedOverlay}
+          tabIndex={-1}
+          onKeyDown={event=>{
+            if(!advancedViewerReady)return;
+            if(event.key==='Escape'){event.preventDefault();event.stopPropagation();closeAdvancedRoboticsViewer();}
+            if(event.key==='Tab'){
+              const items=[...event.currentTarget.querySelectorAll<HTMLElement>('button:not(:disabled),a[href],input:not(:disabled),select:not(:disabled),textarea:not(:disabled),[tabindex="0"]')].filter(e=>e.getClientRects().length&&!e.closest('[aria-hidden="true"]'));
+              if(!items.length){event.preventDefault();event.currentTarget.focus();return;}
+              const i=items.indexOf(document.activeElement as HTMLElement);
+              if(event.shiftKey&&i<=0){event.preventDefault();items.at(-1)!.focus();}
+              else if(!event.shiftKey&&(i===items.length-1||i<0)){event.preventDefault();items[0].focus();}
+            }
+          }}
           className={
             advancedViewerReady
               ? "fixed inset-0 z-[80] flex flex-col bg-[var(--bg)]"

@@ -11,11 +11,19 @@ it('loads persisted backend history in new mounts with a GET-only open link',asy
   const fetcher=vi.fn(async(_url:string)=>Response.json({jobs:[job]}));vi.stubGlobal('fetch',fetcher);
   await act(async()=>root.render(<RecentInvestigations/>));
   expect(host.textContent).toContain('droid.mp4 · 1 camera view');expect(host.textContent).toContain('Uncertain · saved verdict');
-  expect(host.textContent).toContain('Real analysis · saved outputs');expect(host.querySelector('time')?.dateTime).toBe(job.created_at);
+  expect(host.textContent).toContain('Saved analysis · execution unconfirmed');expect(host.querySelector('time')?.dateTime).toBe(job.created_at);
   expect(host.querySelector('a')?.getAttribute('href')).toBe('#job/'+job.job_id);
   expect(fetcher.mock.calls.every(c=>c[0]==='/api/jobs')).toBe(true);
   await act(async()=>root.unmount());root=createRoot(host);await act(async()=>root.render(<RecentInvestigations/>));
   expect(host.querySelector('a')).not.toBeNull();expect(fetcher).toHaveBeenCalledTimes(2);
+});
+it('distinguishes locally recorded real execution from explicit provider-skipped experimental jobs',async()=>{
+  vi.stubGlobal('fetch',async()=>Response.json({jobs:[
+    {...job,execution:{mode:'real',note:'Local provider records'}},
+    {...job,job_id:'mock',execution:{mode:'experimental',note:'No paid call'}}]}));
+  await act(async()=>root.render(<RecentInvestigations/>));
+  expect(host.textContent).toContain('Real Analysis · saved outputs');
+  expect(host.textContent).toContain('Experimental · execution unconfirmed');
 });
 it('shows accurate missing and dry-run states without a restart button',async()=>{
   vi.stubGlobal('fetch',vi.fn(async()=>Response.json({jobs:[{...job,can_open:false,availability_error:'Missing saved camera video. No analysis was started.'},

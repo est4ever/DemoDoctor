@@ -69,5 +69,43 @@ def test_api_reassesses_on_read_without_mutating_saved_results(job,monkeypatch):
     assert response['criteria']['reassessment']['approved_provenance_verified']
     assert response['task_outcome']==a['task_outcome'] and R.hashes(job)==before
     (job/'cam1/video.mp4').write_bytes(b'changed after approval')
+    from fastapi import HTTPException
+    with pytest.raises(HTTPException) as blocked:api.get_analysis(job.name)
+    assert blocked.value.status_code==409
+
+
+def test_existing_criteria_get_separate_local_temporal_context_without_rewriting_results(job,monkeypatch):
+    import live_api as api
+    monkeypatch.setattr(api,'JOBS_ROOT',job.parent)
+    a=R.read(job/'analysis.json');a.update(dry_run=False,criteria={'task_text':'Preserved explicit task','assessments':[],'completion':'unverified'})
+    (job/'analysis.json').write_text(json.dumps(a));before=R.hashes(job)
     response=api.get_analysis(job.name)
-    assert response['task_coverage_error'] and 'criteria' not in response
+    assert {k:v for k,v in response['criteria'].items() if k not in ('temporal_evidence','coverage','context_frames')}==a['criteria']
+    assert response['criteria']['temporal_evidence'][0]['adjacent_box_steps']==[]
+    assert R.hashes(job)==before and response['task_outcome']=='uncertain'
+    (job/'cam1/video.mp4').write_bytes(b'changed after approval')
+    from fastapi import HTTPException
+    with pytest.raises(HTTPException) as blocked:api.get_analysis(job.name)
+    assert blocked.value.status_code==409
+
+
+@pytest.mark.parametrize('count',[2,3])
+def test_temporal_context_keeps_multiple_cameras_and_identical_track_names_separate(job,count):
+    import shutil
+    from task_coverage import build_assessment
+    manifest=R.read(job/'multicamera.json');first=manifest['cameras'][0]
+    for i in range(2,count+1):
+        cid=f'cam{i}';shutil.copytree(job/'cam1',job/cid)
+        c={**first,'camera_id':cid};manifest['cameras'].append(c)
+        (job/cid/'provenance.json').write_text(json.dumps(c))
+    for c in manifest['cameras']:
+        obs=[{'camera_id':c['camera_id'],'source_video_id':'source1','object_id':'same-id','frame_index':i,'bbox':[10+i,10,20+i,20]} for i in range(8)]
+        (job/c['camera_id']/'provider_observations.json').write_text(json.dumps({'observations':obs}))
+    (job/'multicamera.json').write_text(json.dumps(manifest));(job/'prepared-multicamera.json').write_text(json.dumps({'manifest_sha256':R.digest(job/'multicamera.json')}))
+    analysis=R.read(job/'analysis.json');analysis['multicamera']=manifest;(job/'analysis.json').write_text(json.dumps(analysis))
+    criteria,_=build_assessment(job)
+    assert len(criteria['temporal_evidence'])==count
+    for c in criteria['temporal_evidence']:
+        assert all(f['camera_id']==c['camera_id'] for f in c['frames'])
+        assert len(c['frames'])<=12//count
+    assert criteria['completion']=='unverified'

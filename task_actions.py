@@ -9,6 +9,7 @@ from __future__ import annotations
 
 import math
 import re
+from urllib.parse import unquote
 
 
 def parse_task(description: str, object_concept: str, destination: str):
@@ -67,6 +68,14 @@ def assess_action(spec, task, ev):
             # same explicitly bound target. Motion/identity cannot come from IDs alone.
             start, lo, hi, before, after = (m.get(k) for k in
                 ('start_frame', 'closed_threshold', 'open_threshold', 'start_open_fraction', 'end_open_fraction'))
+            reference = m.get('reference_geometry_source')
+            start_source = m.get('start_source_ref')
+            # A calibration name must not alias the observation it is intended
+            # to independently test. This guards direct URI aliases; semantic
+            # calibration validity remains the trusted adapter's responsibility.
+            if (not all(isinstance(s, str) and s.strip() for s in (reference, start_source, p.source_ref)) or
+                unquote(reference.strip()) in {unquote(start_source.strip()), unquote(p.source_ref.strip())}):
+                continue
             if (ev.camera_motion.get(p.view) != 'static' or not all(_number(v) for v in (start, lo, hi, before, after)) or
                 not isinstance(start, int) or not 0 <= start < p.frame == ev.n_frames-1 or
                 not 0 <= lo < hi <= 1 or not 0 <= before <= 1 or not 0 <= after <= 1 or before < hi or

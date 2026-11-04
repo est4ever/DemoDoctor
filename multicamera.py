@@ -5,6 +5,7 @@ No cross-camera object matching or physical-event reconstruction is performed.
 from __future__ import annotations
 from dataclasses import asdict
 from pathlib import Path
+from typing import Annotated
 import copy
 import hashlib
 import json
@@ -22,6 +23,8 @@ import live_budget as budget
 import evidence_fusion as ef
 from vision import SampledFrame
 
+Pixel = Annotated[int, Field(strict=True)]
+
 
 class Camera(BaseModel):
     model_config = ConfigDict(extra="forbid")
@@ -29,16 +32,16 @@ class Camera(BaseModel):
     object_concept: str = Field(min_length=1, max_length=200)
     destination_concept: str = Field(min_length=1, max_length=200)
     motion: str = Field(default="unknown", pattern="^(static|moving|unknown)$")
-    offset_s: float = Field(default=0, ge=-60, le=60, allow_inf_nan=False)
-    crop: tuple[int, int, int, int] | None = None
+    offset_s: float = Field(default=0, ge=-60, le=60, allow_inf_nan=False, strict=True)
+    crop: tuple[Pixel, Pixel, Pixel, Pixel] | None = None
 
 
 class LayoutProposal(BaseModel):
     model_config = ConfigDict(extra="forbid")
     method: str = Field(pattern="^(dark-gutters|equal-panels)$")
     axis: str = Field(pattern="^(horizontal|vertical)$")
-    rectangles: list[tuple[int,int,int,int]] = Field(min_length=1,max_length=3)
-    preview_time_s: float = Field(default=0,ge=0,allow_inf_nan=False)
+    rectangles: list[tuple[Pixel,Pixel,Pixel,Pixel]] = Field(min_length=1,max_length=3)
+    preview_time_s: float = Field(default=0,ge=0,allow_inf_nan=False,strict=True)
     note: str = Field(max_length=1000)
 
 
@@ -52,8 +55,8 @@ class Manifest(BaseModel):
     crops_confirmed: bool = False
     layout_proposal: LayoutProposal | None = None
     investigation_questions: str = Field(default="",max_length=2000)
-    window_start_s: float = Field(default=0, ge=0, allow_inf_nan=False)
-    window_end_s: float = Field(default=4, gt=0, allow_inf_nan=False)
+    window_start_s: float = Field(default=0, ge=0, allow_inf_nan=False, strict=True)
+    window_end_s: float = Field(default=4, gt=0, allow_inf_nan=False, strict=True)
 
     @model_validator(mode="after")
     def validate_plan(self):

@@ -13,10 +13,12 @@ type Props = {
   fps?: number;
   duration?: number;
   jobId?: string | null;
+  showCriteria?: boolean;
+  previewsEnabled?: boolean;
 };
 
 /** Presentation only: saved model suggestions never enter the verified finding groups. */
-export function DiagnosticDetails({ analysis: a, inspectEvidence, seek, inspectFrame, videoSrc, fps=30, duration=0, jobId }: Props) {
+export function DiagnosticDetails({ analysis: a, inspectEvidence, seek, inspectFrame, videoSrc, fps=30, duration=0, jobId,showCriteria=true,previewsEnabled=true }: Props) {
   const catalog = a.evidence_catalog;
   const citations = (ids: string[] = []) => ids.length ? (
     <div className="claim-links diagnostic-links">
@@ -39,8 +41,9 @@ export function DiagnosticDetails({ analysis: a, inspectEvidence, seek, inspectF
 
   return <>
     {a.task_coverage_error && <p role="alert">{a.task_coverage_error}</p>}
-    {a.criteria && <CriterionCoverage criteria={a.criteria} citations={citations} inspectFrame={inspectFrame} />}
-    {videoSrc && <TemporalContext analysis={a} videoSrc={videoSrc} fps={fps} duration={duration} jobId={jobId} inspectFrame={inspectFrame} seek={seek}/>}
+    {a.temporal_evidence_error && <p role="alert">{a.temporal_evidence_error}</p>}
+    {showCriteria && a.criteria && <CriterionCoverage criteria={a.criteria} citations={citations} inspectFrame={inspectFrame} manifest={a.multicamera} />}
+    {videoSrc && <TemporalContext analysis={a} videoSrc={videoSrc} fps={fps} duration={duration} jobId={jobId} inspectFrame={inspectFrame} seek={seek} previewsEnabled={previewsEnabled}/>}
     <section className="diagnostic-hypotheses" aria-label="Diagnostic hypotheses">
       <h3>Diagnostic hypotheses</h3>
       <p>Saved Muse suggestions and visual interpretations. <strong>Unverified</strong>: citations provide context, not independent confirmation. These do not change the recorded outcome.</p>

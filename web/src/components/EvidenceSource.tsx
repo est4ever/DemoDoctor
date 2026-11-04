@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import type { AnalysisBundle, EvidenceItem, JointsBundle, TracksBundle } from "../lib/types";
+import { citationBinding } from '../lib/citationIntegrity';
 
 type Props = {
   item: EvidenceItem;
@@ -21,14 +22,21 @@ export function EvidenceSource(props: Props) {
       .then(tracks=>{if(!cancelled)setCameraTracks({cameraId:item.camera_id!,jobId,tracks});}).catch(e=>{if(!cancelled)setCameraError(String(e));});return()=>{cancelled=true;};
   },[item.camera_id,jobId]);
   const c=analysis.multicamera?.cameras.find(c=>c.camera_id===item.camera_id);
+  const guardedSeek=(native:number,options?:{pause?:boolean})=>{
+    const t=native-(c?.playback_offset_s??0),duration=analysis.video?.duration_s;
+    if (Number.isFinite(t) && t>=0 && (duration==null || t<duration)) props.seek(t,options);
+  };
   const bound=item.camera_id&&jobId&&cameraTracks?.cameraId===item.camera_id&&cameraTracks.jobId===jobId?cameraTracks.tracks:null;
   return <>{item.camera_id&&<div className="source-limitation"><strong>{item.camera_name} · {item.camera_id}</strong><p>Original {item.original_evidence_id} · {item.source_video_id} · camera-local pixels. Cross-view identity is unverified.</p>{cameraError&&<p role="alert">{cameraError}</p>}</div>}
     <EvidenceSourceDetails {...props} tracks={item.camera_id?bound:props.tracks} fps={c?.fps??props.fps}
-      seek={item.camera_id?(s,options)=>props.seek(s-(c?.playback_offset_s??0),options):props.seek}/>
+      seek={guardedSeek}/>
   </>;
 }
 
 function EvidenceSourceDetails({ item, analysis, tracks, joints, fps, seek, jobId }: Props) {
+  const binding=citationBinding(analysis,item,!!jobId);
+  const matched=binding.status==='record_match';
+  // A missing original locator permits inspection, never synthesized measurements/seek.
   const claims = (item.claims ?? []).filter((c): c is Record<string, unknown> => !!c && typeof c === "object");
   const displacement = claims.find(c => c.type === "displacement");
   const trackId = item.track_id ?? claims.find(c => typeof c.track_id === "string")?.track_id;
@@ -38,7 +46,10 @@ function EvidenceSourceDetails({ item, analysis, tracks, joints, fps, seek, jobI
   const rawPoints = track ? (displacement
     ? [track.points.find(p => p.frame_index === from), track.points.find(p => p.frame_index === to)].filter(p => p != null)
     : [track.points[0], track.points[track.points.length - 1]].filter(p => p != null)) : [];
-  const points = rawPoints.filter((p,i,all)=>all.findIndex(other=>other.frame_index===p.frame_index)===i);
+  const inSpan=(f:number)=>item.frame_start!=null && item.frame_end!=null && f>=item.frame_start && f<item.frame_end;
+  const scopedPoints=displacement ? rawPoints : track?.points.filter(p=>inSpan(p.frame_index)) ?? [];
+  const endpoints=displacement ? scopedPoints : [scopedPoints[0],scopedPoints[scopedPoints.length-1]].filter(p=>p!=null);
+  const points = endpoints.filter((p,i,all)=>inSpan(p.frame_index) && all.findIndex(other=>other.frame_index===p.frame_index)===i);
   const center = (box: number[]) => [(box[0] + box[2]) / 2, (box[1] + box[3]) / 2];
   const gripperClaim = claims.find(c => c.type === "gripper_open");
   const frame = typeof gripperClaim?.frame === "number" ? gripperClaim.frame : item.frame_start;
@@ -47,7 +58,10 @@ function EvidenceSourceDetails({ item, analysis, tracks, joints, fps, seek, jobI
   const sam = item.source?.startsWith("sam:");
   const proprio = item.source?.startsWith("proprio:");
   const report = item.source === "pipeline:report";
+  const camera=analysis.multicamera?.cameras.find(c=>c.camera_id===item.camera_id);
+  const inSharedWindow=(f:number)=>{const t=f/fps-(camera?.playback_offset_s??0);return t>=0 && (analysis.video?.duration_s==null || t<analysis.video.duration_s);};
   return <>
+    <p className="source-limitation"><strong>{matched ? 'Original citation record matched.' : 'Citation binding unverified.'}</strong> {binding.reason} This does not verify physical actions.</p>
     <p className="technical-summary">{item.summary || "No summary provided"}</p>
     {report && <>
 
@@ -61,10 +75,10 @@ function EvidenceSourceDetails({ item, analysis, tracks, joints, fps, seek, jobI
     </>}
     {sam && <>
       <h4>Recorded image-space source</h4>
-      {tracks && points.length ? <>
+      {matched && tracks && points.length ? <>
         <p>{trackId as string} · {track?.n_observations} returned observations · image {tracks.image_size.join(" × ")} px</p>
         <table className="source-measurements"><thead><tr><th>Frame</th><th>Box center (px)</th><th>Returned box</th></tr></thead>
-          <tbody>{points.map(p => <tr key={p.frame_index}><td><button onClick={() => seek(p.frame_index / fps, { pause: true })}>F{p.frame_index} ↗</button></td><td>{center(p.bbox).join(", ")}</td><td>{p.bbox.join(", ")}</td></tr>)}</tbody>
+          <tbody>{points.map(p => <tr key={p.frame_index}><td><button disabled={!inSharedWindow(p.frame_index)} title={!inSharedWindow(p.frame_index)?'Original source frame is outside the shared playback window':undefined} onClick={() => seek(p.frame_index / fps, { pause: true })}>F{p.frame_index} ↗</button></td><td>{center(p.bbox).join(", ")}</td><td>{p.bbox.join(", ")}</td></tr>)}</tbody>
         </table>
         {displacement && points.length === 2 && <p>Box-center calculation: √(({center(points[1].bbox)[0]} − {center(points[0].bbox)[0]})² + ({center(points[1].bbox)[1]} − {center(points[0].bbox)[1]})²). Saved endpoint difference: {String(displacement.value_px)} px.</p>}
         {displacement && points.length !== 2 && <p className="source-limitation">Source artifact unavailable for one or more endpoints; the saved endpoint calculation cannot be fully inspected from the loaded observations.</p>}
@@ -74,7 +88,7 @@ function EvidenceSourceDetails({ item, analysis, tracks, joints, fps, seek, jobI
     </>}
     {proprio && <>
       <h4>Recorded joint source</h4>
-      {jointAvailable && joints && frame != null ? <>
+      {matched && jointAvailable && joints && frame != null ? <>
         <p>joints.json · {joints.dataset_joint_names[gripperIndex]} · recorded motor_deg export</p>
         <table className="source-measurements"><thead><tr><th>Frame</th><th>Recorded time (s)</th><th>motor_deg</th></tr></thead>
           <tbody>{[frame - 1, frame, frame + 1].filter(f => joints.motor_deg[f]?.[gripperIndex] != null).map(f => <tr key={f}><td>{f}</td><td>{joints.timestamps_s[f]?.toFixed(6) ?? "Unavailable"}</td><td>{joints.motor_deg[f][gripperIndex]}</td></tr>)}</tbody>

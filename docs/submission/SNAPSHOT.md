@@ -70,3 +70,39 @@ algorithm or scientific result was changed. Current results are in FINAL_UPDATE_
 ## Frozen diagnostic-context update
 
 Current source freeze: `de5009f26818d6d8a6cc0b15ba87fd89004095b6`. The incremental parent is `c1cebf3f353eb62422cabacce3922bda1b166609`. Only reviewed source/tests/docs were transferred; personal analyst reviews and all private job/video data remain excluded. Existing public history, licenses and original result hashes are preserved. See RELEASE_READINESS_20261101.md for current checks and limitations.
+
+## Defensive integrity update — November 2
+
+Public parent: `0e2e69690a81b8188b8fdcd5b367dc60673fc696`. This incremental
+release selectively ports reviewed source-bound criterion guards, temporal
+provenance checks and citation-binding repairs through development checkpoint
+`c0f28c3eb370355750dd34fe86fed7c58924265e`. Experimental pixel/action detectors
+and their API/UI are excluded. Original private history is not imported. Existing
+public code line endings and byte-preserving attributes are retained. The citation
+registry hashes unchanged public source artifacts; no original result is rewritten.
+All 19 replay hashes, provider artifacts, licenses/notices, README media and build
+history remain unchanged. The current SOURCE_MANIFEST includes this incremental
+tree; earlier export provenance records remain preserved. See
+[defensive release review](../integration/DEFENSIVE_INTEGRITY_RELEASE.md) for exact
+source scope, tests, skipped research fixtures and native browser checks.
+
+## Combined local candidate — November 2
+
+Public parent: `27375223d2740e4a3570c5212632a8be15bf008c`. Selective integration through development checkpoint
+`bb5c509ac2dff14b3c1c0dcc2afdbe5d9407cebf` preserves the public Git history and prior defensive
+release adaptations. Reviewed workstation/upload corrections and strict JSON numeric
+metadata checks are included; experimental physical-action detectors remain excluded.
+No original media, citations, outcomes, notices or private jobs are changed or added.
+See [combined review](../integration/COMBINED_RELEASE_REVIEW.md) for exact tests,
+file scope, remaining P2 issues and independent-review status. Publication is pending.
+
+## Local-prototype preparation follow-up — November 2
+
+Parent: `d9b9bb4ffff86349c23f8fba688516f7e22bfd21`, after independent acceptance.
+This small follow-up improves execution-mode descriptions, narrow navigation
+focus, out-of-window warning readability and on-demand temporal previews. It
+adds user instructions and focused tests, not inference algorithms or new model
+results. Local provider-record labels are not remote authentication or physical
+verification. Original media, provider outputs, citations, task assessments,
+licenses, notices and build-history disclosure are preserved. See
+[release preparation](../integration/LOCAL_PROTOTYPE_RELEASE_PREPARATION.md).

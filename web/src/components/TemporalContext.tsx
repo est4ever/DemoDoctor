@@ -20,7 +20,7 @@ function Preview({frame}:{frame:TemporalFrame}) {
   return image?<img src={image} alt={`Original ${frame.camera_id} frame ${frame.original_frame}`} style={{width:'100%',height:80,objectFit:'contain'}}/>:<span>{unavailable?'Frame preview unavailable; seek original footage':'Loading original frame…'}</span>;
 }
 
-export function TemporalContext({analysis:a,videoSrc,fps,duration,jobId,inspectFrame,seek}:{analysis:AnalysisBundle;videoSrc:string;fps:number;duration:number;jobId?:string|null;inspectFrame?:(f:CriterionContextFrame)=>void;seek:(t:number,o?:{pause?:boolean})=>void}) {
+export function TemporalContext({analysis:a,videoSrc,fps,duration,jobId,inspectFrame,seek,previewsEnabled=true}:{analysis:AnalysisBundle;videoSrc:string;fps:number;duration:number;jobId?:string|null;inspectFrame?:(f:CriterionContextFrame)=>void;seek:(t:number,o?:{pause?:boolean})=>void;previewsEnabled?:boolean}) {
   const frames=useMemo(()=>temporalContext(a,videoSrc,fps,duration,jobId),[a,videoSrc,fps,duration,jobId]);
   const [review,setReview]=useState<VisualReview|null>(null),[invalid,setInvalid]=useState(false);
   useEffect(()=>{
@@ -39,8 +39,9 @@ export function TemporalContext({analysis:a,videoSrc,fps,duration,jobId,inspectF
     <h3>Original temporal context</h3>
     <p>Original footage for inspection, not verified action support. Saved Muse catalog references identify recorded inputs, not correct interpretation. Other frames are local context; no claim Muse received them.</p>
     <div style={{display:'grid',gridTemplateColumns:'repeat(2,minmax(0,1fr))',gap:8}}>{frames.map(f=><button key={`${f.camera_id}-${f.original_frame}`} onClick={()=>open(f)} aria-label={`Inspect original ${f.camera_id} frame ${f.original_frame}`} style={{textAlign:'left'}}>
-      <Preview frame={f}/><span>{f.camera_id} · frame {f.original_frame} · {f.original_timestamp_s.toFixed(3)}s ↗</span><br/>
+      {previewsEnabled?<Preview frame={f}/>:<span>Open technical details to load the original frame preview.</span>}<span>{f.camera_id} · frame {f.original_frame} · {f.original_timestamp_s.toFixed(3)}s ↗</span><br/>
       <small>{f.museReferences.length?`Saved Muse catalog: ${f.museReferences.join(', ')}`:'Local context; not a saved Muse reference'}</small><br/>
+      {f.selection_reasons?.length ? <small>{f.selection_reasons.join('; ')}<br/></small> : null}
       {f.observedBySam!==null&&<small>{f.observedBySam?'SAM observation returned at this frame; identity unverified':'No returned SAM observation at this frame'}</small>}
     </button>)}</div>
     {invalid&&<p role="alert">Local analyst review unavailable or its camera/hash/frame provenance does not match. No interpretation was applied.</p>}

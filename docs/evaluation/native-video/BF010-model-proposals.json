@@ -1,0 +1,311 @@
+{
+  "schema": "demodoctor.public-native-proposals-extract/v1",
+  "mode": "recorded_genuine_model_proposals",
+  "warning": "AI-generated unverified model output, not a verified physical diagnosis or human ground truth. Documentation only; never detector input.",
+  "model": "muse-spark-1.3",
+  "source_sha256": "8f61d8613e820992f7db8f9c9cb930fb067a8fa39497b852ebfc23202fbb349a",
+  "upload_sha256": "8abd79df803fc112b2dc6400b7d6aeb76f835c02ca473436c92b7a29071baf76",
+  "camera_id": "cam1",
+  "crop": null,
+  "source_frames": 2090,
+  "source_last_timestamp": 69.63333333333334,
+  "original_raw_response_sha256": "592375f4780f5b79d7fae1dabb9460e036b04c207fa8b67d0129c828539a1545",
+  "extraction": "Only decoded output_text JSON retained verbatim in model_output. Account/file/response IDs, encrypted reasoning, local paths, approvals and ledgers excluded.",
+  "model_output": {
+    "coverage_limitations": [
+      "Single fixed viewpoint with partial occlusion of gripper interior and rack interior",
+      "Grasp contact and release moments inferred from object motion co-moving with gripper, not tactile confirmation"
+    ],
+    "events": [
+      {
+        "alternative_interpretations": [
+          "Gripper may have only caged cup without firm grasp"
+        ],
+        "description": "Red arm closes on clear translucent cup on table, lifts it clear of table surface.",
+        "event_type": "pickup",
+        "proposed_end_time": 4.0,
+        "proposed_start_time": 0.0,
+        "relation": "unknown",
+        "relevant_objects": [
+          "translucent cup front"
+        ],
+        "uncertainty": "Initial contact occluded; attachment inferred from cup rising with gripper",
+        "visible_evidence": [
+          "gripper fingers around cup",
+          "cup leaves table and rises with arm"
+        ]
+      },
+      {
+        "alternative_interpretations": [
+          "Object could have slipped rather than been intentionally released"
+        ],
+        "description": "Arm carries clear cup leftward over rack and cup appears inside rack wires as arm retracts.",
+        "event_type": "placement_attempt",
+        "proposed_end_time": 7.5,
+        "proposed_start_time": 4.0,
+        "relation": "unknown",
+        "relevant_objects": [
+          "translucent cup front",
+          "wire rack"
+        ],
+        "uncertainty": "Release moment inside rack not clearly visible; final cup position visible in rack",
+        "visible_evidence": [
+          "cup moves with arm over rack",
+          "cup remains in rack after arm withdraws"
+        ]
+      },
+      {
+        "alternative_interpretations": [
+          "Could be two separate grasps with re-adjustment"
+        ],
+        "description": "Arm grasps purple mug on table, transports it to rack and leaves it in rack next to first cup.",
+        "event_type": "transport",
+        "proposed_end_time": 14.5,
+        "proposed_start_time": 8.0,
+        "relation": "unknown",
+        "relevant_objects": [
+          "purple mug",
+          "wire rack"
+        ],
+        "uncertainty": "Grasp firmness uncertain; motion co-movement is clear",
+        "visible_evidence": [
+          "mug lifts off table with gripper",
+          "mug moves over rack",
+          "mug stationary in rack after arm leaves"
+        ]
+      },
+      {
+        "alternative_interpretations": [
+          "Whisk contact may have assisted lift"
+        ],
+        "description": "Arm grasps small red cup, lifts, moves to rack and deposits it beside purple mug.",
+        "event_type": "placement_attempt",
+        "proposed_end_time": 20.5,
+        "proposed_start_time": 15.0,
+        "relation": "unknown",
+        "relevant_objects": [
+          "red cup",
+          "wire rack"
+        ],
+        "uncertainty": "Gripper-cup interface partially occluded but cup clearly co-moves",
+        "visible_evidence": [
+          "red cup rises from table",
+          "red cup over rack",
+          "red cup remains in rack"
+        ]
+      },
+      {
+        "alternative_interpretations": [
+          "Gripper may have pushed rather than grasped initially"
+        ],
+        "description": "Arm reaches to rear translucent cup on rear green plate, lifts it and places it in rack beside red cup.",
+        "event_type": "pickup",
+        "proposed_end_time": 29.0,
+        "proposed_start_time": 21.5,
+        "relation": "unknown",
+        "relevant_objects": [
+          "translucent cup rear",
+          "wire rack"
+        ],
+        "uncertainty": "Long reach, but lift and transport clearly visible",
+        "visible_evidence": [
+          "cup leaves rear plate area",
+          "cup carried over table",
+          "cup appears in rack after maneuver"
+        ]
+      },
+      {
+        "alternative_interpretations": [
+          "Metal handle may have slid in gripper during transport"
+        ],
+        "description": "Arm grasps green whisk utensil, lifts, carries over rack and lays it in rack.",
+        "event_type": "transport",
+        "proposed_end_time": 38.5,
+        "proposed_start_time": 30.5,
+        "relation": "unknown",
+        "relevant_objects": [
+          "green whisk",
+          "wire rack"
+        ],
+        "uncertainty": "Exact grasp point on whisk handle obscured, but transport is unambiguous",
+        "visible_evidence": [
+          "whisk lifts off table",
+          "whisk suspended from gripper over rack",
+          "whisk resting in rack afterwards"
+        ]
+      },
+      {
+        "alternative_interpretations": [
+          "Plate may have slipped due to grip geometry rather than intentional release"
+        ],
+        "description": "Arm attempts to lift front green plate, plate tilts, falls and lands inverted on table beside rack.",
+        "event_type": "drop",
+        "proposed_end_time": 45.5,
+        "proposed_start_time": 39.5,
+        "relation": "unknown",
+        "relevant_objects": [
+          "green plate front"
+        ],
+        "uncertainty": "Downward motion plus loss of gripper support visible; intent unknown",
+        "visible_evidence": [
+          "plate lifted at edge by gripper",
+          "plate detaches and falls to table",
+          "plate ends inverted on table"
+        ]
+      },
+      {
+        "alternative_interpretations": [
+          "Spin could be caused by edge contact with table during placement"
+        ],
+        "description": "Arm grasps middle green plate, lifts vertically, plate detaches mid-air, spins and lands upright on table.",
+        "event_type": "drop",
+        "proposed_end_time": 52.5,
+        "proposed_start_time": 46.5,
+        "relation": "unknown",
+        "relevant_objects": [
+          "green plate middle"
+        ],
+        "uncertainty": "Release appears unintentional; no clear placement over rack before fall",
+        "visible_evidence": [
+          "plate rises with gripper",
+          "plate in free fall and rotating",
+          "plate lands on table outside rack"
+        ]
+      },
+      {
+        "alternative_interpretations": [
+          "Plate may be leaning rather than fully seated in rack slot"
+        ],
+        "description": "Arm grasps rear green plate, transports leftward and inserts it into rack where it remains.",
+        "event_type": "placement_attempt",
+        "proposed_end_time": 58.5,
+        "proposed_start_time": 53.5,
+        "relation": "unknown",
+        "relevant_objects": [
+          "green plate rear",
+          "wire rack"
+        ],
+        "uncertainty": "Final seating angle partially occluded by rack wires but plate remains in rack",
+        "visible_evidence": [
+          "plate lifted from table",
+          "plate carried over rack",
+          "plate visible inside rack after arm retracts"
+        ]
+      },
+      {
+        "alternative_interpretations": [
+          "Broad dish definition could include whisk and cups; count based on visible tableware"
+        ],
+        "description": "Final view shows cups, mug, whisk and one green plate in rack, while two green plates remain on table outside rack.",
+        "event_type": "final_position",
+        "proposed_end_time": 69.6,
+        "proposed_start_time": 60.0,
+        "relation": "some_task_object_outside_destination",
+        "relevant_objects": [
+          "green plate front",
+          "green plate middle",
+          "wire rack"
+        ],
+        "uncertainty": "Static end state clearly visible; task requires all dishes in rack",
+        "visible_evidence": [
+          "two green plates on table surface",
+          "rack contains other items but not those two plates",
+          "robot retracted and stationary"
+        ]
+      },
+      {
+        "alternative_interpretations": [
+          "Could be considered incomplete rather than violation if more time allowed, but at video end criterion unmet"
+        ],
+        "description": "Two green plates visible outside rack at end while goal is all dishes in rack, indicating unmet end state.",
+        "event_type": "visible_task_criterion_violation",
+        "proposed_end_time": 69.6,
+        "proposed_start_time": 60.0,
+        "relation": "some_task_object_outside_destination",
+        "relevant_objects": [
+          "green plate front",
+          "green plate middle"
+        ],
+        "uncertainty": "No inference about cause; purely visible location outside destination",
+        "visible_evidence": [
+          "plates on table not in rack",
+          "desired end state requires all dishes in rack"
+        ]
+      }
+    ]
+  },
+  "illustration_references": [
+    {
+      "frame": 1327,
+      "timestamp_s": 44.233333333333334,
+      "native_pts": 679424,
+      "time_base": "1/15360",
+      "frame_sha256": "16351da51722b054168677d85fc57a765a56fd54391fcc440cbc25796b9bed69",
+      "camera_id": "cam1",
+      "source_sha256": "8f61d8613e820992f7db8f9c9cb930fb067a8fa39497b852ebfc23202fbb349a",
+      "crop": null,
+      "file": "BF010-frame-1327.png",
+      "png_sha256": "84dc92600fb1c3d3db1d896120b62408d724e56b596c386d04ee6e758b8cd11b"
+    },
+    {
+      "frame": 1329,
+      "timestamp_s": 44.3,
+      "native_pts": 680448,
+      "time_base": "1/15360",
+      "frame_sha256": "b5071b7aaf9aaec0880537521e737f0fcde7104e396fe6b3318d5104a359b418",
+      "camera_id": "cam1",
+      "source_sha256": "8f61d8613e820992f7db8f9c9cb930fb067a8fa39497b852ebfc23202fbb349a",
+      "crop": null,
+      "file": "BF010-frame-1329.png",
+      "png_sha256": "fceb6c74c7892ff99b94190dcd5452690d99483996c80dcbba6d8724b696db8d"
+    },
+    {
+      "frame": 1350,
+      "timestamp_s": 45.0,
+      "native_pts": 691200,
+      "time_base": "1/15360",
+      "frame_sha256": "8480c9b0d37cf43c2fe55d0b93deabdde272a285cc7481f3c08dd4bb6f55111e",
+      "camera_id": "cam1",
+      "source_sha256": "8f61d8613e820992f7db8f9c9cb930fb067a8fa39497b852ebfc23202fbb349a",
+      "crop": null,
+      "file": "BF010-frame-1350.png",
+      "png_sha256": "c2740b8338f33095d9d6513d5db14485818bbfe673129004e22035a59d290398"
+    },
+    {
+      "frame": 1522,
+      "timestamp_s": 50.733333333333334,
+      "native_pts": 779264,
+      "time_base": "1/15360",
+      "frame_sha256": "a064dad60c3a107011cbba2bca1cb2d58651fd312101d07f893b4dcffff8db01",
+      "camera_id": "cam1",
+      "source_sha256": "8f61d8613e820992f7db8f9c9cb930fb067a8fa39497b852ebfc23202fbb349a",
+      "crop": null,
+      "file": "BF010-frame-1522.png",
+      "png_sha256": "16dfda81d9a31420655b299881b33010cf69d9847be97074bd1fcebf429eee00"
+    },
+    {
+      "frame": 1524,
+      "timestamp_s": 50.8,
+      "native_pts": 780288,
+      "time_base": "1/15360",
+      "frame_sha256": "d48397260dd18ecba28523a2f259a38b83cd8b5505727eb5930aaa6acb238e58",
+      "camera_id": "cam1",
+      "source_sha256": "8f61d8613e820992f7db8f9c9cb930fb067a8fa39497b852ebfc23202fbb349a",
+      "crop": null,
+      "file": "BF010-frame-1524.png",
+      "png_sha256": "d77518d4f7a9fcd53639580801064108a6db974ef2b9004e12db3a937a96b72d"
+    },
+    {
+      "frame": 1605,
+      "timestamp_s": 53.5,
+      "native_pts": 821760,
+      "time_base": "1/15360",
+      "frame_sha256": "e53e9f3434d5af5357d15fdc8a7f94dba881981d2faa51f978f298abd48121b6",
+      "camera_id": "cam1",
+      "source_sha256": "8f61d8613e820992f7db8f9c9cb930fb067a8fa39497b852ebfc23202fbb349a",
+      "crop": null,
+      "file": "BF010-frame-1605.png",
+      "png_sha256": "011a5a269171db56d05ff1c4d893d49552c9bdd0ecf711242a349a2c185fb7ee"
+    }
+  ]
+}

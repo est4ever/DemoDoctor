@@ -81,6 +81,8 @@ Model prose does not become a physical measurement. Task assessment is separate 
 
 ## Results and limitations
 
+**New, bounded native-video pilot:** two genuine Meta Muse Spark 1.3 requests proposed two earlier plate-fall intervals in BF010 and no drop in BF000. Independent AI inspection of original frames supports the visible falls; the application still labels the model events **Unverified** because geometry alone does not verify the temporal physical events. Exact failure onset and cause remain unknown. [Inspect original frames, saved model extracts and operating limits](docs/integration/NATIVE_VIDEO_PILOT.md). This experimental path is separate from the existing Fireworks workflow, requires operator authorization for paid execution, and is not validated general failure diagnosis.
+
 | Demonstrated | What that establishes |
 |---|---|
 | **Six bundled replays** | Recorded investigations open without credentials or new provider calls. |

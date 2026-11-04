@@ -1,0 +1,7 @@
+# Evidence-image and model-output notice
+
+The seven PNGs in this directory are unannotated RGB exports of original BotFails video frames. Their frame numbers, native timestamps, source-video hashes and PNG hashes are recorded in the accompanying JSON extracts. No new frames, trajectories or masks were synthesized. The videos themselves are provisioned separately using the pinned public sources in the existing portable setup.
+
+Source: [kantine/BotFails](https://huggingface.co/datasets/kantine/BotFails), revision `3478e49d91e1737eb76dfee2d81bb22617039c13`; publisher-declared **Apache-2.0**. Authors: Quentin Rolland, Fabrice Mayran de Chamisso and Jean-Baptiste Mouret. Citation: *Failure Identification in Imitation Learning via Statistical and Semantic Filtering*, ICRA 2026. Preserve the repository [LICENSE](../../../LICENSE), [NOTICE](../../../NOTICE), [third-party notices](../../submission/THIRD_PARTY.md) and [original-source/template notices](../../../placement_assessment/assets/NOTICE.md).
+
+Modifications: lossless still-image extraction and JSON documentation envelopes only. Model event text is an extract of genuine Meta Muse Spark 1.3 output and is prominently identified as unverified AI-generated content, not publisher annotations, human ground truth or verified physical events. Original raw provider records are retained locally; these extracts intentionally omit account identifiers, encrypted reasoning, private paths and authorization records. Model-service terms remain separate from the source-code/dataset license.

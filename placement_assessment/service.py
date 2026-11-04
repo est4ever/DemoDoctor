@@ -161,6 +161,8 @@ def create(root, key):
 def register(app, root):
     from fastapi import HTTPException
     from fastapi.responses import FileResponse
+    from .video_integration import register as register_native_video
+    register_native_video(app,root)
 
     def checked(job_id):
         if not re.fullmatch(r'placement-[0-9a-f]{16}',job_id):raise HTTPException(400,'Invalid placement ID')

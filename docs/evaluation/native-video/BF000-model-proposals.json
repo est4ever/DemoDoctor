@@ -1,0 +1,240 @@
+{
+  "schema": "demodoctor.public-native-proposals-extract/v1",
+  "mode": "recorded_genuine_model_proposals",
+  "warning": "AI-generated unverified model output, not a verified physical diagnosis or human ground truth. Documentation only; never detector input.",
+  "model": "muse-spark-1.3",
+  "source_sha256": "cea576db2d2a9b48ddf95c5cb6dbee38c032030459c28cb48f411f547bd54c99",
+  "upload_sha256": "06df8503a0298387d5e9bba7611da5fc97403328df11603423003d678f5cc444",
+  "camera_id": "cam1",
+  "crop": null,
+  "source_frames": 2090,
+  "source_last_timestamp": 69.63333333333334,
+  "original_raw_response_sha256": "63aed9d72830a41754c687e748827c2f64c2487f8b9f4602f2f5a58a85ed7c1c",
+  "extraction": "Only decoded output_text JSON retained verbatim in model_output. Account/file/response IDs, encrypted reasoning, local paths, approvals and ledgers excluded.",
+  "model_output": {
+    "coverage_limitations": [
+      "Low resolution and fixed viewpoint limit discrimination of fingertip contact and attachment",
+      "Gripper and rack wires intermittently occlude object-gripper interfaces during placements",
+      "Sequential 10-second bins force approximate start-end times; fast lifts may be truncated"
+    ],
+    "events": [
+      {
+        "alternative_interpretations": [
+          "Object was already grasped before video start and only release is visible"
+        ],
+        "description": "Robot arm moves over rack and a translucent grey cup appears upright in left side of rack where rack was empty",
+        "event_type": "placement_attempt",
+        "proposed_end_time": 4.0,
+        "proposed_start_time": 0.0,
+        "relation": "some_task_object_outside_destination",
+        "relevant_objects": [
+          "translucent grey cup",
+          "wire dish rack"
+        ],
+        "uncertainty": "Grasp and pickup not clearly visible in this bin; contact and release moment occluded by gripper and rack",
+        "visible_evidence": [
+          "rack empty in first frame",
+          "gripper over rack",
+          "grey cup present in rack after arm retracts"
+        ]
+      },
+      {
+        "alternative_interpretations": [
+          "Gripper pushed rather than securely grasped the mug"
+        ],
+        "description": "Gripper closes on purple mug on table, lifts it clear, transports over rack and leaves it inverted in rack",
+        "event_type": "placement_attempt",
+        "proposed_end_time": 10.5,
+        "proposed_start_time": 4.0,
+        "relation": "some_task_object_outside_destination",
+        "relevant_objects": [
+          "purple mug",
+          "wire dish rack"
+        ],
+        "uncertainty": "Fingertip contact partially occluded; firm attachment inferred from mug moving with gripper without visible support",
+        "visible_evidence": [
+          "gripper centred on purple mug",
+          "mug airborne moving with gripper",
+          "mug stationary inverted in rack after retract"
+        ]
+      },
+      {
+        "alternative_interpretations": [
+          "Momentary touch without secure grasp followed by re-grasp"
+        ],
+        "description": "Gripper closes on small red cup on table, lifts it, transports to rack and releases it beside purple mug",
+        "event_type": "placement_attempt",
+        "proposed_end_time": 17.0,
+        "proposed_start_time": 11.0,
+        "relation": "some_task_object_outside_destination",
+        "relevant_objects": [
+          "red cup",
+          "wire dish rack"
+        ],
+        "uncertainty": "Small cup size and gripper occlusion limit view of contact; continuous motion with gripper supports pickup interpretation",
+        "visible_evidence": [
+          "red cup disappears from table",
+          "red cup airborne with gripper",
+          "red cup visible in rack after"
+        ]
+      },
+      {
+        "alternative_interpretations": [
+          "First grey cup shifted rather than second cup placed"
+        ],
+        "description": "Gripper grasps remaining translucent grey tumbler from top-right plate area, transports and inserts it into rack",
+        "event_type": "placement_attempt",
+        "proposed_end_time": 24.0,
+        "proposed_start_time": 17.0,
+        "relation": "some_task_object_outside_destination",
+        "relevant_objects": [
+          "translucent grey tumbler",
+          "wire dish rack"
+        ],
+        "uncertainty": "Grasp instant partially occluded but lift is clearly visible; release moment partly hidden by rack wires",
+        "visible_evidence": [
+          "gripper on grey tumbler on table",
+          "tumbler airborne during transport",
+          "tumbler upright in rack beside red cup"
+        ]
+      },
+      {
+        "alternative_interpretations": [
+          "Multiple failed grasp attempts with no secure hold"
+        ],
+        "description": "Gripper hovers over whisk, adjusts, closes on whisk handle area and lifts whisk clear of table",
+        "event_type": "pickup",
+        "proposed_end_time": 39.0,
+        "proposed_start_time": 33.0,
+        "relation": "some_task_object_outside_destination",
+        "relevant_objects": [
+          "green whisk"
+        ],
+        "uncertainty": "Thin handle and open gripper make contact ambiguous; sustained airborne motion indicates pickup but slip cannot be excluded",
+        "visible_evidence": [
+          "gripper opening-closing over whisk handle",
+          "whisk leaves table surface",
+          "whisk suspended and moving with gripper"
+        ]
+      },
+      {
+        "alternative_interpretations": [
+          "Whisk dropped unintentionally rather than deliberately placed"
+        ],
+        "description": "Airborne whisk is carried over rack and deposited lying across cups inside rack",
+        "event_type": "placement_attempt",
+        "proposed_end_time": 44.5,
+        "proposed_start_time": 40.0,
+        "relation": "some_task_object_outside_destination",
+        "relevant_objects": [
+          "green whisk",
+          "wire dish rack"
+        ],
+        "uncertainty": "Release instant not sharply resolved; downward motion alone does not prove controlled release versus slip",
+        "visible_evidence": [
+          "whisk airborne over rack",
+          "whisk comes to rest inside rack",
+          "gripper retracts empty"
+        ]
+      },
+      {
+        "alternative_interpretations": [
+          "Plate tipped without full grasp"
+        ],
+        "description": "Gripper pinches edge of left green plate, lifts it off table, carries vertically and inserts it into dish slots",
+        "event_type": "placement_attempt",
+        "proposed_end_time": 52.0,
+        "proposed_start_time": 44.5,
+        "relation": "some_task_object_outside_destination",
+        "relevant_objects": [
+          "green plate",
+          "wire dish rack"
+        ],
+        "uncertainty": "Edge contact briefly occluded; plate remains with gripper through transport indicating hold but force not visible",
+        "visible_evidence": [
+          "plate leaves table and tilts",
+          "plate airborne with gripper",
+          "plate upright in rack slots after"
+        ]
+      },
+      {
+        "alternative_interpretations": [
+          "Plate slid on table before secure lift"
+        ],
+        "description": "Gripper grasps second green plate from table, lifts, transports and places it upright in rack beside first plate",
+        "event_type": "placement_attempt",
+        "proposed_end_time": 58.0,
+        "proposed_start_time": 53.5,
+        "relation": "some_task_object_outside_destination",
+        "relevant_objects": [
+          "green plate",
+          "wire dish rack"
+        ],
+        "uncertainty": "Moderate uncertainty on exact grasp onset due to gripper angle; transport and final upright position clearly visible",
+        "visible_evidence": [
+          "plate lifted from table",
+          "plate carried over rack",
+          "two green plates upright in rack"
+        ]
+      },
+      {
+        "alternative_interpretations": [
+          "Gripper contact only without lift on first touch"
+        ],
+        "description": "Gripper grasps last green plate on table, lifts it, transports to rack and inserts it upright completing plates",
+        "event_type": "placement_attempt",
+        "proposed_end_time": 65.0,
+        "proposed_start_time": 58.5,
+        "relation": "unknown",
+        "relevant_objects": [
+          "green plate",
+          "wire dish rack"
+        ],
+        "uncertainty": "Initial touch versus secure grasp ambiguous for ~1s; subsequent sustained lift reduces but does not eliminate uncertainty",
+        "visible_evidence": [
+          "last plate on table engaged by gripper",
+          "plate airborne to rack",
+          "plate upright in rack"
+        ]
+      },
+      {
+        "alternative_interpretations": [
+          "Small items or whisk orientation could still violate unstated task criteria"
+        ],
+        "description": "All table dishes absent; rack holds cups, mug, whisk and three upright green plates with arm retracted",
+        "event_type": "final_position",
+        "proposed_end_time": 69.63,
+        "proposed_start_time": 65.0,
+        "relation": "all_task_objects_inside_destination",
+        "relevant_objects": [
+          "wire dish rack",
+          "green plates",
+          "cups",
+          "purple mug",
+          "whisk"
+        ],
+        "uncertainty": "Final observation shows end state, not process success; hidden damage or order requirements cannot be assessed visually",
+        "visible_evidence": [
+          "table surface empty of dishes",
+          "three green plates vertical in rack",
+          "cups and whisk retained in rack",
+          "robot retracted"
+        ]
+      }
+    ]
+  },
+  "illustration_references": [
+    {
+      "frame": 2089,
+      "timestamp_s": 69.63333333333334,
+      "native_pts": 1069568,
+      "time_base": "1/15360",
+      "frame_sha256": "58d71e3d3b4f561e20d3e3f8c51694a89fbded9ad1eea64120ef145f5ba1242e",
+      "camera_id": "cam1",
+      "source_sha256": "cea576db2d2a9b48ddf95c5cb6dbee38c032030459c28cb48f411f547bd54c99",
+      "crop": null,
+      "file": "BF000-frame-2089.png",
+      "png_sha256": "81248e365e45d67cf64a284bd793f07a9aaadb58e98d8179798da856d1e7e9b4"
+    }
+  ]
+}

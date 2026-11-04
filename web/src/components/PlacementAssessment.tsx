@@ -1,17 +1,20 @@
 import {useEffect,useState} from 'react';
+import {NativeVideoProposals,type NativeResult} from './NativeVideoProposals';
 
 type Reference={frame:number;timestamp_s:number;frame_sha256:string;source_sha256:string;camera_id:string;native_pts:number;time_base:string};
 type Result={job_id:string;failure_detected:boolean;failure_type:string|null;scope:string;uncertainty:string;source_label:string;source_sha256:string;
   time_interval:{start_frame:number;end_frame_exclusive:number;start_seconds:number;last_frame_seconds:number}|null;
   source_citations:Reference[];observed_evidence:Array<{evidence_id:string;minimum_lateral_separation_px:number;stable_features:number;median_translation_diameter_px:number}>;
-  muse_status:string;muse_note:string;rejected_frames:Array<{frame:number;reason:string}>};
+  muse_status:string;muse_note:string;native_video?:NativeResult;rejected_frames:Array<{frame:number;reason:string}>};
 type Options={available:boolean;reason?:string;sources:Array<{key:string;label:string}>};
 async function response<T>(url:string,options?:RequestInit):Promise<T>{const r=await fetch(url,options);const value=await r.json();if(!r.ok)throw Error(value.detail??'Assessment unavailable');return value;}
 
 export function PlacementAssessment({jobId,episodeKey,seek}:{jobId?:string|null;episodeKey:string;seek:(t:number,opts?:{pause?:boolean})=>void}){
-  const [options,setOptions]=useState<Options|null>(null),[selected,setSelected]=useState(episodeKey),[result,setResult]=useState<Result|null>(null);
+  const [options,setOptions]=useState<Options|null>(null),[selected,setSelected]=useState(episodeKey),[storedResult,setResult]=useState<Result|null>(null);
+  const result=storedResult?.job_id===jobId?storedResult:null;
   const [busy,setBusy]=useState(false),[error,setError]=useState(''),[frame,setFrame]=useState<number|null>(null);
   useEffect(()=>{let active=true;
+    setError('');setFrame(null);
     if(jobId)response<Result>(`/api/placement/jobs/${jobId}`).then(r=>{if(active){setResult(r);setFrame(r.source_citations[0]?.frame??null);}}).catch(e=>{if(active)setError(e.message);});
     else response<Options>('/api/placement/options').then(o=>{if(active){
       if(typeof o.available!=='boolean'||!Array.isArray(o.sources)){setOptions({available:false,sources:[],reason:'Approved assisted inputs unavailable.'});return;}
@@ -38,10 +41,11 @@ export function PlacementAssessment({jobId,episodeKey,seek}:{jobId?:string|null;
       {result.observed_evidence.map(e=><p key={e.evidence_id}>{e.evidence_id}: minimum plate/rack separation {e.minimum_lateral_separation_px} pixels; {e.stable_features} persistent features; median translation diameter {e.median_translation_diameter_px.toFixed(4)} pixels. This is not the maximum displacement of every feature or a calibrated physical measurement.</p>)}
       <p>{result.uncertainty}</p>
       <p>Muse: {result.muse_status}. {result.muse_note}</p>
+      {jobId&&<NativeVideoProposals key={jobId} jobId={jobId} result={result.native_video} seek={seek} showFrame={setFrame}/>}
       <details><summary>Source frames, masks and measurement limitations</summary>
         <p>Yellow: offline green-plate candidate pixels. Cyan: registered genuine SAM rack template. Neither is a new SAM video result. Semantic plate identity is inferred; absolute error bounds and calibrated depth are unavailable.</p>
         <label>Evidence frame<select aria-label="Placement evidence frame" value={frame??''} onChange={e=>setFrame(Number(e.target.value))}>{result.source_citations.map(r=><option key={r.frame} value={r.frame}>{r.frame} · {r.timestamp_s.toFixed(6)} s</option>)}</select></label>
-        {ref&&<><button onClick={()=>seek(ref.timestamp_s,{pause:true})}>Seek original frame {ref.frame}</button><img style={{width:'100%'}} src={`/api/placement/jobs/${jobId}/frames/${ref.frame}/source`} alt={`Original source frame ${ref.frame}`}/><img style={{width:'100%'}} src={`/api/placement/jobs/${jobId}/frames/${ref.frame}/overlay`} alt={`Assisted plate candidates and registered rack overlay at frame ${ref.frame}`}/><p>Camera {ref.camera_id}; native PTS {ref.native_pts}, time base {ref.time_base}.</p><small style={{overflowWrap:'anywhere'}}>Source SHA-256: {ref.source_sha256}<br/>RGB frame SHA-256: {ref.frame_sha256}</small></>}
+        {ref&&<><button onClick={()=>seek(ref.timestamp_s,{pause:true})}>Seek original frame {ref.frame}</button><img style={{width:'100%'}} src={`/api/placement/jobs/${jobId}/frames/${ref.frame}/source`} alt={`Original source frame ${ref.frame}`}/>{result.native_video?.proposal_only_frames?.includes(ref.frame)?<p>This is a model-proposal citation only. No segmentation or event measurement is registered for this frame.</p>:<img style={{width:'100%'}} src={`/api/placement/jobs/${jobId}/frames/${ref.frame}/overlay`} alt={`Assisted plate candidates and registered rack overlay at frame ${ref.frame}`}/>}<p>Camera {ref.camera_id}; native PTS {ref.native_pts}, time base {ref.time_base}.</p><small style={{overflowWrap:'anywhere'}}>Source SHA-256: {ref.source_sha256}<br/>RGB frame SHA-256: {ref.frame_sha256}</small></>}
         {result.rejected_frames.length>0&&<p>Missing target geometry: {result.rejected_frames.length} assessed frames. No gap interpolation or forced failure.</p>}
       </details>
       <p>Saved automatically. Refresh or reopen this investigation without inference.</p>

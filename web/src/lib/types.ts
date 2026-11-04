@@ -90,6 +90,7 @@ export type CriteriaBundle = {
 };
 
 export type AnalysisBundle = {
+  native_video?: {mode:string};
   placement_assessment?: boolean;
   citation_bindings?: import('./citationIntegrity').CitationBindings;
   temporal_evidence_error?: string;

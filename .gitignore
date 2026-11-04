@@ -11,6 +11,7 @@ eval_videos/**/*.mp4
 /.pytest_cache/
 data/predictions/*.json
 data/live_jobs/
+data/native_video_plans/
 data/placement_assets/
 /qa-browser-artifacts/
 /.gstack/

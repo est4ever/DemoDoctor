@@ -15,3 +15,12 @@ it('labels saved real outputs only with explicit execution metadata',()=>{
   const mode=investigationMode(a({execution:{mode:'real',note:'Local execution records; not physical verification'}}),true);
   expect(mode.label).toBe('Real Analysis · saved outputs');expect(mode.note).toContain('not physical verification');
 });
+it('distinguishes native video mocks from saved genuine proposals',()=>{
+  expect(investigationMode(a({placement_assessment:true,native_video:{mode:'offline_mock'}}),true).label).toContain('Mock proposals');
+  const real=investigationMode(a({placement_assessment:true,native_video:{mode:'genuine_native_video'}}),true);
+  expect(real.label).toContain('saved genuine proposals');expect(real.note).toContain('not verified facts');
+});
+it('does not promote unregistered or contradictory native execution metadata',()=>{
+  expect(investigationMode(a({placement_assessment:true,native_video:{mode:'genuine_native_video'}}),false).label).toContain('unconfirmed');
+  expect(investigationMode(a({placement_assessment:true,dry_run:true,native_video:{mode:'genuine_native_video'}}),true).label).toContain('unconfirmed');
+});

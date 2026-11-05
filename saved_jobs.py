@@ -146,5 +146,7 @@ def describe(directory: Path) -> dict:
         'video_filename':name or 'Original filename not recorded','created_at':created,'date_basis':date_basis,
         'camera_count':len(manifest['cameras']) if isinstance(manifest.get('cameras'),list) else 1,
         'analysis_type':kind,'execution':execution_summary(directory),'status':status.get('status','unknown'),'outcome':outcome,
+        'native_mode':(analysis.get('native_video') or {}).get('mode') if directory.name.startswith('placement-') else None,
+        'source_label':(read(directory,'placement-result.json') or {}).get('source_label') if directory.name.startswith('placement-') else None,
         'outcome_note':'Provider-skipped preparation; no physical conclusions' if kind=='dry_run' else 'Saved verdict; inspect its evidence scope and limitations',
         'can_open':problem is None,'availability_error':problem}

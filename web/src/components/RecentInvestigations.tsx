@@ -4,6 +4,7 @@ import { isSavedJobId, savedJobHref } from "../lib/savedInvestigations";
 import type {AnalysisBundle} from '../lib/types';
 
 type SavedJob = {
+  native_mode?:string;source_label?:string;
   job_id: string; task_description?: string; video_filename?: string; created_at?: string | null; date_basis?: string;
   camera_count?: number; analysis_type?: string; status: string; outcome?: string | null;
   execution?:AnalysisBundle['execution'];
@@ -36,6 +37,7 @@ export function RecentInvestigations() {
         const date=job.created_at ? new Date(job.created_at) : null;
         return <li key={job.job_id} className="rounded-xl border border-[var(--border)] p-4 space-y-2" data-saved-job={job.job_id}>
           <h3 className="font-semibold">{job.task_description ?? 'Task not recorded'}</h3>
+          {job.native_mode&&<p><strong>{job.source_label} · {job.native_mode==='genuine_native_video'?'Saved genuine Meta Muse video analysis — replay':job.native_mode==='offline_mock'?'Offline mock native-video results — no genuine inference':'Native execution unconfirmed'}</strong></p>}
           <p>{job.video_filename ?? 'Original filename not recorded'} · {job.camera_count ? `${job.camera_count} camera view${job.camera_count===1?'':'s'}` : 'Camera count not recorded'}</p>
           <p><time dateTime={job.created_at ?? undefined} title={job.date_basis}>{date && Number.isFinite(date.getTime()) ? date.toLocaleString(undefined,{timeZoneName:'short'}) : 'Analysis date not recorded'}</time></p>
           <p>{job.execution ? executionLabels[job.execution.mode]??modes.unknown : modes[job.analysis_type ?? 'unknown'] ?? modes.unknown} · Status: {job.status}</p>

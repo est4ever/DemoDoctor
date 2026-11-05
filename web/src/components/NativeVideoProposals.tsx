@@ -8,7 +8,7 @@ export type NativeResult={mode:string;model:string;explanation:string;explanatio
     supported_interval:{start_frame:number;end_frame_exclusive:number;start_s:number;last_s:number}|null;
     scope:string;source_citations:Array<{frame:number;timestamp_s:number}>}>};
 type Plan={plan_id:string;plan_sha256:string;model:string;reservation_usd:number;frame_count:number;last_source_timestamp:number;source_sha256:string;upload_sha256:string};
-export function NativeVideoProposals({jobId,result,seek,showFrame}:{jobId:string;result?:NativeResult;seek:(t:number,opts?:{pause?:boolean})=>void;showFrame:(f:number)=>void}){
+export function NativeVideoProposals({jobId,result,seek,showFrame,allowPrepare=true}:{jobId:string;result?:NativeResult;seek:(t:number,opts?:{pause?:boolean})=>void;showFrame:(f:number)=>void;allowPrepare?:boolean}){
   const [task,setTask]=useState('Place all dishes in the rack'),[desired,setDesired]=useState('All required dishes are in the rack');
   const [plan,setPlan]=useState<Plan|null>(null),[approved,setApproved]=useState(false),[busy,setBusy]=useState(false),[error,setError]=useState('');
   async function post(url:string,body:unknown){const r=await fetch(url,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});const data=await r.json();if(!r.ok)throw Error(data.detail??'Stopped');return data;}
@@ -17,7 +17,7 @@ export function NativeVideoProposals({jobId,result,seek,showFrame}:{jobId:string
   return <section aria-label="Native video event proposals"><h3>Video event proposals · Experimental</h3>
     <p>Meta-hosted Muse Spark 1.3 examines the complete video. Its event descriptions are proposals, not verified findings. This is separate from Fireworks Muse Spark Open.</p>
     {result&&<>
-      <p><strong>{result.mode==='offline_mock'?'OFFLINE MOCK MODEL RESPONSE — genuine source footage and geometric evidence only':result.mode==='genuine_native_video'?'GENUINE NATIVE-VIDEO MODEL RESPONSE':'MODEL EXECUTION UNCONFIRMED'}</strong></p>
+      <p><strong>{result.mode==='offline_mock'?'OFFLINE MOCK MODEL RESPONSE — source footage is real; model responses are test fixtures, not genuine inference':result.mode==='genuine_native_video'?'GENUINE NATIVE-VIDEO MODEL RESPONSE':'MODEL EXECUTION UNCONFIRMED'}</strong></p>
       <p>{result.explanation}</p><p>{result.explanation_status}</p>
       <p>Original failure onset: Unknown. Physical cause: {result.physical_cause}. No physical grasp, release or task-success confirmation.</p>
       {result.proposals.map(e=><article key={e.proposal_id} aria-label={`Proposal ${e.proposal_id}`}>
@@ -34,7 +34,7 @@ export function NativeVideoProposals({jobId,result,seek,showFrame}:{jobId:string
       {!result.proposals.length&&<p>No model event proposal. This does not establish success.</p>}
       <p>{result.mode==='offline_mock'?'Simulated usage only':'Provider token-rate calculation'}: ${result.accounting.rate_derived_usd.toFixed(6)}. Provider-confirmed dollar charge: {result.accounting.provider_confirmed_charge_usd===null?'unavailable':result.accounting.provider_confirmed_charge_usd}.</p>
     </>}
-    <details><summary>Prepare a separate native-video analysis plan</summary>
+    {allowPrepare&&<details><summary>Prepare a separate native-video analysis plan</summary>
       <label>Task description<input value={task} disabled={busy||!!plan} onChange={e=>setTask(e.target.value)}/></label>
       <label>Desired end state (instruction, never actual outcome)<input value={desired} disabled={busy||!!plan} onChange={e=>setDesired(e.target.value)}/></label>
       <p>This pilot is limited to the displayed dish-to-rack task and registered recordings; arbitrary upload criteria are not yet verified. Do not enter reference outcomes, failure times or historical diagnoses. One full-video upload and one bounded native-video request. No SAM, retries, or paid refinement. Existing assisted geometry is supplied only to the independent verifier after the response.</p>
@@ -45,6 +45,6 @@ export function NativeVideoProposals({jobId,result,seek,showFrame}:{jobId:string
         <label><input type="checkbox" checked={approved} disabled={busy} onChange={e=>setApproved(e.target.checked)}/>I approve this exact plan and ${plan.reservation_usd.toFixed(2)} reservation, subject to the operator gate.</label>
         <button disabled={busy||!approved} onClick={execute}>Run authorized native-video analysis</button></>}
       {error&&<p role="alert">{error}</p>}
-    </details>
+    </details>}
   </section>;
 }

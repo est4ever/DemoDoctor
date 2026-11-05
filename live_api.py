@@ -70,7 +70,7 @@ async def trusted_browser_request(request: Request, call_next):
             or (origin is None and request.headers.get("sec-fetch-site") == "cross-site")):
         return JSONResponse({"detail": "Untrusted browser origin"}, status_code=403)
     response=await call_next(request)
-    if request.url.path.startswith(('/api/jobs','/live-data/','/api/placement/')):
+    if request.url.path.startswith(('/api/jobs','/live-data/','/api/placement/','/api/native-video/')):
         response.headers['Cache-Control']='no-store'
     return response
 
@@ -196,7 +196,9 @@ def list_jobs() -> dict[str, Any]:
     import saved_jobs
     jobs = []
     if JOBS_ROOT.is_dir():
-        for p in sorted(JOBS_ROOT.iterdir(), reverse=True):
+        # Native/placement IDs are random, not sortable creation timestamps.
+        # Show recently saved investigations before applying the history limit.
+        for p in sorted(JOBS_ROOT.iterdir(), key=lambda p:p.stat().st_mtime, reverse=True):
             if not p.is_dir() or p.name.startswith("_"):
                 continue
             try:

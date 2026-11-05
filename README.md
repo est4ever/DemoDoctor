@@ -156,9 +156,15 @@ The example explicitly sets a $1.50 local run cap; plans above it are refused. E
 
 Provider readiness reports configuration presence, not account authentication or available credit. Keep the backend on loopback. [Provider setup and operating limits →](docs/REFERENCE.md#analyze-new-footage-locally)
 
+## Experimental full-video event proposals
+
+**Import Footage → Experimental Native Video Analysis** now accepts a new single-camera video, task and intended end state in the same workstation. Review original-frame provenance and cost before explicitly approving one Meta Muse Spark 1.3 request. Ordinary startup remains offline. [Try the complete offline/mock workflow, or configure separately authorized native analysis](docs/integration/NATIVE_VIDEO_UPLOAD.md).
+
+This path is separate from SAM/Fireworks and multi-camera analysis. The new upload UI was tested with mock providers; historical genuine BF010 replay was also checked. Fresh paid execution through this UI remains untested. New-video events are **Unverified model proposals**, not confirmed failure, grasp, release or task-completion findings. Completed jobs reopen without inference; genuine historical jobs are local-only and are not bundled into fresh installations.
+
 ## Multi-camera workflow
 
-Use the same import flow for one video, two/three separate synchronized MP4s, or a fixed-panel composite. Preview and confirm crops; for separate files, explicitly approve alignment and offsets. Composite extraction requires an installed FFmpeg executable.
+Use the same SAM/Fireworks import flow for one video, two/three separate synchronized MP4s, or a fixed-panel composite. Preview and confirm crops; for separate files, explicitly approve alignment and offsets. Composite extraction requires an installed FFmpeg executable.
 
 ![Actual three-view DemoDoctor layout using visibly labelled generated calibration videos and mocked providers. No real robot or multi-camera inference result is shown.](docs/media/multicamera-mock.webp)
 

@@ -58,6 +58,11 @@ def publish(directory,root):
     result['source_citations']=[refs[f] for f in sorted(refs)]
     analysis.update(episode_key=job.name,native_video=native,
         muse_explanation=None,muse_only=None,evidence_muse_outcome=None)
+    if result.get('native_upload'):
+        native['failure_basis']='No independent object/destination measurements for this upload; every model event remains UNVERIFIED.'
+        native['explanation']='Meta video descriptions below are unverified proposals. No measured task failure, physical cause or task success is established.'
+        analysis.update(title='Experimental native-video investigation',diagnosis_headline='AI event proposals — verification pending',
+            diagnosis_summary=native['explanation'])
     for e in native['proposals']:
         analysis['timeline_markers'].append(dict(id='native-'+e['proposal_id'],label='MODEL PROPOSAL: '+e['event_type'],
             t=e['proposed_start_time'],kind='unverified',evidence_ids=[]))
@@ -71,12 +76,15 @@ def publish(directory,root):
 def register(app,root):
     from fastapi import HTTPException
     from pydantic import BaseModel,Field
+    from . import native_upload
+    native_upload.register(app,root)
     class PlanInput(BaseModel):
         task_description:str=Field(min_length=3,max_length=2000)
         desired_end_state:str=Field(min_length=3,max_length=2000)
     class ExecuteInput(BaseModel):
         plan_sha256:str
         approve_reservation_usd:float
+        attestations:dict[str,bool]=Field(default_factory=dict)
     def path(plan_id):
         need(re.fullmatch(r'native-[a-f0-9]{16}',plan_id),'Invalid plan ID')
         return M.PLANS/plan_id
@@ -94,14 +102,25 @@ def register(app,root):
         try:
             directory=path(plan_id)
             need(body.plan_sha256==sha(directory/'plan.json') and body.approve_reservation_usd==M.V.RESERVATION,'Explicit exact-plan cost approval required')
-            approval=os.environ.get('DEMODOCTOR_NATIVE_VIDEO_APPROVAL')
-            need(approval and Path(approval).is_file(),'Paid execution disabled: operator authorization unavailable')
-            owner=read(approval);ledger=Path(owner['ledger_path'])
+            plan,_=M.check_plan(directory)
+            is_upload=service.verify(Path(plan['parent_job'])).get('native_upload')
+            mock=None
+            if is_upload:
+                owner,ledger,mock=native_upload.browser_owner(app,directory,body)
+            else:
+                approval=os.environ.get('DEMODOCTOR_NATIVE_VIDEO_APPROVAL')
+                need(approval and Path(approval).is_file(),'Paid execution disabled: operator authorization unavailable')
+                owner=read(approval);ledger=Path(owner['ledger_path'])
+            if not mock:
+                import live_api
+                need(not live_api.OFFLINE_ONLY,'Offline launcher forbids provider execution')
             async def run():
-                client=M.sam_api.client()
-                try:return await M.execute(directory,owner,ledger,client)
+                client=mock['client'](*M.check_plan(directory)) if mock else M.sam_api.client()
+                try:return await M.execute(directory,owner,ledger,client,offline=bool(mock))
                 finally:await client.close()
             with service.LOCK:
+                need(not (directory/'attempt.json').exists(),'Plan already attempted; no retry')
+                write(directory/'operator-approval.json',dict(owner,mode='offline_mock' if mock else 'genuine_native_video'))
                 asyncio.run(run());result=publish(directory,root)
             return result
         except Exception as e:raise HTTPException(409,'Native-video analysis stopped; no automatic retry: '+str(e))

@@ -55,6 +55,11 @@ export function resolvingObservation(r:{kind:string;reason:string},criterionKind
 }
 export function observationSummary(a:AnalysisBundle,context:SourceContext={}):string[] {
   const result:string[]=[];
+  if(a.placement_assessment && context.savedJob){
+    const measured=a.evidence_catalog.filter(e=>e.source==='offline:assisted_final_placement' && e.kind==='measurement' && citationBinding(a,e,true).status==='record_match');
+    if(measured.length)result.push(...measured.map(e=>`${e.summary} Assisted image-space measurement; physical cause and earlier onset remain Unverified.`));
+    else if(a.native_video)result.push('Source-linked native-video event proposals are available below. They are not independently verified measurements or physical failure conclusions.');
+  }
   const containment=a.criteria?.assessments.find(c=>c.kind==='containment');
   // A criterion's independently checked 2D geometry can be decisive even when
   // its historical catalog entry labels full physical completion uncertain.

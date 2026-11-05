@@ -50,7 +50,12 @@ def execution_seal(directory,create=False):
 def prepare(parent,task,desired,root=PLANS):
     parent=Path(parent).resolve();verified=service.verify(parent)
     need(3<=len(task)<=2000 and 3<=len(desired)<=2000,'Task and desired condition required')
-    need(task==PILOT_TASK and desired==PILOT_GOAL,'This pilot verifies only the approved dish-to-rack task. Other task criteria remain unsupported.')
+    if verified.get('native_upload'):
+        original=read(parent/'request.json')
+        need(task==original['task_description'] and desired==original['desired_end_state'],'Task changed after source preparation')
+        need(not verified['failure_detected'] and not verified['observed_evidence'] and verified['time_interval'] is None,'New upload cannot inherit assisted evidence')
+    else:
+        need(task==PILOT_TASK and desired==PILOT_GOAL,'This pilot verifies only the approved dish-to-rack task. Other task criteria remain unsupported.')
     root.mkdir(parents=True,exist_ok=True);directory=root/('native-'+uuid.uuid4().hex[:16]);directory.mkdir()
     shutil.copyfile(parent/'video.mp4',directory/'source.mp4')
     source=index(directory/'source.mp4',verified['source_sha256'])
